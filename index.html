@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Referral Race — Live Ranking</title>
+<meta name="theme-color" content="#121125" />
+
+<!-- FONTS (system-safe fallback) -->
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<style>
+  :root{
+    /* Brand gradient (matches your VIP style) */
+    --g1:#ff6ec4; --g2:#7873f5; --a3:#78f3ff;
+    --bg:#0f1129; --card:#121125; --ring:#2a2e58; --mut:#c7cbff; --ink:#f2f3ff; 
+    --ok:#aef7c1; --warn:#ffd86a; --bad:#ffb3be; --shadow: 0 10px 40px rgba(0,0,0,.35);
+    --row-h:64px; --radius:18px; --pad:16px;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; color:var(--ink); font-family:Inter, ui-sans-serif, system-ui, Segoe UI, Roboto, Arial;
+    background:
+      radial-gradient(1100px 700px at 85% -20%, rgba(120,115,245,.25), rgba(15,17,41,0) 60%),
+      radial-gradient(900px 600px at 10% 110%, rgba(255,110,196,.20), rgba(15,17,41,0) 55%),
+      linear-gradient(180deg, #0a0c1f 0%, #0e1027 100%);
+    overflow-x:hidden;
+  }
+
+  /* ====== LAYOUT ====== */
+  .wrap{max-width:1200px; margin:0 auto; padding:20px clamp(12px, 3vw, 28px) 100px;}
+  header.hero{
+    position:sticky; top:0; z-index:20; backdrop-filter: blur(10px);
+    background:linear-gradient(180deg, rgba(17,18,38,.95) 0%, rgba(17,18,38,.75) 100%);
+    border-bottom:1px solid #2a2e58; box-shadow:0 8px 30px rgba(0,0,0,.25);
+  }
+  .hero-inner{display:grid; grid-template-columns: 1fr auto; gap:16px; align-items:center; max-width:1200px; margin:0 auto; padding:14px clamp(12px, 3vw, 28px);}  
+  .title{
+    display:flex; align-items:center; gap:14px;
+  }
+  .badge{
+    padding:6px 12px; border-radius:999px; font-weight:700; letter-spacing:.4px; font-size:12px;
+    background:linear-gradient(90deg, var(--g1), var(--g2));
+    box-shadow: inset 0 0 0 2px rgba(255,255,255,.08), 0 8px 30px rgba(120,115,245,.25);
+  }
+  h1{
+    margin:0; font-size: clamp(18px, 3.2vw, 32px); font-weight:900; letter-spacing:.4px;
+    background:linear-gradient(90deg, var(--g1), var(--g2)); -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .actions{display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end}
+  .btn{
+    appearance:none; border:0; cursor:pointer; border-radius:14px; padding:10px 14px; font-weight:700; color:var(--ink);
+    background:#1b1e3a; border:1px solid #2a2e58; display:inline-flex; gap:8px; align-items:center;
+    transition: transform .12s ease, box-shadow .2s ease, background .2s ease;
+  }
+  .btn:hover{transform: translateY(-1px); box-shadow: 0 8px 20px rgba(120,115,245,.25)}
+  .btn.primary{ background:linear-gradient(90deg, var(--g1), var(--g2)); border-color:transparent; }
+  .btn.ghost{ background:transparent }
+
+  /* ====== TOOLBAR ====== */
+  .toolbar{
+    margin:18px 0 14px; display:grid; grid-template-columns:1fr 1fr auto; gap:12px; align-items:center;
+  }
+  .field{ position:relative; }
+  .input{
+    width:100%; height:48px; border-radius:14px; background:#13142b; border:1px solid #262a52; color:var(--ink);
+    padding:0 44px 0 14px; font-size:14px; outline:none;
+  }
+  .input::placeholder{color:#8e96c9}
+  .field .icon{ position:absolute; right:12px; top:50%; transform:translateY(-50%); opacity:.75 }
+  .tabs{ display:flex; gap:10px; flex-wrap:wrap }
+  .tab{ height:48px; padding:0 16px; border-radius:14px; background:#161636; border:1px solid #2a2e58; display:inline-flex; align-items:center; gap:10px; cursor:pointer }
+  .tab.active{ background:linear-gradient(90deg, rgba(255,110,196,.22), rgba(120,115,245,.22)); box-shadow: inset 0 0 0 1px rgba(255,255,255,.08) }
+
+  /* ====== PODIUM ====== */
+  .podium{ display:grid; grid-template-columns: repeat(3,1fr); gap:14px; margin:16px 0 8px }
+  @media (max-width:840px){ .podium{ grid-template-columns: 1fr; } }
+  .pod-card{
+    position:relative; border-radius:var(--radius); background:linear-gradient(180deg,#191a3c,#111228); border:1px solid #2a2e58; padding:18px; overflow:hidden; box-shadow: var(--shadow);
+  }
+  .pod-rank{ position:absolute; top:12px; left:12px; width:44px; height:44px; border-radius:12px; display:grid; place-items:center; font-weight:900; background:linear-gradient(180deg,#ffd86a,#a96b03); color:#211c0a; box-shadow: inset 0 0 0 2px rgba(255,255,255,.15)}
+  .pod-rank.r2{ background:linear-gradient(180deg,#e6ecff,#8fa0ff); color:#1a1f3d }
+  .pod-rank.r3{ background:linear-gradient(180deg,#ffd4b0,#ff8e4d); color:#3b1a0d }
+  .pod-user{ display:flex; align-items:center; gap:14px; margin-left:4px }
+  .avatar{ width:56px; height:56px; border-radius:50%; background:#222645; border:2px solid #303767; box-shadow: inset 0 0 0 2px rgba(255,255,255,.05) }
+  .pod-meta b{ display:block; font-size:16px }
+  .pod-meta small{ color:var(--mut) }
+  .pod-stats{ display:flex; gap:12px; margin-top:12px; flex-wrap:wrap }
+  .pill{ padding:8px 10px; border-radius:12px; background:#17193c; border:1px solid #2a2e58; display:inline-flex; gap:8px; align-items:center }
+  .pill.ok{ background:rgba(174,247,193,.08); border-color:rgba(174,247,193,.3)}
+
+  /* ====== LEADERBOARD TABLE ====== */
+  .board{
+    margin-top:14px; border-radius:var(--radius); overflow:hidden; border:1px solid #262a52; box-shadow: var(--shadow);
+  }
+  .board-head, .row{ display:grid; grid-template-columns: 64px 1fr 120px 140px 120px; align-items:center }
+  @media (max-width:760px){ .board-head, .row{ grid-template-columns: 56px 1fr 100px 110px 0 } .col-hide{ display:none } }
+  .board-head{ background:linear-gradient(180deg,#17183a,#141533); color:#9fb0d9; height:52px; padding:0 12px; font-size:12px; letter-spacing:.4px; text-transform:uppercase }
+  .rows{ background:#0f1129 }
+  .row{ height:var(--row-h); padding:0 12px; background:linear-gradient(180deg, #0f1129, #101233); border-top:1px solid #1a1e45 }
+  .row:nth-child(odd){ background:linear-gradient(180deg, #101233, #0f1129) }
+  .rank{ font-weight:900; font-size:18px; opacity:.9 }
+  .user{ display:flex; align-items:center; gap:12px }
+  .user .avatar{ width:40px; height:40px }
+  .user b{ font-size:14px }
+  .tag{ font-size:11px; padding:4px 8px; border-radius:999px; background:#181b3c; border:1px solid #2d3160; color:#a9b7d8 }
+  .score{ font-weight:900; font-size:18px }
+  .trend{ display:inline-flex; align-items:center; gap:6px }
+  .trend.up{ color:var(--ok) } .trend.down{ color:#ff98a8 }
+  .me{ background:linear-gradient(90deg, rgba(255,110,196,.10), rgba(120,115,245,.10)); box-shadow: inset 0 0 0 1px rgba(255,255,255,.08) }
+
+  /* ====== SECTIONS ====== */
+  .grid-2{ display:grid; grid-template-columns: 1.45fr .55fr; gap:16px; margin-top:16px }
+  @media (max-width:980px){ .grid-2{ grid-template-columns:1fr; } }
+  .card{ background:linear-gradient(180deg,#16183a,#12122a); border:1px solid #262a52; border-radius:var(--radius); padding:var(--pad); box-shadow: var(--shadow) }
+
+  .rewards{ display:grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap:12px }
+  .reward{ position:relative; padding:14px; border-radius:16px; background:linear-gradient(180deg,#181b3e,#12122b); border:1px solid #2a2e58 }
+  .reward h4{ margin:0 0 8px }
+  .progress{ height:10px; border-radius:10px; background:#0d0f23; border:1px solid #2a2e58; overflow:hidden }
+  .progress > i{ display:block; height:100%; width:0%; background:linear-gradient(90deg,var(--g1),var(--g2)) }
+  .reward .cap{ position:absolute; right:12px; top:12px; font-size:12px; color:#b7c3ff }
+
+  .ticker{ height:48px; overflow:hidden; border-radius:12px; border:1px solid #2a2e58; background:#141537 }
+  .ticker ul{ list-style:none; margin:0; padding:0 }
+  .ticker li{ display:flex; align-items:center; gap:8px; height:48px; padding:0 12px; border-bottom:1px solid #222655 }
+
+  /* Floating my-rank chip */
+  .my-rank{ position:fixed; right:14px; bottom:14px; z-index:30; background:#12122a; border:1px solid #2a2e58; border-radius:16px; padding:10px 14px; display:flex; gap:10px; align-items:center; box-shadow: var(--shadow) }
+  .my-rank .dot{ width:10px; height:10px; border-radius:50%; background:linear-gradient(180deg,#ffd86a,#a96b03) }
+
+  /* Confetti canvas */
+  canvas#fx{ position:fixed; inset:0; pointer-events:none; z-index:50 }
+
+  /* Language toggle */
+  .lang{ font-size:12px; opacity:.9 }
+
+  /* Subtle glow lines */
+  .glowline{ position:relative }
+  .glowline:before{
+    content:""; position:absolute; inset:auto 0 -1px 0; height:1px; 
+    background:linear-gradient(90deg, rgba(255,110,196,.0), rgba(255,110,196,.6), rgba(120,115,245,.0));
+    filter: blur(.6px);
+  }
+</style>
+</head>
+<body>
+<canvas id="fx"></canvas>
+<header class="hero">
+  <div class="hero-inner">
+    <div class="title">
+      <span class="badge">Referral Race</span>
+      <h1 id="heroTitle">Live Ranking Board</h1>
+    </div>
+    <div class="actions">
+      <button class="btn" id="copyLinkBtn" title="Copy your referral link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M8 12a4 4 0 014-4h3a4 4 0 110 8h-3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M16 12a4 4 0 01-4 4H9a4 4 0 110-8h3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span id="copyCta">Copy Link</span></button>
+      <button class="btn ghost lang" id="langBtn">PT / EN</button>
+      <button class="btn primary" id="remindBtn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 7v6l4 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span id="endsIn">Ends in 00:00:00</span></button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <div class="field">
+      <input class="input" id="search" placeholder="Search username or ID…" />
+      <span class="icon">🔎</span>
+    </div>
+    <div class="tabs" role="tablist">
+      <button class="tab active" data-tab="global">🌐 <span id="tabGlobal">Global</span></button>
+      <button class="tab" data-tab="friends">👥 <span id="tabFriends">Friends</span></button>
+      <button class="tab" data-tab="myrefs">🎟️ <span id="tabMy">My Referrals</span></button>
+    </div>
+    <div style="text-align:right">
+      <select class="input" id="sort">
+        <option value="referrals-desc">Sort: Referrals ↓</option>
+        <option value="referrals-asc">Sort: Referrals ↑</option>
+        <option value="points-desc">Sort: Points ↓</option>
+        <option value="points-asc">Sort: Points ↑</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Podium -->
+  <div class="podium" id="podium"></div>
+
+  <!-- Leaderboard table -->
+  <div class="board" aria-live="polite">
+    <div class="board-head glowline">
+      <div>#</div>
+      <div>Player</div>
+      <div class="col-hide">Referrals</div>
+      <div>Points</div>
+      <div class="col-hide">Trend</div>
+    </div>
+    <div class="rows" id="rows"></div>
+  </div>
+
+  <div class="grid-2">
+    <!-- Rewards / Progress -->
+    <section class="card">
+      <h3 style="margin:0 0 8px">Milestone Rewards</h3>
+      <p style="margin:0 0 12px; color:var(--mut)">Unlock bonuses as your referrals grow. Progress updates live.</p>
+      <div class="rewards" id="rewards"></div>
+    </section>
+
+    <!-- Live ticker / tips -->
+    <section class="card">
+      <h3 style="margin:0 0 8px">Live Activity</h3>
+      <div class="ticker" id="ticker"><ul></ul></div>
+      <div style="margin-top:12px; font-size:13px; color:var(--mut)">
+        Tip: Share your unique link from the top-right. Weekly resets keep races fresh.
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- Floating my-rank chip -->
+<div class="my-rank" id="myChip" aria-live="polite">
+  <span class="dot"></span>
+  <span><b id="myRank">#12</b> • <span id="myPoints">2,340 pts</span></span>
+</div>
+
+<script>
+/**********************
+ * CONFIG & DUMMY DATA *
+ **********************/
+const EVENT_END = new Date(Date.now() + 1000*60*60*24*3 + 1000*60*30); // 3.5 days from now
+const REF_LINK = (location.origin || 'https://your-domain') + '/?ref=VIP123';
+const MILESTONES = [
+  {label:'5 Referrals', need:5,  reward:'20 Free Spins'},
+  {label:'15 Referrals', need:15, reward:'1 Lucky Sweet Spin'},
+  {label:'30 Referrals', need:30, reward:'50 Free Spins'},
+  {label:'60 Referrals', need:60, reward:'VIP Mystery Box'},
+];
+
+let CURRENT_TAB = 'global';
+let MY_ID = 'you';
+
+function seedPlayers(n=50){
+  const names = 'Nova,Ace,Rio,Mika,Sol,Jet,Skye,Zee,Luna,Max,Axel,Zara,Milo,Kai,Noah,Ava,Theo,Lex,Juno,Nyx'.split(',');
+  const arr = [];
+  for(let i=0;i<n;i++){
+    const id = 'u'+(1000+i);
+    const name = names[i%names.length] + (Math.random()<.5?''+Math.floor(Math.random()*90):'');
+    const refs = Math.floor(Math.random()*120);
+    const pts = refs*100 + Math.floor(Math.random()*500);
+    arr.push({ id, name, avatar:`https://api.dicebear.com/7.x/pixel-art/svg?seed=${name}`, referrals:refs, points:pts, trend: Math.random()<.5?1:-1 });
+  }
+  // inject me
+  arr[12] = { id:MY_ID, name:'You', avatar:`https://api.dicebear.com/7.x/pixel-art/svg?seed=You`, referrals:19, points:2340, trend:1 };
+  return arr;
+}
+let PLAYERS = seedPlayers(60);
+
+/*************************
+ * UTIL & FX (Confetti)   *
+ *************************/
+const $ = sel => document.querySelector(sel);
+function fmt(n){ return (n||0).toLocaleString(); }
+function countdown(){
+  const d = EVENT_END - Date.now();
+  if(d<=0){ $('#endsIn').textContent = 'Race finished'; return; }
+  const h = Math.floor(d/3.6e6), m=Math.floor((d%3.6e6)/6e4), s=Math.floor((d%6e4)/1e3);
+  $('#endsIn').textContent = `Ends in ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+}
+setInterval(countdown, 1000); countdown();
+
+// Confetti minimal
+const fx = document.getElementById('fx');
+const ctx = fx.getContext('2d');
+function sizeFx(){ fx.width = innerWidth; fx.height = innerHeight; }
+addEventListener('resize', sizeFx); sizeFx();
+let confetti = [];
+function boom(x,y){
+  for(let i=0;i<120;i++){
+    confetti.push({
+      x, y, vx: (Math.random()-0.5)*6, vy: (Math.random()-1.2)*6, life: 80+Math.random()*30, 
+      c: `hsl(${Math.floor(Math.random()*360)}, 90%, 65%)`, r: 2+Math.random()*3
+    });
+  }
+}
+function stepFx(){
+  ctx.clearRect(0,0,fx.width,fx.height);
+  confetti = confetti.filter(p=>p.life>0);
+  confetti.forEach(p=>{
+    p.life--; p.x+=p.vx; p.y+=p.vy; p.vy+=0.08; 
+    ctx.fillStyle=p.c; ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,6.283); ctx.fill();
+  });
+  requestAnimationFrame(stepFx);
+}
+stepFx();
+
+/*********************
+ * RENDER FUNCTIONS   *
+ *********************/
+function renderPodium(list){
+  const top3 = [...list].slice(0,3);
+  const podium = document.getElementById('podium');
+  podium.innerHTML = top3.map((p,i)=>{
+    const rank = i+1;
+    return `<article class="pod-card">
+      <div class="pod-rank r${rank}">${rank}</div>
+      <div class="pod-user">
+        <img class="avatar" src="${p.avatar}" alt="${p.name}"/>
+        <div class="pod-meta">
+          <b>${p.name}</b>
+          <small>${fmt(p.referrals)} referrals • ${fmt(p.points)} pts</small>
+        </div>
+      </div>
+      <div class="pod-stats">
+        <span class="pill"><span>🏆</span> <b>${fmt(p.points)}</b> pts</span>
+        <span class="pill ok"><span>👥</span> <b>${fmt(p.referrals)}</b> refs</span>
+        <span class="pill"><span>${p.trend>0?'📈':'📉'}</span> trend</span>
+      </div>
+    </article>`
+  }).join('');
+}
+
+function renderRows(list){
+  const rows = document.getElementById('rows');
+  rows.innerHTML = list.map((p,i)=>{
+    const rank = i+1;
+    const me = p.id===MY_ID ? ' me' : '';
+    return `<div class="row${me}">
+      <div class="rank">${rank}</div>
+      <div class="user"><img class="avatar" src="${p.avatar}" alt="${p.name}"/><div>
+        <b>${p.name}</b><div class="tag">ID: ${p.id}</div>
+      </div></div>
+      <div class="score col-hide">${fmt(p.referrals)}</div>
+      <div class="score">${fmt(p.points)}</div>
+      <div class="col-hide"><span class="trend ${p.trend>0?'up':'down'}">${p.trend>0?'▲':'▼'} ${Math.abs(p.trend)}</span></div>
+    </div>`
+  }).join('');
+}
+
+function renderRewards(my){
+  const box = document.getElementById('rewards');
+  box.innerHTML = MILESTONES.map(ms=>{
+    const pct = Math.max(0, Math.min(100, Math.round((my.referrals/ms.need)*100)));
+    return `<div class="reward">
+      <div class="cap">Need: ${ms.need}</div>
+      <h4>${ms.label}</h4>
+      <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pct}"><i style="width:${pct}%"></i></div>
+      <p style="margin:8px 0 0; color:var(--mut)">Reward: <b>${ms.reward}</b></p>
+    </div>`
+  }).join('');
+}
+
+function renderTicker(){
+  const ul = document.querySelector('#ticker ul');
+  ul.innerHTML = '';
+  const recent = [...PLAYERS].sort(()=>Math.random()-.5).slice(0,8);
+  recent.forEach(p=>{
+    const li = document.createElement('li');
+    li.innerHTML = `✨ <b>${p.name}</b> just added <b>${Math.floor(Math.random()*3)+1}</b> referral(s)!`;
+    ul.appendChild(li);
+  });
+}
+
+function applyAll(){
+  // sort
+  const sort = document.getElementById('sort').value;
+  const list = [...PLAYERS];
+  list.sort((a,b)=>{
+    switch(sort){
+      case 'referrals-desc': return b.referrals - a.referrals;
+      case 'referrals-asc': return a.referrals - b.referrals;
+      case 'points-asc': return a.points - b.points;
+      case 'points-desc': return b.points - a.points;
+    }
+  });
+  // search
+  const q = document.getElementById('search').value.toLowerCase().trim();
+  const filtered = q ? list.filter(p => p.name.toLowerCase().includes(q) || p.id.toLowerCase().includes(q)) : list;
+  renderPodium(filtered);
+  renderRows(filtered);
+  const me = filtered.find(p=>p.id===MY_ID) || PLAYERS.find(p=>p.id===MY_ID);
+  if(me){
+    document.getElementById('myRank').textContent = '#' + (filtered.indexOf(me)+1);
+    document.getElementById('myPoints').textContent = fmt(me.points) + ' pts';
+    renderRewards(me);
+  }
+}
+
+/*********************
+ * INTERACTIVITY      *
+ *********************/
+// Copy link
+const copyBtn = document.getElementById('copyLinkBtn');
+copyBtn.addEventListener('click', async (e)=>{
+  try{ await navigator.clipboard.writeText(REF_LINK); }
+  catch(err){ /* fallback: select a hidden input */
+    const t = document.createElement('textarea'); t.value = REF_LINK; document.body.appendChild(t); t.select(); document.execCommand('copy'); t.remove();
+  }
+  const r = copyBtn.getBoundingClientRect();
+  boom(r.left + r.width/2, r.top + 10);
+  document.getElementById('copyCta').textContent = 'Copied!';
+  setTimeout(()=> document.getElementById('copyCta').textContent = 'Copy Link', 1200);
+});
+
+// Sort & search
+document.getElementById('sort').addEventListener('change', applyAll);
+['input','keyup','change'].forEach(ev=> document.getElementById('search').addEventListener(ev, applyAll));
+
+// Tabs (demo-only filtering)
+for(const t of document.querySelectorAll('.tab')){
+  t.addEventListener('click', ()=>{
+    document.querySelector('.tab.active')?.classList.remove('active');
+    t.classList.add('active');
+    CURRENT_TAB = t.dataset.tab;
+    if(CURRENT_TAB==='friends'){
+      // Fake: show a subset as friends
+      PLAYERS = seedPlayers(25); PLAYERS[5].id = MY_ID; PLAYERS[5].name='You'; PLAYERS[5].referrals=22; PLAYERS[5].points=2600;
+    }else if(CURRENT_TAB==='myrefs'){
+      // Fake: emphasize my rank
+      PLAYERS = seedPlayers(40); PLAYERS[2].id=MY_ID; PLAYERS[2].name='You'; PLAYERS[2].referrals=48; PLAYERS[2].points=5200;
+    }else{
+      PLAYERS = seedPlayers(60);
+    }
+    applyAll();
+  });
+}
+
+// Live micro updates (demo)
+setInterval(()=>{
+  // random player gains a referral
+  const idx = Math.floor(Math.random()*PLAYERS.length);
+  PLAYERS[idx].referrals += 1 + Math.floor(Math.random()*2);
+  PLAYERS[idx].points += 75 + Math.floor(Math.random()*100);
+  PLAYERS[idx].trend = Math.random()<.7? 1 : -1;
+  applyAll();
+}, 3500);
+
+// Ticker refresh
+renderTicker(); setInterval(renderTicker, 10000);
+
+// Language toggle (EN/PT)
+const lang = {
+  en: { title:'Live Ranking Board', global:'Global', friends:'Friends', my:'My Referrals', ends:'Ends in', copy:'Copy Link' },
+  pt: { title:'Ranking ao Vivo', global:'Global', friends:'Amigos', my:'Minhas Indicações', ends:'Termina em', copy:'Copiar Link' }
+};
+let langNow = 'en';
+const langBtn = document.getElementById('langBtn');
+langBtn.addEventListener('click', ()=>{
+  langNow = langNow==='en'?'pt':'en';
+  const L = lang[langNow];
+  document.getElementById('heroTitle').textContent = L.title;
+  document.getElementById('tabGlobal').textContent = L.global;
+  document.getElementById('tabFriends').textContent = L.friends;
+  document.getElementById('tabMy').textContent = L.my;
+  document.getElementById('copyCta').textContent = L.copy;
+});
+
+// Initial paint
+applyAll();
+</script>
+</body>
+</html>
