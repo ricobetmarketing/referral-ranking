@@ -1,459 +1,253 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Referral Race — Group Arena</title>
-<meta name="theme-color" content="#121125" />
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>Leaderboard App</title>
 <style>
   :root{
-    --bg:#0f1129; --card:#121125; --ring:#2a2e58; --ink:#f2f3ff; --mut:#c7cbff;
-    --g1:#ff6ec4; --g2:#7873f5; --a3:#78f3ff; --ok:#aef7c1; --warn:#ffd86a; --bad:#ff9bb3;
-    --shadow: 0 20px 60px rgba(0,0,0,.45); --radius:18px; --pad:16px; --row:64px;
+    --bg:#0c0c12; --panel:#141424; --panel2:#191932; --ink:#eaf0ff; --muted:#9aa4c7;
+    --pri1:#8457ff; --pri2:#a06bff; --pri3:#c28bff; --acc:#ffd86a; --good:#4be1a0;
+    --edge:rgba(255,255,255,.08); --glow:rgba(150,120,255,.25);
   }
-  *{box-sizing:border-box}
-  html,body{height:100%}
-  body{
-    margin:0; color:var(--ink); font-family:Inter,ui-sans-serif,system-ui,Segoe UI,Roboto,Arial;
-    background:
-      radial-gradient(1100px 700px at 85% -20%, rgba(120,115,245,.25), rgba(15,17,41,0) 60%),
-      radial-gradient(900px 600px at 10% 110%, rgba(255,110,196,.20), rgba(15,17,41,0) 55%),
-      linear-gradient(180deg, #0a0c1f 0%, #0e1027 100%);
-    overflow-x:hidden;
-  }
-  header{position:sticky;top:0;z-index:20;backdrop-filter: blur(12px);
-    background:linear-gradient(180deg, rgba(18,18,37,.92), rgba(18,18,37,.72)); border-bottom:1px solid var(--ring)}
-  .bar{max-width:1240px;margin:0 auto;padding:14px clamp(12px,3vw,28px);display:grid;grid-template-columns:1fr auto auto;gap:12px;align-items:center}
-  h1{margin:0;font-size:clamp(18px,3.2vw,32px);letter-spacing:.3px}
-  .grad{background:linear-gradient(90deg,var(--g1),var(--g2));-webkit-background-clip:text;background-clip:text;color:transparent}
-  .btn{appearance:none;border:1px solid var(--ring);background:#1b1e3a;color:var(--ink);border-radius:14px;padding:10px 14px;font-weight:700;display:inline-flex;gap:8px;align-items:center;cursor:pointer}
-  .btn.primary{background:linear-gradient(90deg,var(--g1),var(--g2));border-color:transparent}
-
-  .wrap{max-width:1240px;margin:0 auto;padding:18px clamp(12px,3vw,28px) 90px}
-
-  /* ====== STEP MODALS ====== */
-  dialog{border:1px solid var(--ring);background:linear-gradient(180deg,#16183a,#12122a);color:var(--ink);border-radius:20px;box-shadow:var(--shadow);padding:0;width:min(920px,94vw)}
-  dialog::backdrop{background:rgba(0,0,20,.65)}
-  .dlg-head{padding:16px;border-bottom:1px solid #2a2e58}
-  .dlg-body{padding:16px}
-  .grid-groups{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
-  .gcard{position:relative;border:1px solid var(--ring);background:linear-gradient(180deg,#181b3e,#12122b);border-radius:16px;padding:14px;box-shadow:var(--shadow)}
-  .gtitle{display:flex;align-items:center;gap:10px;font-weight:900}
-  .cap{font-size:12px;color:#b7c3ff}
-  .bar{height:10px;border-radius:10px;background:#0d0f23;border:1px solid var(--ring);overflow:hidden;margin-top:10px}
-  .bar>i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--g1),var(--g2))}
-  .gmeta{display:flex;justify-content:space-between;align-items:center;margin-top:10px}
-  .tag{font-size:11px;padding:4px 8px;border-radius:999px;background:#181b3c;border:1px solid #2d3160;color:#a9b7d8}
-  .gbtn{margin-left:auto}
-
-  .field{display:grid;gap:8px;margin:8px 0}
-  input[type="text"],select{height:48px;border-radius:14px;background:#13142b;border:1px solid #262a52;color:var(--ink);padding:0 14px}
-
-  /* ====== DASH ====== */
-  .tabs{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0 14px}
-  .tab{height:48px;padding:0 16px;border-radius:14px;background:#161636;border:1px solid #2a2e58;display:inline-flex;align-items:center;gap:10px;cursor:pointer}
-  .tab.active{background:linear-gradient(90deg, rgba(255,110,196,.22), rgba(120,115,245,.22)); box-shadow: inset 0 0 0 1px rgba(255,255,255,.08) }
-
-  .grid-2{display:grid;grid-template-columns:1.35fr .65fr;gap:16px}
-  @media (max-width:980px){ .grid-2{grid-template-columns:1fr} }
-  .card{background:linear-gradient(180deg,#16183a,#12122a);border:1px solid var(--ring);border-radius:18px;padding:var(--pad);box-shadow:var(--shadow)}
-  .board{margin-top:10px;border-radius:18px;overflow:hidden;border:1px solid #262a52}
-  .thead,.row{display:grid;grid-template-columns:64px 1fr .8fr .8fr;align-items:center}
-  .thead{height:52px;color:#9fb0d9;text-transform:uppercase;font-size:12px;letter-spacing:.4px;background:#15173a}
-  .row{height:var(--row);padding:0 12px;background:linear-gradient(180deg,#0f1129,#101233);border-top:1px solid #1a1e45}
-  .row:nth-child(odd){background:linear-gradient(180deg,#101233,#0f1129)}
-  .pos{font-weight:900;font-size:18px}
-  .user{display:flex;align-items:center;gap:12px}
-  .mini{width:40px;height:40px;border-radius:50%;border:2px solid #303767;background:#222645}
-  .pts{font-weight:900;font-size:18px}
-
-  .rewards{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
-  .reward{position:relative;padding:14px;border-radius:16px;background:linear-gradient(180deg,#181b3e,#12122b);border:1px solid var(--ring)}
-  .progress{height:10px;border-radius:10px;background:#0d0f23;border:1px solid var(--ring);overflow:hidden}
-  .progress>i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--g1),var(--g2))}
-  .capr{position:absolute;right:12px;top:12px;font-size:12px;color:#b7c3ff}
-
-  .groupsGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
-  .groupCard{position:relative;border:1px solid var(--ring);background:linear-gradient(180deg,#181b3e,#12122b);border-radius:16px;padding:14px}
-  .level{position:absolute;right:12px;top:12px;font-weight:900;background:#111436;border:1px solid #2a2e58;padding:4px 10px;border-radius:999px}
-  .tiny{font-size:12px;color:#9fb0d9}
-
-  .chip{position:fixed;right:14px;bottom:14px;background:#12122a;border:1px solid #2a2e58;border-radius:16px;padding:10px 14px;display:flex;gap:10px;align-items:center;box-shadow:var(--shadow)}
-  .dot{width:10px;height:10px;border-radius:50%;background:linear-gradient(180deg,#ffd86a,#a96b03)}
+  *{box-sizing:border-box} html,body{margin:0;height:100%;background:radial-gradient(1200px 700px at 50% -10%, #1a1b3a 0%, transparent 60%), linear-gradient(180deg,#0b0c1a,#070813);color:var(--ink);font:15px/1.5 Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;-webkit-tap-highlight-color:transparent}
+  .app{max-width:520px;margin:0 auto;min-height:100dvh;display:grid;grid-template-rows:auto 1fr auto}
+  /* Header */
+  header{position:sticky;top:0;background:linear-gradient(180deg,#10112a,#0c0d22);border-bottom:1px solid var(--edge);padding:12px 16px;z-index:10}
+  .hrow{display:flex;align-items:center;gap:10px}
+  .title{font-weight:900;font-size:18px;letter-spacing:.4px}
+  .seg{margin-top:10px;background:var(--panel2);border:1px solid var(--edge);padding:4px;border-radius:999px;display:inline-flex;gap:4px}
+  .seg button{appearance:none;border:0;background:transparent;color:var(--muted);padding:8px 12px;border-radius:999px;font-weight:800;cursor:pointer}
+  .seg button.active{background:linear-gradient(180deg,var(--pri2),var(--pri1));color:#fff;box-shadow:0 2px 10px var(--glow)}
+  /* Content */
+  main{padding:14px 14px 80px}
+  .card{background:linear-gradient(180deg,#151533,#10112a);border:1px solid var(--edge);border-radius:16px;padding:14px}
+  .card + .card{margin-top:12px}
+  h3{margin:0 0 10px;font-size:16px}
+  p{margin:0 0 8px;color:#cbd5ff}
+  .muted{color:var(--muted)}
+  /* Podium (purple theme) */
+  .podiumWrap{position:relative;border-radius:20px;background:linear-gradient(180deg,#c9b3ff,#9f84ff);border:1px solid rgba(255,255,255,.5);box-shadow:0 30px 80px rgba(0,0,0,.45);overflow:hidden}
+  .cap{position:absolute;top:8px;left:0;right:0;text-align:center;color:#2b135f;font-size:11px;font-weight:900;letter-spacing:.4px}
+  .podium{display:grid;grid-template-columns:1fr 1.2fr 1fr;gap:8px;align-items:end;padding:56px 10px 8px}
+  .step{position:relative;border-radius:14px;background:linear-gradient(180deg,#e9deff,#cabaff);border:1px solid rgba(80,40,140,.25);box-shadow:inset 0 -12px 18px rgba(80,40,140,.18),0 8px 18px rgba(0,0,0,.15);padding:8px 6px 10px;display:grid;place-items:center}
+  .s1{height:96px}.s2{height:78px}.s3{height:74px}
+  .rankDot{position:absolute;top:-18px;left:50%;transform:translateX(-50%);width:52px;height:52px;border-radius:50%;display:grid;place-items:center;font-weight:900;color:#2b135f;background:radial-gradient(circle at 35% 30%, #fff 0%, #ffe5a6 50%, #ffc44d 70%);border:2px solid rgba(0,0,0,.08);box-shadow:0 6px 14px rgba(0,0,0,.25)}
+  .avatar{position:absolute;top:-56px;left:50%;transform:translateX(-50%);width:68px;height:68px;border-radius:50%;border:3px solid #fff;box-shadow:0 8px 20px rgba(0,0,0,.35);background:#fff center/cover no-repeat}
+  .name{margin-top:16px;font-weight:900;color:#2b135f;font-size:12px;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  /* Rank list */
+  .search{display:grid;grid-template-columns:1fr auto;gap:8px}
+  .input{border-radius:12px;border:1px solid var(--edge);background:#0f1030;color:#eff3ff;padding:10px 12px}
+  .btn{appearance:none;border:0;border-radius:12px;background:linear-gradient(180deg,var(--pri2),var(--pri1));color:#fff;font-weight:900;padding:10px 12px;cursor:pointer}
+  .table{border:1px solid var(--edge);border-radius:14px;overflow:hidden;margin-top:10px}
+  .th,.tr{display:grid;grid-template-columns:60px 1fr 110px;gap:8px;align-items:center}
+  .th{background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.03));padding:8px 10px;color:#dfe6ff;font-weight:800}
+  .tr{background:linear-gradient(180deg,#0f1133,#0c1030);border-top:1px solid #0a0e28;padding:8px 10px}
+  .rk{display:inline-flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:50%;font-weight:900;background:radial-gradient(circle at 35% 30%, #fff, #ffe5a6 55%, #ffc44d 70%);color:#3a2a00;border:2px solid rgba(0,0,0,.06)}
+  .rk.silver{background:radial-gradient(circle at 35% 30%, #fff, #eef3ff 55%, #d7e5ff 70%);color:#243152}
+  .rk.bronze{background:radial-gradient(circle at 35% 30%, #fff, #ffd8b3 55%, #e7a86f 70%);color:#4a2c12}
+  .user{display:flex;align-items:center;gap:10px}
+  .face{width:38px;height:38px;border-radius:50%;background:#eee center/cover no-repeat;border:2px solid #fff22}
+  .points{justify-self:end;font-weight:900}
+  .me{outline:2px solid var(--good);box-shadow:0 0 0 4px rgba(75,225,160,.2)}
+  /* Tabs (bottom) */
+  nav{position:sticky;bottom:0;background:linear-gradient(180deg,#10112a,#0b0c1f);border-top:1px solid var(--edge);padding:8px 10px}
+  .tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  .tab{appearance:none;border:1px solid var(--edge);background:var(--panel2);color:#cdd7ff;border-radius:12px;padding:10px 8px;font-weight:800}
+  .tab.active{background:linear-gradient(180deg,var(--pri2),var(--pri1));color:#fff;box-shadow:0 6px 18px var(--glow)}
+  /* FAQ/Details */
+  details{background:var(--panel2);border:1px solid var(--edge);border-radius:12px;padding:10px}
+  details+details{margin-top:8px}
+  summary{cursor:pointer;font-weight:800}
 </style>
 </head>
 <body>
-<header>
-  <div class="bar">
-    <div>
-      <div style="font-size:12px;color:#9fb0d9">Referral Race</div>
-      <h1><span class="grad">Group Arena — Pick Your Squad</span></h1>
+<div class="app">
+  <header>
+    <div class="hrow">
+      <div class="title" id="hdrTitle">Leaderboard</div>
     </div>
-    <button class="btn" id="copyBtn">🔗 Copy Referral Link</button>
-    <button class="btn primary" id="timerBtn">Ends in 00:00:00</button>
-  </div>
-</header>
-
-<div class="wrap">
-  <!-- DASH TABS -->
-  <div class="tabs" role="tablist">
-    <button class="tab active" data-tab="overview">🗺️ Overview</button>
-    <button class="tab" data-tab="global">🌐 Global Leaderboard</button>
-    <button class="tab" data-tab="mygroup">👥 My Group</button>
-    <button class="tab" data-tab="rewards">🎁 Rewards</button>
-  </div>
-
-  <!-- OVERVIEW -->
-  <section class="card" id="view-overview">
-    <h3 style="margin:0 0 8px">Choose a Group</h3>
-    <p style="margin:0 0 12px;color:var(--mut)">Each group holds up to <b>100 players</b>. Your personal ranking is global; your team also competes for group rewards.</p>
-    <div class="groupsGrid" id="groupsGrid"></div>
-  </section>
-
-  <!-- GLOBAL + GROUP PANELS -->
-  <section class="grid-2" id="view-boards" style="display:none">
-    <div class="card">
-      <h3 style="margin:0">Global Leaderboard</h3>
-      <div class="board">
-        <div class="thead"><div>#</div><div>Player</div><div>Referrals</div><div>Points</div></div>
-        <div id="globalRows"></div>
-      </div>
+    <!-- Segment only visible on RANKS -->
+    <div class="seg" id="rangeSeg" style="display:none">
+      <button data-range="daily" class="active">Daily</button>
+      <button data-range="monthly">Monthly</button>
+      <button data-range="all">All time</button>
     </div>
-    <aside class="card">
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <h3 style="margin:0">My Group</h3>
-        <div class="tiny" id="groupMeta"></div>
-      </div>
-      <div class="board" style="margin-top:8px">
-        <div class="thead"><div>#</div><div>Player</div><div>Referrals</div><div>Points</div></div>
-        <div id="groupRows"></div>
-      </div>
-    </aside>
-  </section>
+  </header>
 
-  <!-- REWARDS -->
-  <section class="grid-2" id="view-rewards" style="display:none">
-    <div class="card">
-      <h3 style="margin:0 0 8px">Personal Rewards (Global)</h3>
-      <p style="margin:0 0 12px;color:var(--mut)">Based on your <b>global points</b> across all groups.</p>
-      <div class="rewards" id="personalRewards"></div>
+  <main id="view">
+    <!-- Views injected by JS -->
+  </main>
+
+  <nav>
+    <div class="tabs">
+      <button class="tab active" data-tab="home">Home</button>
+      <button class="tab" data-tab="ranks">Ranks</button>
+      <button class="tab" data-tab="terms">T&amp;C</button>
+      <button class="tab" data-tab="community">Community</button>
     </div>
-    <aside class="card">
-      <h3 style="margin:0 0 8px">Group Rewards</h3>
-      <p style="margin:0 0 12px;color:var(--mut)">Based on your <b>group total points</b> vs levels.</p>
-      <div class="rewards" id="teamRewards"></div>
-    </aside>
-  </section>
+  </nav>
 </div>
-
-<!-- Floating chip -->
-<div class="chip" id="meChip" aria-live="polite" style="display:none">
-  <span class="dot"></span>
-  <span><b id="meRank">#—</b> • <span id="mePts">0 pts</span> • <span id="meGroup">Group ?</span></span>
-</div>
-
-<!-- DIALOGS -->
-<dialog id="dlgGroups">
-  <div class="dlg-head"><b>Select a Group (Max 100 per group)</b></div>
-  <div class="dlg-body">
-    <div class="grid-groups" id="dlgGroupList"></div>
-  </div>
-</dialog>
-
-<dialog id="dlgJoin">
-  <div class="dlg-head"><b>Join Group</b></div>
-  <div class="dlg-body">
-    <div class="field">
-      <label for="username">Username (public)</label>
-      <input id="username" type="text" maxlength="24" placeholder="Enter your username"/>
-    </div>
-    <div class="field">
-      <label for="groupPick">Group</label>
-      <select id="groupPick"></select>
-    </div>
-    <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:8px">
-      <button class="btn" id="cancelJoin">Cancel</button>
-      <button class="btn primary" id="confirmJoin">Join</button>
-    </div>
-  </div>
-</dialog>
 
 <script>
-/**************** CONFIG + DEMO DB ****************/
-const GROUPS = [
-  { id:'alpha',  name:'Alpha',   emoji:'🅰️', color:'#8e8cff' },
-  { id:'bravo',  name:'Bravo',   emoji:'🅱️', color:'#ff8cbd' },
-  { id:'cosmo',  name:'Cosmo',   emoji:'🪐', color:'#78f3ff' },
-  { id:'delta',  name:'Delta',   emoji:'🔺', color:'#ffd86a' },
-  { id:'ember',  name:'Ember',   emoji:'🔥', color:'#ff9b7a' },
-];
-const GROUP_CAP = 100;
-const PERSONAL_TIERS = [
-  {need:500, reward:'10 Free Spins'},
-  {need:1500, reward:'1 Lucky Sweet Spin'},
-  {need:3000, reward:'30 Free Spins'},
-  {need:6000, reward:'VIP Mystery Box'},
-];
-const GROUP_LEVELS = [
-  {need: 20000, label:'Level 1', reward:'All members: 5 FS'},
-  {need: 60000, label:'Level 2', reward:'All members: 1 Sweet Spin'},
-  {need:120000, label:'Level 3', reward:'All members: 20 FS'},
-  {need:240000, label:'Level 4', reward:'All members: VIP Box'},
-];
-
-// Simulated DB
-let DB = {
-  players: [], // {id, name, groupId, points, referrals, avatar}
+/* ================= CONFIG (Sheets optional) ================= */
+const USE_SHEETS = false; // set true to use Google Sheets
+const SHEET_ID   = "YOUR_SHEET_ID";      // if USE_SHEETS=true
+const SHEET_NAME = "Leaderboard";        // required tab
+const MAP = {
+  username:["username","user","player","name"],
+  score:["score","points","turnover","referrals","total"],
+  avatar:["avatarurl","avatar","image","img","icon","photo"],
 };
-
-/********** SEED DATA (demo) **********/
-function randName(){
-  const names = 'Nova,Ace,Rio,Mika,Sol,Jet,Skye,Zee,Luna,Max,Axel,Zara,Milo,Kai,Noah,Ava,Theo,Lex,Juno,Nyx'.split(',');
-  const n = names[Math.floor(Math.random()*names.length)];
-  return n + (Math.random()<.5? ''+Math.floor(Math.random()*90):'');
+const DAILY   = [{username:'Masuma',score:1490,avatar:''},{username:'Hasan Sajjad',score:1800,avatar:''},{username:'Tanim',score:1205,avatar:''},{username:'Sadia Afrin',score:1000,avatar:''},{username:'Rejaul karim',score:900,avatar:''},{username:'Hasnat',score:800,avatar:''},{username:'Nishat jahan',score:750,avatar:''},{username:'Sajjad (YOU)',score:720,avatar:''}];
+const MONTHLY = DAILY.map((x,i)=>({...x,score:Math.round(x.score*3.2 - i*20)}));
+const ALL     = DAILY.map((x,i)=>({...x,score:Math.round(x.score*7.1 - i*50)}));
+/* ================= UTIL ================= */
+const $ = (sel, el=document)=> el.querySelector(sel);
+const $$= (sel, el=document)=> [...el.querySelectorAll(sel)];
+function fmt(n){ return Number(n||0).toLocaleString(); }
+function esc(s){ return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[m]); }
+function faceBg(url){ return url? `url("${url}")` : `url('data:image/svg+xml;utf8,${encodeURIComponent(svgAvatar())}')`; }
+function svgAvatar(){return `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0%' stop-color='%23ffd1ff'/><stop offset='100%' stop-color='%238857ff'/></linearGradient></defs><rect width='64' height='64' rx='16' fill='url(%23g)'/><circle cx='32' cy='26' r='12' fill='white' opacity='.9'/><rect x='14' y='40' width='36' height='16' rx='8' fill='white' opacity='.9'/></svg>`; }
+function pickIndex(headers, aliases){ const L=headers.map(h=>String(h||'').toLowerCase()); for(const a of aliases){const i=L.findIndex(h=>h.includes(a)); if(i>-1) return i;} return -1; }
+/* ================= SHEETS (optional) ================= */
+async function fetchGViz(){
+  const url=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
+  const res=await fetch(url,{cache:'no-store'}); const text=await res.text();
+  const jsonStr=text.match(/google\.visualization\.Query\.setResponse\((.*)\);?/s)?.[1];
+  if(!jsonStr) throw new Error('GViz JSON parse failed');
+  const data=JSON.parse(jsonStr); const headers=data.table.cols.map(c=>c.label||c.id||"");
+  const rows=data.table.rows.filter(r=>r&&r.c).map(r=> r.c.map(c=> c ? (c.f ?? c.v):""));
+  const ui=pickIndex(headers, MAP.username), si=pickIndex(headers, MAP.score), ai=pickIndex(headers, MAP.avatar);
+  return rows.map(r=>({username:String(r[ui]??'').trim(), score:Number(String(r[si]).replace(/[^\d.\-]/g,''))||0, avatar:(ai>-1? String(r[ai]??'').trim():'')})).filter(x=>x.username);
 }
-function seedPlayers(){
-  DB.players = [];
-  GROUPS.forEach(g=>{
-    const count = Math.floor(40 + Math.random()*40); // 40-80 members
-    for(let i=0;i<count;i++){
-      const name = randName();
-      const refs = Math.floor(Math.random()*120);
-      const pts = refs*100 + Math.floor(Math.random()*600);
-      DB.players.push({
-        id: g.id + '-' + (1000+i),
-        name,
-        groupId: g.id,
-        points: pts,
-        referrals: refs,
-        avatar: `https://api.dicebear.com/7.x/pixel-art/svg?seed=${encodeURIComponent(name)}`,
-      });
-    }
-  });
-}
-seedPlayers();
+/* ================= VIEWS ================= */
+const state = { tab:'home', range:'daily', data:{daily:DAILY, monthly:MONTHLY, all:ALL} };
 
-/********** STATE **********/
-let me = JSON.parse(localStorage.getItem('rr_me')||'null'); // {id, name, groupId}
+function render(){
+  // header title + segment visibility
+  $('#hdrTitle').textContent = state.tab==='ranks' ? 'Leaderboard' :
+                               state.tab==='terms' ? 'Terms & FAQ' :
+                               state.tab==='community' ? 'Community' : 'Event';
+  $('#rangeSeg').style.display = state.tab==='ranks' ? 'inline-flex' : 'none';
+  $$('.tab').forEach(btn=> btn.classList.toggle('active', btn.dataset.tab===state.tab));
+  $$('#rangeSeg button').forEach(b=> b.classList.toggle('active', b.dataset.range===state.range));
 
-/********** UTIL **********/
-const $ = s=>document.querySelector(s);
-function fmt(n){return (n||0).toLocaleString();}
-function groupStats(gid){
-  const members = DB.players.filter(p=>p.groupId===gid);
-  const total = members.reduce((a,b)=>a+b.points,0);
-  const refs = members.reduce((a,b)=>a+b.referrals,0);
-  return {members: members.length, total, refs};
-}
-function groupLevel(total){
-  let lvl = 0; for(const [i,l] of GROUP_LEVELS.entries()){ if(total>=l.need) lvl=i+1; }
-  return lvl;
+  if(state.tab==='home') return renderHome();
+  if(state.tab==='ranks') return renderRanks();
+  if(state.tab==='terms') return renderTerms();
+  if(state.tab==='community') return renderCommunity();
 }
 
-/********** HEADER TIMER **********/
-const END = new Date(Date.now() + 1000*60*60*24*4 + 1000*60*30);
-function tickTimer(){
-  const d = END - Date.now(); if(d<=0){ $('#timerBtn').textContent='Race finished'; return }
-  const h=Math.floor(d/3.6e6), m=Math.floor((d%3.6e6)/6e4), s=Math.floor((d%6e4)/1e3);
-  $('#timerBtn').textContent = `Ends in ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+function renderHome(){
+  $('#view').innerHTML = `
+    <div class="card">
+      <h3>Event details</h3>
+      <p><b>When:</b> Daily/Monthly competition. Scores reset daily at 00:00.</p>
+      <p><b>How to win:</b> Earn points by completing tasks and quizzes.</p>
+      <p><b>Rewards:</b> Top 10 daily, bigger prizes monthly. Winners announced in-app.</p>
+      <p class="muted">Tip: Invite friends to earn bonus points!</p>
+    </div>
+    <div class="card">
+      <h3>Today’s highlights</h3>
+      <p>🔥 Double points on quizzes from 6–8 PM.</p>
+      <p>🎯 Streak bonus +15 for 5 days in a row.</p>
+    </div>`;
 }
-setInterval(tickTimer,1000); tickTimer();
 
-/********** GROUP CARDS (Overview) **********/
-function renderGroups(){
-  const box = $('#groupsGrid'); box.innerHTML='';
-  GROUPS.forEach(g=>{
-    const {members,total,refs} = groupStats(g.id);
-    const capPct = Math.round((members/GROUP_CAP)*100);
-    const lvl = groupLevel(total);
-    const card = document.createElement('article');
-    card.className='groupCard';
-    card.innerHTML = `
-      <div class="level">LV ${lvl}</div>
-      <div class="gtitle" style="gap:10px">
-        <span style="font-size:22px">${g.emoji}</span>
-        <div>
-          <div style="font-weight:900">${g.name}</div>
-          <div class="tiny">${fmt(members)}/${GROUP_CAP} players • ${fmt(refs)} refs</div>
-        </div>
+function renderRanks(){
+  const items = state.data[state.range].slice().sort((a,b)=> b.score-a.score);
+  const [first,second,third] = [items[0],items[1],items[2]];
+  $('#view').innerHTML = `
+    <div class="podiumWrap">
+      <div class="cap">${state.range.charAt(0).toUpperCase()+state.range.slice(1)} Podium</div>
+      <div class="podium">
+        <div class="step s2"><div class="rankDot">2</div><div class="avatar" id="p2a"></div><div class="name" id="p2n">—</div></div>
+        <div class="step s1"><div class="rankDot">1</div><div class="avatar" id="p1a"></div><div class="name" id="p1n">—</div></div>
+        <div class="step s3"><div class="rankDot">3</div><div class="avatar" id="p3a"></div><div class="name" id="p3n">—</div></div>
       </div>
-      <div style="margin-top:10px" class="tiny">Team points</div>
-      <div class="bar" title="${fmt(total)} pts"><i style="width:${Math.min(100,(total/GROUP_LEVELS.at(-1).need)*100)}%"></i></div>
-      <div style="display:flex;gap:8px;align-items:center;justify-content:space-between;margin-top:10px">
-        <span class="tag">${fmt(total)} pts</span>
-        <button class="btn" data-join="${g.id}" ${members>=GROUP_CAP? 'disabled':''}>${members>=GROUP_CAP?'Full':'Join'}</button>
+    </div>
+
+    <div class="card" style="margin-top:12px">
+      <div class="search">
+        <input id="searchName" class="input" placeholder="Search username…"/>
+        <button class="btn" id="findBtn">Find</button>
       </div>
-    `;
-    box.appendChild(card);
+      <div class="table" style="margin-top:10px">
+        <div class="th"><div>Rank</div><div>Player</div><div>Points</div></div>
+        <div id="tbody"></div>
+      </div>
+      <div id="meSpot" class="card" style="display:none;margin-top:10px;background:#10203e">
+        <div id="meText" class="muted">Your position</div>
+      </div>
+    </div>`;
+
+  // fill podium
+  const set = (id, row)=>{ $(`#${id}a`).style.backgroundImage=faceBg(row?.avatar||''); $(`#${id}n`).textContent=row?.username||'—'; };
+  set('p1',first); set('p2',second); set('p3',third);
+
+  // list
+  const body = $('#tbody'); body.innerHTML='';
+  items.forEach((r,i)=>{
+    const tr=document.createElement('div'); tr.className='tr'; tr.dataset.user=r.username.toLowerCase();
+    const place=i+1, cls = place===2?'silver':place===3?'bronze':'';
+    tr.innerHTML = `<div class="rk ${cls}">${place<=3?(place===1?'1st':place===2?'2nd':'3rd'):place}</div>
+      <div class="user"><div class="face" style="background-image:${faceBg(r.avatar)}"></div><div>${esc(r.username)}</div></div>
+      <div class="points">${fmt(r.score)} pts</div>`;
+    body.appendChild(tr);
   });
+
+  // search
+  $('#findBtn').onclick = ()=>{
+    const val=$('#searchName').value.trim().toLowerCase();
+    if(!val) return;
+    const idx=items.findIndex(x=>x.username.toLowerCase()===val);
+    if(idx<0){ $('#meText').textContent='No match found.'; $('#meSpot').style.display='block'; return; }
+    const place=idx+1, row=items[idx];
+    $('#meText').innerHTML = `<b>${esc(row.username)}</b> — Rank <b>${place}</b> • ${fmt(row.score)} pts`;
+    $('#meSpot').style.display='block';
+    const hit=$(`.tr[data-user="${val}"]`); if(hit){ hit.classList.add('me'); hit.scrollIntoView({behavior:'smooth',block:'center'}); setTimeout(()=>hit.classList.remove('me'),1600); }
+  };
 }
 
-/********** DIALOG LOGIC **********/
-const dlgGroups = $('#dlgGroups');
-const dlgJoin = $('#dlgJoin');
-function openJoinDialog(defaultGroup){
-  // Fill options
-  const sel = $('#groupPick'); sel.innerHTML='';
-  GROUPS.forEach(g=>{
-    const m = groupStats(g.id).members; if(m>=GROUP_CAP && g.id!==defaultGroup) return;
-    const opt = document.createElement('option'); opt.value=g.id; opt.textContent = `${g.name} (${m}/${GROUP_CAP})`;
-    if(g.id===defaultGroup) opt.selected=true;
-    sel.appendChild(opt);
-  });
-  $('#username').value = me?.name || '';
-  dlgJoin.showModal();
+function renderTerms(){
+  $('#view').innerHTML = `
+    <div class="card">
+      <h3>Terms & Conditions</h3>
+      <p>1) Points are earned by in-app activities. 2) Anti-fraud filters apply. 3) We may change rewards with notice.</p>
+      <p>By participating, you agree to these terms.</p>
+    </div>
+    <div class="card">
+      <h3>FAQ</h3>
+      <details><summary>How often is the leaderboard updated?</summary><p>Live; values are refreshed whenever you open the Ranks tab.</p></details>
+      <details><summary>When are rewards paid?</summary><p>Daily winners paid within 24h, monthly within 3 days.</p></details>
+      <details><summary>Can I change my username?</summary><p>Yes, from your profile; rank history stays attached.</p></details>
+    </div>`;
 }
 
-// Overview join buttons
-addEventListener('click', (e)=>{
-  const t = e.target.closest('[data-join]'); if(!t) return;
-  if(me){ alert('You have already joined: '+me.groupId); return; }
-  openJoinDialog(t.dataset.join);
-});
+function renderCommunity(){
+  $('#view').innerHTML = `
+    <div class="card"><h3>Join the community</h3>
+      <p><a href="#" class="muted">Telegram</a> • <a href="#" class="muted">Discord</a> • <a href="#" class="muted">X / Twitter</a></p>
+      <p>Share tips, meet players, and get event announcements first.</p>
+    </div>`;
+}
 
-$('#cancelJoin').addEventListener('click', ()=> dlgJoin.close());
-$('#confirmJoin').addEventListener('click', ()=>{
-  const name = ($('#username').value||'').trim();
-  const gid = $('#groupPick').value;
-  if(!name || name.length<2){ alert('Please enter a valid username (min 2 chars).'); return; }
-  const exists = DB.players.some(p=>p.name.toLowerCase()===name.toLowerCase());
-  if(exists){ if(!confirm('This username exists. Use anyway?')) return; }
-  const m = groupStats(gid).members; if(m>=GROUP_CAP){ alert('Group is full. Pick another.'); return; }
-  // create player
-  const id = 'you';
-  const avatar = `https://api.dicebear.com/7.x/pixel-art/svg?seed=${encodeURIComponent(name)}`;
-  DB.players.push({ id, name, groupId: gid, points: 0, referrals: 0, avatar });
-  me = { id, name, groupId: gid };
-  localStorage.setItem('rr_me', JSON.stringify(me));
-  dlgJoin.close();
-  afterJoin();
-});
+/* ================= NAV & RANGE ================= */
+$$('.tab').forEach(btn=> btn.onclick = ()=>{ state.tab = btn.dataset.tab; render(); });
+$$('#rangeSeg button').forEach(btn=> btn.onclick = ()=>{ state.range = btn.dataset.range; render(); });
 
-/********** POST-JOIN DASH **********/
-function renderLeaderboards(){
-  // global
-  const gl = [...DB.players].sort((a,b)=>b.points-a.points).slice(0,50);
-  const gRows = $('#globalRows'); gRows.innerHTML='';
-  gl.forEach((p,i)=>{
-    const el = document.createElement('div'); el.className='row'; if(me && p.id===me.id) el.style.background='linear-gradient(90deg, rgba(255,110,196,.10), rgba(120,115,245,.10))';
-    el.innerHTML = `<div class="pos">${i+1}</div>
-      <div class="user"><img class="mini" src="${p.avatar}"><div><b>${p.name}</b><div style="font-size:11px;opacity:.8">ID: ${p.id}</div></div></div>
-      <div class="pts">${fmt(p.referrals)}</div>
-      <div class="pts">${fmt(p.points)}</div>`;
-    gRows.appendChild(el);
-  });
-
-  // group
-  if(me){
-    const my = DB.players.filter(p=>p.groupId===me.groupId).sort((a,b)=>b.points-a.points);
-    const box = $('#groupRows'); box.innerHTML='';
-    my.forEach((p,i)=>{
-      const el = document.createElement('div'); el.className='row'; if(p.id===me.id) el.style.background='linear-gradient(90deg, rgba(255,110,196,.10), rgba(120,115,245,.10))';
-      el.innerHTML = `<div class="pos">${i+1}</div>
-        <div class="user"><img class="mini" src="${p.avatar}"><div><b>${p.name}</b><div style="font-size:11px;opacity:.8">ID: ${p.id}</div></div></div>
-        <div class="pts">${fmt(p.referrals)}</div>
-        <div class="pts">${fmt(p.points)}</div>`;
-      box.appendChild(el);
-    });
-
-    const gs = groupStats(me.groupId);
-    $('#groupMeta').textContent = `${gs.members}/${GROUP_CAP} players • ${fmt(gs.total)} pts • ${fmt(gs.refs)} refs`;
+/* ================= BOOT ================= */
+(async function(){
+  if(USE_SHEETS){
+    try{
+      const rows = await fetchGViz();
+      // If your sheet has separate tabs for daily/monthly/all, fetch each; here we just use one
+      state.data.daily = rows; state.data.monthly = rows; state.data.all = rows;
+    }catch(e){ console.warn('Sheets fetch failed, using sample.', e); }
   }
-}
-
-function renderRewards(){
-  if(!me) return;
-  const mine = DB.players.find(p=>p.id===me.id);
-  // Personal
-  const pBox = $('#personalRewards'); pBox.innerHTML='';
-  PERSONAL_TIERS.forEach(t=>{
-    const pct = Math.max(0, Math.min(100, Math.round((mine.points/t.need)*100)));
-    const card = document.createElement('div'); card.className='reward';
-    card.innerHTML = `<div class="capr">Need: ${fmt(t.need)}</div>
-      <h4 style="margin:0 0 8px">${t.reward}</h4>
-      <div class="progress"><i style="width:${pct}%"></i></div>
-      <p style="margin:8px 0 0;color:var(--mut)">${fmt(mine.points)} / ${fmt(t.need)} pts</p>`;
-    pBox.appendChild(card);
-  });
-
-  // Group
-  const gBox = $('#teamRewards'); gBox.innerHTML='';
-  const gs = groupStats(me.groupId);
-  GROUP_LEVELS.forEach(l=>{
-    const pct = Math.max(0, Math.min(100, Math.round((gs.total/l.need)*100)));
-    const card = document.createElement('div'); card.className='reward';
-    card.innerHTML = `<div class="capr">Target: ${fmt(l.need)}</div>
-      <h4 style="margin:0 0 8px">${l.label} — ${l.reward}</h4>
-      <div class="progress"><i style="width:${pct}%"></i></div>
-      <p style="margin:8px 0 0;color:var(--mut)">${fmt(gs.total)} / ${fmt(l.need)} pts</p>`;
-    gBox.appendChild(card);
-  });
-}
-
-function afterJoin(){
-  renderGroups();
-  renderLeaderboards();
-  renderRewards();
-  if(me){
-    $('#view-overview').style.display='none';
-    $('#view-boards').style.display='grid';
-    $('#view-rewards').style.display='grid';
-    $('#meChip').style.display='flex';
-    const mine = DB.players.find(p=>p.id===me.id);
-    const gl = [...DB.players].sort((a,b)=>b.points-a.points);
-    $('#meRank').textContent = '#' + (gl.findIndex(p=>p.id===me.id)+1);
-    $('#mePts').textContent = fmt(mine.points) + ' pts';
-    $('#meGroup').textContent = 'Group ' + me.groupId;
-    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-    document.querySelector('[data-tab="global"]').classList.add('active');
-    showTab('global');
-  }
-}
-
-/********** TABS **********/
-function showTab(key){
-  $('#view-overview').style.display = key==='overview' ? 'block':'none';
-  $('#view-boards').style.display   = (key==='global'||key==='mygroup') ? 'grid':'none';
-  $('#view-rewards').style.display  = key==='rewards' ? 'grid':'none';
-}
-for(const t of document.querySelectorAll('.tab')){
-  t.addEventListener('click', ()=>{
-    document.querySelector('.tab.active')?.classList.remove('active');
-    t.classList.add('active');
-    showTab(t.dataset.tab);
-  });
-}
-
-/********** COPY LINK **********/
-const REF_LINK = (location.origin||'https://your-domain') + '/?ref=VIP123';
-$('#copyBtn').addEventListener('click', async ()=>{
-  try{ await navigator.clipboard.writeText(REF_LINK); }catch(e){ const ta=document.createElement('textarea'); ta.value=REF_LINK; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); }
-  const b=$('#copyBtn'); b.textContent='✅ Copied!'; setTimeout(()=>b.textContent='🔗 Copy Referral Link',1200);
-});
-
-/********** LIVE DEMO UPDATES **********/
-setInterval(()=>{
-  // Random player earns points/ref
-  const i = Math.floor(Math.random()*DB.players.length); const p = DB.players[i];
-  const gain = 60 + Math.floor(Math.random()*140); p.points += gain; p.referrals += Math.random()<.4 ? 1 : 0;
-  // Repaint if dashboards visible
-  renderGroups();
-  if(me){ renderLeaderboards(); renderRewards(); }
-}, 3200);
-
-/********** INIT **********/
-renderGroups();
-if(!me){
-  // Encourage selection by opening dialog (optional)
-  // $('#dlgGroups').showModal(); // keep closed by default; overview shows cards already
-}else{
-  // Ensure the stored player exists (for demo) or re-create
-  const have = DB.players.find(p=>p.id===me.id);
-  if(!have){
-    DB.players.push({ id: me.id, name: me.name, groupId: me.groupId, points: 0, referrals: 0, avatar:`https://api.dicebear.com/7.x/pixel-art/svg?seed=${encodeURIComponent(me.name)}` });
-  }
-  afterJoin();
-}
+  render();
+})();
 </script>
 </body>
 </html>
