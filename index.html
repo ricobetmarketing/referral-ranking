@@ -12,8 +12,14 @@
     --acc:#ffd86a; --good:#4be1a0;
   }
   *{box-sizing:border-box}
-  html,body{margin:0;height:100%;background:radial-gradient(1000px 700px at 50% -10%, #1b1c3f 0%, transparent 60%), linear-gradient(180deg,#0b0c1a,#070813);color:var(--ink);font:15px/1.5 Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;-webkit-tap-highlight-color:transparent}
-  .app{max-width:520px;margin:0 auto;min-height:100dvh;display:grid;grid-template-rows:auto 1fr auto}
+
+  /* ====== IMPORTANT: kill sideways scroll ====== */
+  html,body{margin:0;height:100%;overflow-x:hidden;
+    background:radial-gradient(1000px 700px at 50% -10%, #1b1c3f 0%, transparent 60%),
+               linear-gradient(180deg,#0b0c1a,#070813);
+    color:var(--ink);font:15px/1.5 Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    -webkit-tap-highlight-color:transparent}
+  .app{max-width:520px;margin:0 auto;min-height:100dvh;display:grid;grid-template-rows:auto 1fr auto;overflow-x:hidden}
 
   /* Header */
   header{position:sticky;top:0;background:linear-gradient(180deg,#10112a,#0d0e23);border-bottom:1px solid var(--edge);padding:12px 16px;z-index:20}
@@ -28,23 +34,24 @@
   p{margin:0 0 8px;color:#dfe5ff}
 
   /* ====== RANKING (namespaced .rr) ====== */
-  .rr { --ink:#2b2350; --gold:#ffcf5a; --silver:#dbe6ff; --bronze:#ffd9b3; }
+  .rr{--ink:#2b2350; --gold:#ffcf5a; --silver:#dbe6ff; --bronze:#ffd9b3; width:100%}
+  .rr *{box-sizing:border-box}
   .rr .controls{display:flex;align-items:center;gap:8px}
-  .rr .select, .rr .wbtn{appearance:none;border:0;border-radius:10px;padding:9px 10px;font-weight:800}
+  .rr .select,.rr .wbtn{appearance:none;border:0;border-radius:10px;padding:9px 10px;font-weight:800}
   .rr .select{background:#ffffffbf;color:#2d1b55}
   .rr .wbtn{background:#ffd86a;color:#3a2400;box-shadow:0 4px 0 rgba(0,0,0,.12);cursor:pointer}
   .rr .wbtn:active{transform:translateY(1px);box-shadow:0 2px 0 rgba(0,0,0,.12)}
 
-  .rr .podiumCard{margin-top:12px;border-radius:22px;padding:16px 12px 12px;
+  .rr .podiumCard{margin-top:12px;border-radius:22px;padding:16px 12px 12px;width:100%;
     background:linear-gradient(180deg,#f0e6ff,#f9f1ff);border:1px solid rgba(255,255,255,.55);
-    color:var(--ink);box-shadow:0 24px 60px rgba(36,18,66,.35)}
+    color:var(--ink);box-shadow:0 24px 60px rgba(36,18,66,.35);overflow:hidden}
   .rr .cap{display:flex;justify-content:center;gap:10px;align-items:center;color:#876dc9;
     font-weight:900;font-size:12px;letter-spacing:.4px;margin-bottom:10px}
-  .rr .podium{display:grid;grid-template-columns:1fr 1.2fr 1fr;gap:10px;align-items:end}
+  .rr .podium{display:grid;grid-template-columns:1fr 1.2fr 1fr;gap:10px;align-items:end;max-width:100%}
   .rr .step{position:relative;border-radius:16px 16px 10px 10px;background:linear-gradient(180deg,#ffffff,#f0ecff);
     padding:10px 8px 12px;border:1px solid rgba(44,26,74,.12);
     box-shadow: inset 0 -12px 18px rgba(100,70,180,.10), 0 8px 18px rgba(0,0,0,.10);
-    display:grid;place-items:center;min-height:86px}
+    display:grid;place-items:center;min-height:86px;max-width:100%}
   .rr .s1{min-height:110px}.rr .s2{min-height:92px}.rr .s3{min-height:88px}
   .rr .badge{position:absolute;top:-20px;left:50%;transform:translateX(-50%);width:58px;height:58px;border-radius:50%;
     display:grid;place-items:center;font-weight:900;border:2px solid rgba(0,0,0,.06);box-shadow:0 6px 14px rgba(0,0,0,.18)}
@@ -52,21 +59,22 @@
   .rr .b2{background:radial-gradient(circle at 35% 30%, #fff, var(--silver) 65%);color:#1d2945}
   .rr .b3{background:radial-gradient(circle at 35% 30%, #fff, var(--bronze) 65%);color:#4a2c12}
   .rr .av{position:absolute;top:-64px;left:50%;transform:translateX(-50%);width:76px;height:76px;border-radius:50%;
-    border:4px solid #fff;box-shadow:0 10px 22px rgba(0,0,0,.25);background:#fff center/cover no-repeat}
+    border:4px solid #fff;box-shadow:0 10px 22px rgba(0,0,0,.25);background:#fff center/cover no-repeat;will-change:transform}
   .rr .name{margin-top:14px;font-weight:900;color:#32245c;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .rr .scoreMini{color:#6b5d9c;font-size:12px;margin-top:2px}
 
-  .rr .swrap{margin-top:12px;position:relative}
+  .rr .swrap{margin-top:12px;position:relative;width:100%}
   .rr .hintRow{display:flex;justify-content:space-between;align-items:center;margin:2px 2px 6px;color:#efecffcc;font-size:12px}
   .rr .arrow{background:rgba(255,255,255,.25);border:1px solid rgba(255,255,255,.35);width:28px;height:28px;border-radius:50%;display:grid;place-items:center;cursor:pointer}
   .rr .arrow:active{transform:translateY(1px)}
-  .rr .rail{display:grid;grid-auto-flow:column;grid-auto-columns:calc(50% - 10px);gap:10px;overflow:auto;padding:6px;scroll-snap-type:x mandatory}
+  .rr .rail{display:grid;grid-auto-flow:column;grid-auto-columns:calc(50% - 10px);gap:10px;overflow:auto;padding:6px 6px 12px;
+    scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;max-width:100%}
   @media (min-width:560px){ .rr .rail{grid-auto-columns:calc(33.33% - 10px)} }
   .rr .rail::-webkit-scrollbar{height:0}
   .rr .rail{scrollbar-width:none}
   .rr .chip{scroll-snap-align:start;background:linear-gradient(180deg,rgba(255,255,255,.9),rgba(255,255,255,.75));
     border:1px solid rgba(0,0,0,.06);border-radius:14px;padding:10px;display:grid;
-    grid-template-columns:42px 1fr auto;gap:8px;align-items:center;color:#2b2350}
+    grid-template-columns:42px 1fr auto;gap:8px;align-items:center;color:#2b2350;min-width:0}
   .rr .rk{display:grid;place-items:center;width:38px;height:38px;border-radius:12px;font-weight:900;background:#f0ecff;border:1px solid rgba(0,0,0,.06)}
   .rr .chip .av{position:static;width:38px;height:38px;border:2px solid #fff;box-shadow:none}
   .rr .uname{font-weight:800}
@@ -122,9 +130,8 @@
 
 <script>
 /* ============ CONFIG (Google Sheets) ============ */
-var SHEET_ID   = "YOUR_SHEET_ID_HERE"; // <-- put your sheet id
+var SHEET_ID   = "YOUR_SHEET_ID_HERE"; // <-- put your sheet id later
 var SHEET_NAME = "Referral";           // <-- your tab name
-// Column auto-map (case-insensitive includes)
 var MAP = {
   rank:["rank","#"],
   username:["username","user","player","name"],
@@ -133,7 +140,7 @@ var MAP = {
   week:["week","period"]                // e.g., Week 1, Week 2
 };
 
-/* ============ tiny helpers ============ */
+/* helpers */
 function $(s,el){return (el||document).querySelector(s)}
 function $all(s,el){return [].slice.call((el||document).querySelectorAll(s))}
 function fmt(n){n=Number(n||0);if(n>=1000)return (Math.round(n/100)/10).toLocaleString()+"K";return n.toLocaleString()}
@@ -143,7 +150,6 @@ function svgAvatar(){return "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 
 function getParam(k){var m=location.search.match(new RegExp("[?&]"+k+"=([^&]+)","i"));return m?decodeURIComponent(m[1]):null}
 function pickIndex(headers, aliases){var L=headers.map(h=>String(h||'').toLowerCase());for(var i=0;i<aliases.length;i++){var a=aliases[i];var j=L.findIndex(h=>h.indexOf(a)>-1);if(j>-1)return j;}return -1}
 
-/* ============ fetch from Sheets (GViz) ============ */
 function fetchGViz(){
   var url="https://docs.google.com/spreadsheets/d/"+SHEET_ID+"/gviz/tq?tqx=out:json&sheet="+encodeURIComponent(SHEET_NAME);
   return fetch(url,{cache:"no-store"}).then(r=>r.text()).then(text=>{
@@ -171,7 +177,7 @@ function normalize(payload){
   }).filter(x=>x.username);
 }
 
-/* ============ app state ============ */
+/* app state */
 let state={tab:'home'}
 let ALL=[],WEEKS=[],CUR_WEEK='',TOP100=[]
 
@@ -186,7 +192,7 @@ function render(){
   else renderCommunity()
 }
 
-/* -------- HOME -------- */
+/* HOME */
 function renderHome(){
   $('#view').innerHTML = `
     <div class="card">
@@ -200,7 +206,7 @@ function renderHome(){
     </div>`;
 }
 
-/* -------- RANKS (Weekly via Week column) -------- */
+/* RANKS (Weekly via Week column) */
 function renderRanks(){
   $('#view').innerHTML = `
   <div class="rr">
@@ -234,14 +240,13 @@ function renderRanks(){
       .then(items=>{ ALL=items; buildWeeks(); fillWeekUI(); })
       .catch(err=>{
         console.warn('Sheets failed, demo used:', err.message);
-        // fallback demo
         let demo=[];
         function seed(week,arr){ arr.forEach(x=>{ x.week=week; demo.push(x); }); }
         seed('Week 1',[
           {username:'evelin0510',points:1000000},
-          {username:'송도르',points:455300},
+          {username:'송도르',points:478100},
           {username:'Gumiya',points:372600},
-          {username:'Deathaura',points:269200},
+          {username:'Deathaura',points:282700},
           {username:'Player1063389294',points:200000},
           {username:'薇樂莉Jo',points:134200},
           {username:'talia bentley',points:130200},
@@ -276,7 +281,6 @@ function renderRanks(){
     sel.value=CUR_WEEK;
     renderWeek();
 
-    // events
     $('#rr-left').onclick = ()=> $('#rr-rail').scrollBy({left:-220,behavior:'smooth'});
     $('#rr-right').onclick = ()=> $('#rr-rail').scrollBy({left:220,behavior:'smooth'});
     $('#rr-find').onclick = findUser;
@@ -310,6 +314,8 @@ function renderRanks(){
       rail.appendChild(div);
     });
     TOP100 = items.slice(0,100);
+    // keep page aligned left just in case
+    document.documentElement.scrollLeft = 0; document.body.scrollLeft = 0;
   }
 
   function findUser(){
@@ -326,7 +332,7 @@ function renderRanks(){
   }
 }
 
-/* -------- TERMS -------- */
+/* TERMS */
 function renderTerms(){
   $('#view').innerHTML = `
   <div class="card"><h2>Terms & Conditions</h2><p>By joining the Referral Race, you agree to the rules below.</p></div>
@@ -338,7 +344,7 @@ function renderTerms(){
   </div>`;
 }
 
-/* -------- COMMUNITY -------- */
+/* COMMUNITY */
 function renderCommunity(){
   const socials=[
     {name:'Facebook',  url:'https://facebook.com/yourbrand',  icon:'facebook'},
@@ -351,8 +357,7 @@ function renderCommunity(){
     {name:'Youtube',   url:'https://youtube.com/@yourbrand',  icon:'youtube'}
   ];
   function iconSVG(key){
-    const s={
-      facebook:'<svg viewBox="0 0 24 24"><path fill="#1877F2" d="M24 12.07C24 5.405 18.627 0 12 0S0 5.405 0 12.07C0 18.1 4.388 23.093 10.125 24v-8.44H7.078v-3.49h3.047V9.413c0-3.017 1.792-4.687 4.533-4.687 1.313 0 2.686.235 2.686.235v2.97h-1.514c-1.492 0-1.956.929-1.956 1.884v2.26h3.328l-.532 3.49h-2.796V24C19.612 23.093 24 18.1 24 12.07z"/></svg>',
+    const s={facebook:'<svg viewBox="0 0 24 24"><path fill="#1877F2" d="M24 12.07C24 5.405 18.627 0 12 0S0 5.405 0 12.07C0 18.1 4.388 23.093 10.125 24v-8.44H7.078v-3.49h3.047V9.413c0-3.017 1.792-4.687 4.533-4.687 1.313 0 2.686.235 2.686.235v2.97h-1.514c-1.492 0-1.956.929-1.956 1.884v2.26h3.328l-.532 3.49h-2.796V24C19.612 23.093 24 18.1 24 12.07z"/></svg>',
       instagram:'<svg viewBox="0 0 24 24"><defs><linearGradient id="ig" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#feda75"/><stop offset="50%" stop-color="#d62976"/><stop offset="100%" stop-color="#4f5bd5"/></linearGradient></defs><rect x="2" y="2" width="20" height="20" rx="5" fill="url(#ig)"/><circle cx="12" cy="12" r="4.5" fill="#fff"/><circle cx="17.2" cy="6.8" r="1.3" fill="#fff"/></svg>',
       pinterest:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#E60023"/><path fill="#fff" d="M12.24 7.5c-2.67 0-4.01 1.92-4.01 3.52 0 .97.37 1.82 1.16 2.14.13.05.24 0 .28-.14.02-.1.09-.37.12-.48.04-.14.02-.19-.08-.31-.23-.27-.38-.62-.38-1.12 0-1.44 1.08-2.73 2.82-2.73 1.54 0 2.39.94 2.39 2.2 0 1.65-.73 3.05-1.82 3.05-.6 0-1.05-.5-.9-1.12.17-.71.5-1.48.5-1.99 0-.46-.25-.85-.78-.85-.62 0-1.11.63-1.11 1.48 0 .54.18.9.18.9s-.6 2.52-.7 2.96c-.21.9-.03 2 .03 2.1.02.03.03.03.05.02.02 0 .77-1 .99-1.93.07-.29.39-1.54.39-1.54.19.36.76.68 1.36.68 1.79 0 3.01-1.64 3.01-3.84 0-1.66-1.41-3.2-3.54-3.2z"/></svg>',
       telegram:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#27A7E7"/><path fill="#fff" d="M9.7 17.3l.3-3.2 7.3-6.6c.3-.3-.1-.4-.5-.2l-9 5.7-3.1-1c-.7-.2-.7-.7.1-1l12.1-4.7c.6-.2 1.1.1.9 1l-2.1 10.6c-.1.7-.5.9-1.1.6l-3-2.2-2 1.9c-.1.2-.5.1-.7 0z"/></svg>',
@@ -369,7 +374,7 @@ function renderCommunity(){
 
 /* tabs */
 $all('.tab').forEach(btn=> btn.addEventListener('click', ()=>{ state.tab=btn.dataset.tab; render(); }));
-render(); // boot
+render();
 </script>
 </body>
 </html>
