@@ -3,43 +3,54 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-<title>Leaderboard App</title>
+<title>Referral Race</title>
 <style>
   :root{
-    --bg:#0c0c12; --panel:#141424; --panel2:#191932; --ink:#eaf0ff; --muted:#9aa4c7;
-    --pri1:#8457ff; --pri2:#a06bff; --pri3:#c28bff; --acc:#ffd86a; --good:#4be1a0;
-    --edge:rgba(255,255,255,.08); --glow:rgba(150,120,255,.25);
+    /* palette */
+    --bg:#0c0c12; --ink:#eef2ff; --muted:#a0a7c9;
+    --panel:#141424; --panel2:#191932; --edge:rgba(255,255,255,.08);
+    --p1:#8b5dff; --p2:#aa74ff; --p3:#c69bff; --glow:rgba(153,120,255,.3);
+    --acc:#ffd86a; --good:#4be1a0;
   }
-  *{box-sizing:border-box} html,body{margin:0;height:100%;background:radial-gradient(1200px 700px at 50% -10%, #1a1b3a 0%, transparent 60%), linear-gradient(180deg,#0b0c1a,#070813);color:var(--ink);font:15px/1.5 Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;-webkit-tap-highlight-color:transparent}
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:radial-gradient(1000px 700px at 50% -10%, #1b1c3f 0%, transparent 60%), linear-gradient(180deg,#0b0c1a,#070813);color:var(--ink);font:15px/1.5 Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;-webkit-tap-highlight-color:transparent}
+  a{color:#d2d8ff;text-decoration:none}
   .app{max-width:520px;margin:0 auto;min-height:100dvh;display:grid;grid-template-rows:auto 1fr auto}
-  /* Header */
-  header{position:sticky;top:0;background:linear-gradient(180deg,#10112a,#0c0d22);border-bottom:1px solid var(--edge);padding:12px 16px;z-index:10}
-  .hrow{display:flex;align-items:center;gap:10px}
+
+  /* ===== Header ===== */
+  header{position:sticky;top:0;background:linear-gradient(180deg,#10112a,#0d0e23);border-bottom:1px solid var(--edge);padding:12px 16px;z-index:10}
+  .hrow{display:flex;align-items:center;justify-content:space-between}
   .title{font-weight:900;font-size:18px;letter-spacing:.4px}
-  .seg{margin-top:10px;background:var(--panel2);border:1px solid var(--edge);padding:4px;border-radius:999px;display:inline-flex;gap:4px}
+  /* range segment (only on Ranks) */
+  .seg{margin-top:10px;background:#14143a;border:1px solid var(--edge);padding:4px;border-radius:999px;display:none;gap:4px}
   .seg button{appearance:none;border:0;background:transparent;color:var(--muted);padding:8px 12px;border-radius:999px;font-weight:800;cursor:pointer}
-  .seg button.active{background:linear-gradient(180deg,var(--pri2),var(--pri1));color:#fff;box-shadow:0 2px 10px var(--glow)}
-  /* Content */
-  main{padding:14px 14px 80px}
+  .seg button.active{background:linear-gradient(180deg,var(--p2),var(--p1));color:#fff;box-shadow:0 2px 10px var(--glow)}
+
+  /* ===== Content ===== */
+  main{padding:14px 14px 84px}
   .card{background:linear-gradient(180deg,#151533,#10112a);border:1px solid var(--edge);border-radius:16px;padding:14px}
   .card + .card{margin-top:12px}
-  h3{margin:0 0 10px;font-size:16px}
-  p{margin:0 0 8px;color:#cbd5ff}
+  h2{margin:0 0 8px;font-size:18px}
+  h3{margin:0 0 8px;font-size:16px}
+  p{margin:0 0 8px;color:#dfe5ff}
   .muted{color:var(--muted)}
-  /* Podium (purple theme) */
-  .podiumWrap{position:relative;border-radius:20px;background:linear-gradient(180deg,#c9b3ff,#9f84ff);border:1px solid rgba(255,255,255,.5);box-shadow:0 30px 80px rgba(0,0,0,.45);overflow:hidden}
+
+  /* ===== Ranks styles (match screenshot) ===== */
+  .podiumWrap{position:relative;border-radius:22px;background:linear-gradient(180deg,#d7c9ff,#b59bff);border:1px solid rgba(255,255,255,.55);box-shadow:0 30px 80px rgba(0,0,0,.45);overflow:hidden}
   .cap{position:absolute;top:8px;left:0;right:0;text-align:center;color:#2b135f;font-size:11px;font-weight:900;letter-spacing:.4px}
-  .podium{display:grid;grid-template-columns:1fr 1.2fr 1fr;gap:8px;align-items:end;padding:56px 10px 8px}
-  .step{position:relative;border-radius:14px;background:linear-gradient(180deg,#e9deff,#cabaff);border:1px solid rgba(80,40,140,.25);box-shadow:inset 0 -12px 18px rgba(80,40,140,.18),0 8px 18px rgba(0,0,0,.15);padding:8px 6px 10px;display:grid;place-items:center}
+  .podium{display:grid;grid-template-columns:1fr 1.2fr 1fr;gap:8px;align-items:end;padding:56px 10px 10px}
+  .step{position:relative;border-radius:14px;background:linear-gradient(180deg,#efe7ff,#d4c6ff);border:1px solid rgba(80,40,140,.28);box-shadow:inset 0 -12px 18px rgba(80,40,140,.18),0 8px 18px rgba(0,0,0,.15);padding:8px 6px 10px;display:grid;place-items:center}
   .s1{height:96px}.s2{height:78px}.s3{height:74px}
   .rankDot{position:absolute;top:-18px;left:50%;transform:translateX(-50%);width:52px;height:52px;border-radius:50%;display:grid;place-items:center;font-weight:900;color:#2b135f;background:radial-gradient(circle at 35% 30%, #fff 0%, #ffe5a6 50%, #ffc44d 70%);border:2px solid rgba(0,0,0,.08);box-shadow:0 6px 14px rgba(0,0,0,.25)}
+  .crown{position:absolute;top:-42px;left:50%;transform:translateX(-50%);width:34px;height:34px;background:radial-gradient(circle at 35% 30%, #fff 0%, #ffe5a6 48%, #ffc44d 62%);border-radius:8px;box-shadow:0 6px 14px rgba(0,0,0,.2)}
   .avatar{position:absolute;top:-56px;left:50%;transform:translateX(-50%);width:68px;height:68px;border-radius:50%;border:3px solid #fff;box-shadow:0 8px 20px rgba(0,0,0,.35);background:#fff center/cover no-repeat}
-  .name{margin-top:16px;font-weight:900;color:#2b135f;font-size:12px;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  /* Rank list */
+  .name{margin-top:14px;font-weight:900;color:#2b135f;font-size:12px;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .scoreMini{color:#55308f;font-size:11px;margin-top:2px}
+
   .search{display:grid;grid-template-columns:1fr auto;gap:8px}
   .input{border-radius:12px;border:1px solid var(--edge);background:#0f1030;color:#eff3ff;padding:10px 12px}
-  .btn{appearance:none;border:0;border-radius:12px;background:linear-gradient(180deg,var(--pri2),var(--pri1));color:#fff;font-weight:900;padding:10px 12px;cursor:pointer}
-  .table{border:1px solid var(--edge);border-radius:14px;overflow:hidden;margin-top:10px}
+  .btn{appearance:none;border:0;border-radius:12px;background:linear-gradient(180deg,var(--p2),var(--p1));color:#fff;font-weight:900;padding:10px 12px;cursor:pointer}
+  .table{border:1px solid var(--edge);border-radius:16px;overflow:hidden;margin-top:10px}
   .th,.tr{display:grid;grid-template-columns:60px 1fr 110px;gap:8px;align-items:center}
   .th{background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.03));padding:8px 10px;color:#dfe6ff;font-weight:800}
   .tr{background:linear-gradient(180deg,#0f1133,#0c1030);border-top:1px solid #0a0e28;padding:8px 10px}
@@ -49,35 +60,42 @@
   .user{display:flex;align-items:center;gap:10px}
   .face{width:38px;height:38px;border-radius:50%;background:#eee center/cover no-repeat;border:2px solid #fff22}
   .points{justify-self:end;font-weight:900}
-  .me{outline:2px solid var(--good);box-shadow:0 0 0 4px rgba(75,225,160,.2)}
-  /* Tabs (bottom) */
+  .me{outline:2px solid var(--good);box-shadow:0 0 0 4px rgba(75,225,160,.18)}
+
+  /* ===== Bottom Tabs ===== */
   nav{position:sticky;bottom:0;background:linear-gradient(180deg,#10112a,#0b0c1f);border-top:1px solid var(--edge);padding:8px 10px}
   .tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-  .tab{appearance:none;border:1px solid var(--edge);background:var(--panel2);color:#cdd7ff;border-radius:12px;padding:10px 8px;font-weight:800}
-  .tab.active{background:linear-gradient(180deg,var(--pri2),var(--pri1));color:#fff;box-shadow:0 6px 18px var(--glow)}
-  /* FAQ/Details */
-  details{background:var(--panel2);border:1px solid var(--edge);border-radius:12px;padding:10px}
+  .tab{appearance:none;border:1px solid var(--edge);background:#14143a;color:#cdd7ff;border-radius:12px;padding:10px 8px;font-weight:800;cursor:pointer}
+  .tab.active{background:linear-gradient(180deg,var(--p2),var(--p1));color:#fff;box-shadow:0 6px 18px var(--glow)}
+
+  /* ===== FAQ ===== */
+  details{background:#14143a;border:1px solid var(--edge);border-radius:12px;padding:10px}
   details+details{margin-top:8px}
   summary{cursor:pointer;font-weight:800}
+
+  /* ===== Share buttons ===== */
+  .shareRow{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .shareBtn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px;border-radius:12px;border:1px solid var(--edge);background:#14143a;color:#eaf0ff;font-weight:800;cursor:pointer}
+  .icons{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px}
+  .social{display:grid;place-items:center;border:1px solid var(--edge);background:#14143a;padding:12px;border-radius:12px}
+  .social svg{width:22px;height:22px}
 </style>
 </head>
 <body>
 <div class="app">
   <header>
     <div class="hrow">
-      <div class="title" id="hdrTitle">Leaderboard</div>
+      <div class="title" id="hdrTitle">Referral Race</div>
+      <div class="muted" style="font-size:12px">v1 • demo</div>
     </div>
-    <!-- Segment only visible on RANKS -->
-    <div class="seg" id="rangeSeg" style="display:none">
-      <button data-range="daily" class="active">Daily</button>
+    <div id="rangeSeg" class="seg">
+      <button data-range="daily"   class="active">Daily</button>
       <button data-range="monthly">Monthly</button>
       <button data-range="all">All time</button>
     </div>
   </header>
 
-  <main id="view">
-    <!-- Views injected by JS -->
-  </main>
+  <main id="view"><!-- injected --></main>
 
   <nav>
     <div class="tabs">
@@ -90,81 +108,78 @@
 </div>
 
 <script>
-/* ================= CONFIG (Sheets optional) ================= */
-const USE_SHEETS = false; // set true to use Google Sheets
-const SHEET_ID   = "YOUR_SHEET_ID";      // if USE_SHEETS=true
-const SHEET_NAME = "Leaderboard";        // required tab
-const MAP = {
-  username:["username","user","player","name"],
-  score:["score","points","turnover","referrals","total"],
-  avatar:["avatarurl","avatar","image","img","icon","photo"],
-};
-const DAILY   = [{username:'Masuma',score:1490,avatar:''},{username:'Hasan Sajjad',score:1800,avatar:''},{username:'Tanim',score:1205,avatar:''},{username:'Sadia Afrin',score:1000,avatar:''},{username:'Rejaul karim',score:900,avatar:''},{username:'Hasnat',score:800,avatar:''},{username:'Nishat jahan',score:750,avatar:''},{username:'Sajjad (YOU)',score:720,avatar:''}];
+/* ================= Sample Data ================= */
+const DAILY = [
+  {username:'Masuma',        score:1490, avatar:''},
+  {username:'Hasan Sajjad',  score:1800, avatar:''},
+  {username:'Tanim',         score:1205, avatar:''},
+  {username:'Sadia Afrin',   score:1000, avatar:''},
+  {username:'Rejaul karim',  score:900,  avatar:''},
+  {username:'Hasnat',        score:800,  avatar:''},
+  {username:'Nishat jahan',  score:750,  avatar:''},
+  {username:'Sajjad (YOU)',  score:720,  avatar:''},
+];
 const MONTHLY = DAILY.map((x,i)=>({...x,score:Math.round(x.score*3.2 - i*20)}));
 const ALL     = DAILY.map((x,i)=>({...x,score:Math.round(x.score*7.1 - i*50)}));
-/* ================= UTIL ================= */
-const $ = (sel, el=document)=> el.querySelector(sel);
-const $$= (sel, el=document)=> [...el.querySelectorAll(sel)];
-function fmt(n){ return Number(n||0).toLocaleString(); }
-function esc(s){ return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[m]); }
-function faceBg(url){ return url? `url("${url}")` : `url('data:image/svg+xml;utf8,${encodeURIComponent(svgAvatar())}')`; }
-function svgAvatar(){return `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0%' stop-color='%23ffd1ff'/><stop offset='100%' stop-color='%238857ff'/></linearGradient></defs><rect width='64' height='64' rx='16' fill='url(%23g)'/><circle cx='32' cy='26' r='12' fill='white' opacity='.9'/><rect x='14' y='40' width='36' height='16' rx='8' fill='white' opacity='.9'/></svg>`; }
-function pickIndex(headers, aliases){ const L=headers.map(h=>String(h||'').toLowerCase()); for(const a of aliases){const i=L.findIndex(h=>h.includes(a)); if(i>-1) return i;} return -1; }
-/* ================= SHEETS (optional) ================= */
-async function fetchGViz(){
-  const url=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
-  const res=await fetch(url,{cache:'no-store'}); const text=await res.text();
-  const jsonStr=text.match(/google\.visualization\.Query\.setResponse\((.*)\);?/s)?.[1];
-  if(!jsonStr) throw new Error('GViz JSON parse failed');
-  const data=JSON.parse(jsonStr); const headers=data.table.cols.map(c=>c.label||c.id||"");
-  const rows=data.table.rows.filter(r=>r&&r.c).map(r=> r.c.map(c=> c ? (c.f ?? c.v):""));
-  const ui=pickIndex(headers, MAP.username), si=pickIndex(headers, MAP.score), ai=pickIndex(headers, MAP.avatar);
-  return rows.map(r=>({username:String(r[ui]??'').trim(), score:Number(String(r[si]).replace(/[^\d.\-]/g,''))||0, avatar:(ai>-1? String(r[ai]??'').trim():'')})).filter(x=>x.username);
-}
-/* ================= VIEWS ================= */
-const state = { tab:'home', range:'daily', data:{daily:DAILY, monthly:MONTHLY, all:ALL} };
 
+/* ================= Helpers ================= */
+const $ = (s,el=document)=>el.querySelector(s);
+const $$= (s,el=document)=>[...el.querySelectorAll(s)];
+function fmt(n){return Number(n||0).toLocaleString();}
+function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[m]);}
+function faceBg(url){return url?`url("${url}")`:`url('data:image/svg+xml;utf8,${encodeURIComponent(svgAvatar())}')`;}
+function svgAvatar(){return `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0%' stop-color='%23ffdef2'/><stop offset='100%' stop-color='%238b5dff'/></linearGradient></defs><rect width='64' height='64' rx='16' fill='url(%23g)'/><circle cx='32' cy='26' r='12' fill='white' opacity='.9'/><rect x='14' y='40' width='36' height='16' rx='8' fill='white' opacity='.9'/></svg>`;}
+
+/* ================= State ================= */
+const state = { tab:'home', range:'daily', sets:{daily:DAILY, monthly:MONTHLY, all:ALL} };
+
+/* ================= Views ================= */
 function render(){
-  // header title + segment visibility
   $('#hdrTitle').textContent = state.tab==='ranks' ? 'Leaderboard' :
                                state.tab==='terms' ? 'Terms & FAQ' :
-                               state.tab==='community' ? 'Community' : 'Event';
+                               state.tab==='community' ? 'Community' : 'Referral Race';
   $('#rangeSeg').style.display = state.tab==='ranks' ? 'inline-flex' : 'none';
-  $$('.tab').forEach(btn=> btn.classList.toggle('active', btn.dataset.tab===state.tab));
+  $$('.tab').forEach(b=>b.classList.toggle('active', b.dataset.tab===state.tab));
   $$('#rangeSeg button').forEach(b=> b.classList.toggle('active', b.dataset.range===state.range));
-
-  if(state.tab==='home') return renderHome();
-  if(state.tab==='ranks') return renderRanks();
-  if(state.tab==='terms') return renderTerms();
+  if(state.tab==='home')      return renderHome();
+  if(state.tab==='ranks')     return renderRanks();
+  if(state.tab==='terms')     return renderTerms();
   if(state.tab==='community') return renderCommunity();
 }
 
+/* ==== HOME ==== */
 function renderHome(){
   $('#view').innerHTML = `
     <div class="card">
-      <h3>Event details</h3>
-      <p><b>When:</b> Daily/Monthly competition. Scores reset daily at 00:00.</p>
-      <p><b>How to win:</b> Earn points by completing tasks and quizzes.</p>
-      <p><b>Rewards:</b> Top 10 daily, bigger prizes monthly. Winners announced in-app.</p>
-      <p class="muted">Tip: Invite friends to earn bonus points!</p>
+      <h2>Referral Race</h2>
+      <p>Invite friends, climb the leaderboard, and win weekly rewards.</p>
+      <p><b>How it works</b></p>
+      <ul style="margin:6px 0 0 18px;color:#dfe5ff">
+        <li>Share your referral link with friends.</li>
+        <li>Every verified signup = <b>+1 point</b>.</li>
+        <li>Daily podium (1–3) and Top list reset at midnight.</li>
+        <li>Monthly champions win bigger prizes.</li>
+      </ul>
     </div>
     <div class="card">
-      <h3>Today’s highlights</h3>
-      <p>🔥 Double points on quizzes from 6–8 PM.</p>
-      <p>🎯 Streak bonus +15 for 5 days in a row.</p>
+      <h3>Today’s Boosts</h3>
+      <p>🎉 +2 points for first 5 referrals today.</p>
+      <p>⏰ Streak bonus: 5 days in a row = extra 15 points.</p>
     </div>`;
 }
 
+/* ==== RANKS ==== */
 function renderRanks(){
-  const items = state.data[state.range].slice().sort((a,b)=> b.score-a.score);
+  const items = state.sets[state.range].slice().sort((a,b)=> b.score-a.score);
   const [first,second,third] = [items[0],items[1],items[2]];
+
   $('#view').innerHTML = `
     <div class="podiumWrap">
       <div class="cap">${state.range.charAt(0).toUpperCase()+state.range.slice(1)} Podium</div>
       <div class="podium">
-        <div class="step s2"><div class="rankDot">2</div><div class="avatar" id="p2a"></div><div class="name" id="p2n">—</div></div>
-        <div class="step s1"><div class="rankDot">1</div><div class="avatar" id="p1a"></div><div class="name" id="p1n">—</div></div>
-        <div class="step s3"><div class="rankDot">3</div><div class="avatar" id="p3a"></div><div class="name" id="p3n">—</div></div>
+        <div class="step s2"><div class="rankDot">2</div><div class="avatar" id="p2a"></div><div class="name" id="p2n">—</div><div class="scoreMini" id="p2s"></div></div>
+        <div class="step s1"><div class="crown" aria-hidden="true"></div><div class="rankDot">1</div><div class="avatar" id="p1a"></div><div class="name" id="p1n">—</div><div class="scoreMini" id="p1s"></div></div>
+        <div class="step s3"><div class="rankDot">3</div><div class="avatar" id="p3a"></div><div class="name" id="p3n">—</div><div class="scoreMini" id="p3s"></div></div>
       </div>
     </div>
 
@@ -177,14 +192,14 @@ function renderRanks(){
         <div class="th"><div>Rank</div><div>Player</div><div>Points</div></div>
         <div id="tbody"></div>
       </div>
-      <div id="meSpot" class="card" style="display:none;margin-top:10px;background:#10203e">
+      <div id="meSpot" class="card" style="display:none;margin-top:10px;background:#0f1d3a">
         <div id="meText" class="muted">Your position</div>
       </div>
     </div>`;
 
-  // fill podium
-  const set = (id, row)=>{ $(`#${id}a`).style.backgroundImage=faceBg(row?.avatar||''); $(`#${id}n`).textContent=row?.username||'—'; };
-  set('p1',first); set('p2',second); set('p3',third);
+  // set podium (2–1–3 like image)
+  setPodium('p1', first); setPodium('p2', second); setPodium('p3', third);
+  function setPodium(id,row){ $(`#${id}a`).style.backgroundImage=faceBg(row?.avatar||''); $(`#${id}n`).textContent=row?.username||'—'; $(`#${id}s`).textContent=row? `${fmt(row.score)} points` : ''; }
 
   // list
   const body = $('#tbody'); body.innerHTML='';
@@ -204,50 +219,102 @@ function renderRanks(){
     const idx=items.findIndex(x=>x.username.toLowerCase()===val);
     if(idx<0){ $('#meText').textContent='No match found.'; $('#meSpot').style.display='block'; return; }
     const place=idx+1, row=items[idx];
-    $('#meText').innerHTML = `<b>${esc(row.username)}</b> — Rank <b>${place}</b> • ${fmt(row.score)} pts`;
+    $('#meText').innerHTML = `<b>${esc(row.username)}</b> — Rank <b>${place}</b> • ${fmt(row.score)} points`;
     $('#meSpot').style.display='block';
     const hit=$(`.tr[data-user="${val}"]`); if(hit){ hit.classList.add('me'); hit.scrollIntoView({behavior:'smooth',block:'center'}); setTimeout(()=>hit.classList.remove('me'),1600); }
   };
 }
 
+/* ==== TERMS & FAQ ==== */
 function renderTerms(){
   $('#view').innerHTML = `
     <div class="card">
-      <h3>Terms & Conditions</h3>
-      <p>1) Points are earned by in-app activities. 2) Anti-fraud filters apply. 3) We may change rewards with notice.</p>
-      <p>By participating, you agree to these terms.</p>
+      <h2>Terms & Conditions</h2>
+      <p>By joining the Referral Race, you agree to the following rules.</p>
     </div>
     <div class="card">
       <h3>FAQ</h3>
-      <details><summary>How often is the leaderboard updated?</summary><p>Live; values are refreshed whenever you open the Ranks tab.</p></details>
-      <details><summary>When are rewards paid?</summary><p>Daily winners paid within 24h, monthly within 3 days.</p></details>
-      <details><summary>Can I change my username?</summary><p>Yes, from your profile; rank history stays attached.</p></details>
+      <details open>
+        <summary>How do I earn points?</summary>
+        <p>Each verified signup from your referral link grants <b>+1 point</b>. Bonus events may add extra points.</p>
+      </details>
+      <details>
+        <summary>When are winners announced?</summary>
+        <p>Daily winners after midnight; monthly champions on the 1st of each month.</p>
+      </details>
+      <details>
+        <summary>How do payouts work?</summary>
+        <p>Rewards are credited to your account within 24 hours (daily) and 3 days (monthly).</p>
+      </details>
+      <details>
+        <summary>What about duplicate or fake signups?</summary>
+        <p>Fraud checks remove invalid referrals. Accounts violating rules may be disqualified.</p>
+      </details>
+      <details>
+        <summary>Can I change my username?</summary>
+        <p>Yes in Profile. Ranking history remains attached to your account.</p>
+      </details>
     </div>`;
 }
 
+/* ==== COMMUNITY + SHARE ==== */
 function renderCommunity(){
+  const url   = location.href.split('#')[0];
+  const title = 'Join the Referral Race!';
   $('#view').innerHTML = `
-    <div class="card"><h3>Join the community</h3>
-      <p><a href="#" class="muted">Telegram</a> • <a href="#" class="muted">Discord</a> • <a href="#" class="muted">X / Twitter</a></p>
-      <p>Share tips, meet players, and get event announcements first.</p>
+    <div class="card">
+      <h2>Share with friends</h2>
+      <div class="shareRow">
+        <button class="shareBtn" id="shareTelegram">
+          <!-- TG icon -->
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M9.04 15.81l-.39 5.49c.56 0 .8-.24 1.09-.53l2.62-2.52 5.43 3.99c1 .55 1.7.26 1.97-.92l3.57-16.7v-.01c.32-1.49-.54-2.07-1.52-1.7L1.2 9.66c-1.46.57-1.44 1.39-.25 1.76l4.97 1.55 11.54-7.29c.54-.36 1.03-.16.63.2"/></svg>
+          Telegram
+        </button>
+        <button class="shareBtn" id="shareWhatsApp">
+          <!-- WA icon -->
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M20.52 3.48A11.94 11.94 0 0 0 12.06 0C5.45 0 .12 5.33.12 11.94c0 2.1.55 4.07 1.52 5.8L0 24l6.43-1.6a11.86 11.86 0 0 0 5.63 1.43h.01c6.61 0 11.94-5.33 11.94-11.94 0-3.19-1.24-6.19-3.49-8.41zM12.07 22.1h-.01a10.18 10.18 0 0 1-5.19-1.43l-.37-.22-3.82.95 1.02-3.72-.24-.38a10.2 10.2 0 1 1 8.61 4.8zm5.88-7.65c-.32-.16-1.9-.92-2.2-1.02-.3-.1-.52-.16-.75.16-.22.32-.86 1.02-1.06 1.24-.2.22-.39.24-.71.08-.32-.16-1.36-.5-2.58-1.6-.95-.85-1.6-1.9-1.79-2.22-.19-.32-.02-.5.14-.66.14-.14.32-.37.48-.55.16-.18.21-.32.32-.53.11-.22.05-.4-.03-.56-.08-.16-.75-1.81-1.03-2.48-.27-.64-.54-.55-.75-.56h-.64c-.22 0-.56.08-.85.4-.3.32-1.12 1.1-1.12 2.67s1.15 3.09 1.31 3.3c.16.21 2.27 3.47 5.5 4.86.77.33 1.37.53 1.84.68.77.24 1.48.21 2.04.13.62-.09 1.9-.78 2.17-1.53.27-.75.27-1.39.19-1.53-.08-.14-.3-.22-.62-.38z"/></svg>
+          WhatsApp
+        </button>
+      </div>
+
+      <h3 style="margin-top:12px">Follow us</h3>
+      <div class="icons">
+        <a class="social" href="https://t.me/yourchannel" target="_blank" rel="noopener" title="Telegram">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.04 15.81l-.39 5.49c.56 0 .8-.24 1.09-.53l2.62-2.52 5.43 3.99c1 .55 1.7.26 1.97-.92l3.57-16.7v-.01c.32-1.49-.54-2.07-1.52-1.7L1.2 9.66c-1.46.57-1.44 1.39-.25 1.76l4.97 1.55 11.54-7.29c.54-.36 1.03-.16.63.2"/></svg>
+        </a>
+        <a class="social" href="https://instagram.com/yourbrand" target="_blank" rel="noopener" title="Instagram">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 2C4.24 2 2 4.24 2 7v10c0 2.76 2.24 5 5 5h10c2.76 0 5-2.24 5-5V7c0-2.76-2.24-5-5-5H7zm10.5 7.25h-2V7.5c0-.55-.45-1-1-1h-5c-.55 0-1 .45-1 1v1.75h-2c-.55 0-1 .45-1 1v7.25c0 .55.45 1 1 1h11c.55 0 1-.45 1-1V10.25c0-.55-.45-1-1-1zM9.5 8.5h5v1h-5v-1z"/></svg>
+        </a>
+        <a class="social" href="https://facebook.com/yourbrand" target="_blank" rel="noopener" title="Facebook">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 22v-8h3l1-4h-4V8c0-1.1.9-2 2-2h2V2h-3c-2.76 0-5 2.24-5 5v3H6v4h3v8h4z"/></svg>
+        </a>
+        <a class="social" href="https://twitter.com/yourbrand" target="_blank" rel="noopener" title="Twitter / X">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 3C5.24 3 3 5.24 3 8v8c0 2.76 2.24 5 5 5h8c2.76 0 5-2.24 5-5V8c0-2.76-2.24-5-5-5H8zm8.77 7.35c.01.15.01.3.01.46 0 4.67-3.55 10.05-10.05 10.05-2 0-3.86-.59-5.43-1.61.28.03.57.05.86.05 1.66 0 3.18-.57 4.39-1.53a3.55 3.55 0 0 1-3.31-2.46c.22.04.44.06.67.06.32 0 .63-.04.93-.12a3.54 3.54 0 0 1-2.84-3.47v-.05c.48.27 1.03.44 1.61.46a3.53 3.53 0 0 1-1.58-2.94c0-.65.17-1.25.47-1.77a10.05 10.05 0 0 0 7.3 3.7 3.99 3.99 0 0 1-.09-.81 3.54 3.54 0 0 1 6.13-2.42 6.95 6.95 0 0 0 2.25-.86 3.56 3.56 0 0 1-1.56 1.96 7.06 7.06 0 0 0 2.03-.56 7.63 7.63 0 0 1-1.77 1.84z"/></svg>
+        </a>
+      </div>
     </div>`;
+
+  // Share handlers (native share if available)
+  const sharePayload = {title, text:title, url};
+  $('#shareTelegram').onclick = async ()=>{
+    try{
+      if(navigator.share){ await navigator.share(sharePayload); return; }
+    }catch{}
+    const tg=`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`;
+    window.open(tg,'_blank','noopener');
+  };
+  $('#shareWhatsApp').onclick = ()=>{
+    const wa=`https://wa.me/?text=${encodeURIComponent(`${title} ${url}`)}`;
+    window.open(wa,'_blank','noopener');
+  };
 }
 
-/* ================= NAV & RANGE ================= */
-$$('.tab').forEach(btn=> btn.onclick = ()=>{ state.tab = btn.dataset.tab; render(); });
-$$('#rangeSeg button').forEach(btn=> btn.onclick = ()=>{ state.range = btn.dataset.range; render(); });
+/* ================= Events ================= */
+$$('.tab').forEach(btn=> btn.addEventListener('click', ()=>{ state.tab=btn.dataset.tab; render(); }));
+$$('#rangeSeg button').forEach(btn=> btn.addEventListener('click', ()=>{ state.range=btn.dataset.range; render(); }));
 
-/* ================= BOOT ================= */
-(async function(){
-  if(USE_SHEETS){
-    try{
-      const rows = await fetchGViz();
-      // If your sheet has separate tabs for daily/monthly/all, fetch each; here we just use one
-      state.data.daily = rows; state.data.monthly = rows; state.data.all = rows;
-    }catch(e){ console.warn('Sheets fetch failed, using sample.', e); }
-  }
-  render();
-})();
+/* ================= Boot ================= */
+render();
 </script>
 </body>
 </html>
