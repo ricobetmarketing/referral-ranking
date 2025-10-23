@@ -12,8 +12,6 @@
     --acc:#ffd86a; --good:#4be1a0;
   }
   *{box-sizing:border-box}
-
-  /* ====== IMPORTANT: kill sideways scroll ====== */
   html,body{margin:0;height:100%;overflow-x:hidden;
     background:radial-gradient(1000px 700px at 50% -10%, #1b1c3f 0%, transparent 60%),
                linear-gradient(180deg,#0b0c1a,#070813);
@@ -21,12 +19,10 @@
     -webkit-tap-highlight-color:transparent}
   .app{max-width:520px;margin:0 auto;min-height:100dvh;display:grid;grid-template-rows:auto 1fr auto;overflow-x:hidden}
 
-  /* Header */
   header{position:sticky;top:0;background:linear-gradient(180deg,#10112a,#0d0e23);border-bottom:1px solid var(--edge);padding:12px 16px;z-index:20}
   .hrow{display:flex;align-items:center;justify-content:space-between}
   .title{font-weight:900;font-size:18px;letter-spacing:.4px}
 
-  /* Content */
   main{padding:14px 14px 96px}
   .card{background:linear-gradient(180deg,#151533,#10112a);border:1px solid var(--edge);border-radius:16px;padding:14px;margin-bottom:12px}
   h2{margin:0 0 8px;font-size:18px}
@@ -35,7 +31,6 @@
 
   /* ====== RANKING (namespaced .rr) ====== */
   .rr{--ink:#2b2350; --gold:#ffcf5a; --silver:#dbe6ff; --bronze:#ffd9b3; width:100%}
-  .rr *{box-sizing:border-box}
   .rr .controls{display:flex;align-items:center;gap:8px}
   .rr .select,.rr .wbtn{appearance:none;border:0;border-radius:10px;padding:9px 10px;font-weight:800}
   .rr .select{background:#ffffffbf;color:#2d1b55}
@@ -47,19 +42,22 @@
     color:var(--ink);box-shadow:0 24px 60px rgba(36,18,66,.35);overflow:hidden}
   .rr .cap{display:flex;justify-content:center;gap:10px;align-items:center;color:#876dc9;
     font-weight:900;font-size:12px;letter-spacing:.4px;margin-bottom:10px}
-  .rr .podium{display:grid;grid-template-columns:1fr 1.2fr 1fr;gap:10px;align-items:end;max-width:100%}
+  .rr .podium{display:grid;grid-template-columns:1fr 1.2fr 1fr;gap:10px;align-items:end}
   .rr .step{position:relative;border-radius:16px 16px 10px 10px;background:linear-gradient(180deg,#ffffff,#f0ecff);
     padding:10px 8px 12px;border:1px solid rgba(44,26,74,.12);
     box-shadow: inset 0 -12px 18px rgba(100,70,180,.10), 0 8px 18px rgba(0,0,0,.10);
-    display:grid;place-items:center;min-height:86px;max-width:100%}
-  .rr .s1{min-height:110px}.rr .s2{min-height:92px}.rr .s3{min-height:88px}
+    display:grid;place-items:center;min-height:86px}
+  .rr .s1{min-height:120px}.rr .s2{min-height:100px}.rr .s3{min-height:96px}
   .rr .badge{position:absolute;top:-20px;left:50%;transform:translateX(-50%);width:58px;height:58px;border-radius:50%;
     display:grid;place-items:center;font-weight:900;border:2px solid rgba(0,0,0,.06);box-shadow:0 6px 14px rgba(0,0,0,.18)}
   .rr .b1{background:radial-gradient(circle at 35% 30%, #fff, var(--gold) 65%);color:#5a4300}
   .rr .b2{background:radial-gradient(circle at 35% 30%, #fff, var(--silver) 65%);color:#1d2945}
   .rr .b3{background:radial-gradient(circle at 35% 30%, #fff, var(--bronze) 65%);color:#4a2c12}
+
   .rr .av{position:absolute;top:-64px;left:50%;transform:translateX(-50%);width:76px;height:76px;border-radius:50%;
-    border:4px solid #fff;box-shadow:0 10px 22px rgba(0,0,0,.25);background:#fff center/cover no-repeat;will-change:transform}
+    border:4px solid #fff;box-shadow:0 10px 22px rgba(0,0,0,.25);background:#fff center/cover no-repeat}
+  /* crown over avatar (top-3) */
+  .rr .tiara{position:absolute;top:-86px;left:50%;transform:translateX(-50%);width:46px;height:30px;pointer-events:none}
   .rr .name{margin-top:14px;font-weight:900;color:#32245c;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .rr .scoreMini{color:#6b5d9c;font-size:12px;margin-top:2px}
 
@@ -79,24 +77,30 @@
   .rr .chip .av{position:static;width:38px;height:38px;border:2px solid #fff;box-shadow:none}
   .rr .uname{font-weight:800}
   .rr .val{font-weight:900;color:#5b4bb4}
+
+  /* extra list (ranks 19–20) */
+  .rr .more{margin-top:10px}
+  .rr .row{display:grid;grid-template-columns:46px 1fr auto;gap:8px;align-items:center;
+    background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.05));border:1px solid rgba(255,255,255,.1);
+    border-radius:14px;padding:10px}
+  .rr .row + .row{margin-top:8px}
+  .rr .row .rk{width:38px;height:38px}
+
   .rr .search{margin-top:12px;display:grid;grid-template-columns:1fr auto;gap:8px}
   .rr .input{border-radius:12px;border:1px solid var(--edge);background:#0f1030;color:#eff3ff;padding:10px 12px}
   .rr .go{appearance:none;border:0;border-radius:12px;padding:10px 12px;background:#ffd86a;color:#3a2400;font-weight:900;cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,.12)}
   .rr .go:active{transform:translateY(1px);box-shadow:0 2px 0 rgba(0,0,0,.12)}
   .rr .result{margin-top:8px;background:rgba(255,255,255,.92);border:1px solid rgba(0,0,0,.08);color:#2b2350;border-radius:12px;padding:10px 12px;font-weight:700;display:none}
 
-  /* Bottom tabs */
   nav{position:sticky;bottom:0;background:linear-gradient(180deg,#10112a,#0b0c1f);border-top:1px solid var(--edge);padding:8px 10px;z-index:30}
   .tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
   .tab{appearance:none;border:1px solid var(--edge);background:#14143a;color:#cdd7ff;border-radius:12px;padding:10px 8px;font-weight:800;cursor:pointer}
   .tab.active{background:linear-gradient(180deg,var(--p2),var(--p1));color:#fff;box-shadow:0 6px 18px var(--glow)}
 
-  /* FAQ */
   details{background:#14143a;border:1px solid var(--edge);border-radius:12px;padding:10px}
   details+details{margin-top:8px}
   summary{cursor:pointer;font-weight:800}
 
-  /* Community */
   .socialCard{background: radial-gradient(120% 140% at 0% 0%, #5d2fff 0%, #4c22d8 35%, #3b1dbb 70%);border:1px solid rgba(255,255,255,.18);border-radius:20px;padding:12px;box-shadow:0 20px 50px rgba(0,0,0,.35)}
   .socialItem{display:grid;grid-template-columns:1fr auto;align-items:center;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:14px;padding:10px 12px}
   .socialItem + .socialItem{margin-top:10px}
@@ -111,7 +115,7 @@
 <div class="app">
   <header>
     <div class="hrow">
-      <div class="title" id="hdrTitle">Referral Race</div>
+      <div class="title" id="hdrTitle">Referral Ranking</div>
       <div class="muted" style="font-size:12px">v1 • demo</div>
     </div>
   </header>
@@ -120,8 +124,8 @@
 
   <nav>
     <div class="tabs">
-      <button type="button" class="tab active" data-tab="home">Home</button>
-      <button type="button" class="tab" data-tab="ranks">Ranks</button>
+      <button type="button" class="tab active" data-tab="ranks">Ranks</button>
+      <button type="button" class="tab" data-tab="home">Home</button>
       <button type="button" class="tab" data-tab="terms">T&amp;C</button>
       <button type="button" class="tab" data-tab="community">Community</button>
     </div>
@@ -130,8 +134,8 @@
 
 <script>
 /* ============ CONFIG (Google Sheets) ============ */
-var SHEET_ID   = "YOUR_SHEET_ID_HERE"; // <-- put your sheet id later
-var SHEET_NAME = "Referral";           // <-- your tab name
+var SHEET_ID   = "YOUR_SHEET_ID_HERE"; // put your id later
+var SHEET_NAME = "Referral";           // your tab name
 var MAP = {
   rank:["rank","#"],
   username:["username","user","player","name"],
@@ -178,7 +182,7 @@ function normalize(payload){
 }
 
 /* app state */
-let state={tab:'home'}
+let state={tab:'ranks'}
 let ALL=[],WEEKS=[],CUR_WEEK='',TOP100=[]
 
 function render(){
@@ -186,8 +190,8 @@ function render(){
                                state.tab==='terms' ? 'Terms & FAQ' :
                                state.tab==='community' ? 'Community' : 'Referral Race';
   $all('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===state.tab))
-  if(state.tab==='home') renderHome()
-  else if(state.tab==='ranks') renderRanks()
+  if(state.tab==='ranks') renderRanks()
+  else if(state.tab==='home') renderHome()
   else if(state.tab==='terms') renderTerms()
   else renderCommunity()
 }
@@ -198,11 +202,6 @@ function renderHome(){
     <div class="card">
       <h2>Referral Race</h2>
       <p>Invite friends, climb the leaderboard, and win weekly rewards.</p>
-      <ul style="margin:6px 0 0 18px;color:#dfe5ff">
-        <li>Share your referral link with friends.</li>
-        <li>Every verified signup = <b>+1 point</b>.</li>
-        <li><b>Weekly</b> leaderboard resets every Monday.</li>
-      </ul>
     </div>`;
 }
 
@@ -219,9 +218,21 @@ function renderRanks(){
     <div class="podiumCard">
       <div class="cap">Weekly Podium</div>
       <div class="podium">
-        <div class="step s2"><div class="badge b2">2</div><div class="av" id="rr-p2a"></div><div class="name" id="rr-p2n">—</div><div class="scoreMini" id="rr-p2s"></div></div>
-        <div class="step s1"><div class="badge b1">1</div><div class="av" id="rr-p1a"></div><div class="name" id="rr-p1n">—</div><div class="scoreMini" id="rr-p1s"></div></div>
-        <div class="step s3"><div class="badge b3">3</div><div class="av" id="rr-p3a"></div><div class="name" id="rr-p3n">—</div><div class="scoreMini" id="rr-p3s"></div></div>
+        <div class="step s2">
+          <div class="badge b2">2</div>
+          <svg class="tiara" viewBox="0 0 64 36" fill="none"><path d="M5 32h54l-5-16-10 8-7-12-7 12-10-8-15 16z" fill="#E7EEF9"/><path d="M5 32h54l-5-16-10 8-7-12-7 12-10-8-15 16z" fill="#D7E3FF" opacity=".6"/><circle cx="32" cy="10" r="4" fill="#fff"/><circle cx="12" cy="15" r="3" fill="#fff"/><circle cx="52" cy="15" r="3" fill="#fff"/></svg>
+          <div class="av" id="rr-p2a"></div><div class="name" id="rr-p2n">—</div><div class="scoreMini" id="rr-p2s"></div>
+        </div>
+        <div class="step s1">
+          <div class="badge b1">1</div>
+          <svg class="tiara" viewBox="0 0 64 36" fill="none"><path d="M5 32h54l-6-18-11 9-7-13-7 13-11-9-12 18z" fill="#FFE79B"/><path d="M5 32h54l-6-18-11 9-7-13-7 13-11-9-12 18z" fill="#FFD86A" opacity=".7"/><circle cx="32" cy="10" r="5" fill="#fff"/><circle cx="15" cy="14" r="3.5" fill="#fff"/><circle cx="49" cy="14" r="3.5" fill="#fff"/></svg>
+          <div class="av" id="rr-p1a"></div><div class="name" id="rr-p1n">—</div><div class="scoreMini" id="rr-p1s"></div>
+        </div>
+        <div class="step s3">
+          <div class="badge b3">3</div>
+          <svg class="tiara" viewBox="0 0 64 36" fill="none"><path d="M5 32h54l-4-14-10 8-7-12-7 12-10-8-16 14z" fill="#FFE0C2"/><path d="M5 32h54l-4-14-10 8-7-12-7 12-10-8-16 14z" fill="#FFC99F" opacity=".6"/><circle cx="32" cy="10" r="4" fill="#fff"/><circle cx="13" cy="15" r="3" fill="#fff"/><circle cx="51" cy="15" r="3" fill="#fff"/></svg>
+          <div class="av" id="rr-p3a"></div><div class="name" id="rr-p3n">—</div><div class="scoreMini" id="rr-p3s"></div>
+        </div>
       </div>
     </div>
 
@@ -229,6 +240,8 @@ function renderRanks(){
       <div class="hintRow"><div>Top 15 — swipe ▶</div><div><button class="arrow" id="rr-left">⬅</button> <button class="arrow" id="rr-right">➡</button></div></div>
       <div class="rail" id="rr-rail"></div>
     </div>
+
+    <div class="more" id="rr-more"></div>
 
     <div class="search"><input id="rr-q" class="input" placeholder="Search username (top 100)…"/><button id="rr-find" class="go" type="button">Find</button></div>
     <div id="rr-mine" class="result"></div>
@@ -244,23 +257,19 @@ function renderRanks(){
         function seed(week,arr){ arr.forEach(x=>{ x.week=week; demo.push(x); }); }
         seed('Week 1',[
           {username:'evelin0510',points:1000000},
-          {username:'송도르',points:478100},
-          {username:'Gumiya',points:372600},
+          {username:'송도르',points:502000},
+          {username:'Gumiya',points:391200},
           {username:'Deathaura',points:282700},
           {username:'Player1063389294',points:200000},
-          {username:'薇樂莉Jo',points:134200},
+          {username:'薇樂莉Jo',points:140000},
           {username:'talia bentley',points:130200},
-          {username:'User8',points:120000},
-          {username:'User9',points:118000},
-          {username:'User10',points:110000},
-          {username:'User11',points:108000},
-          {username:'User12',points:104000},
-          {username:'User13',points:101000},
-          {username:'User14',points:98000},
-          {username:'User15',points:96000}
+          {username:'U8',points:120000},{username:'U9',points:118000},{username:'U10',points:110000},
+          {username:'U11',points:108000},{username:'U12',points:104000},{username:'U13',points:101000},
+          {username:'U14',points:98000},{username:'U15',points:96000},{username:'U16',points:92000},
+          {username:'U17',points:90000},{username:'U18',points:88000},{username:'U19',points:86000},{username:'U20',points:84000}
         ]);
-        seed('Week 2', demo.slice(0,15).map(x=>({username:x.username,points:Math.round(x.points*0.92)})));
-        seed('Week 3', demo.slice(0,15).map(x=>({username:x.username,points:Math.round(x.points*1.05)})));
+        seed('Week 2', demo.slice(0,20).map(x=>({username:x.username,points:Math.round(x.points*0.92)})));
+        seed('Week 3', demo.slice(0,20).map(x=>({username:x.username,points:Math.round(x.points*1.05)})));
         ALL=demo; buildWeeks(); fillWeekUI();
       });
   } else { buildWeeks(); fillWeekUI(); }
@@ -305,6 +314,7 @@ function renderRanks(){
     }
     setPod(1,items[0]||null); setPod(2,items[1]||null); setPod(3,items[2]||null);
 
+    // Swipe shows ranks 4..18 (Top 15 after podium)
     const rail = $('#rr-rail'); rail.innerHTML='';
     items.slice(3,18).forEach(r=>{
       const div=document.createElement('div'); div.className='chip';
@@ -313,8 +323,18 @@ function renderRanks(){
         '<div class="val">'+fmt(r.points)+'</div>';
       rail.appendChild(div);
     });
+
+    // Extra list ranks 19..20 (scroll down)
+    const more = $('#rr-more'); more.innerHTML='';
+    items.slice(18,20).forEach(r=>{
+      const row=document.createElement('div'); row.className='row';
+      row.innerHTML='<div class="rk">'+r.rank+'</div>'+
+        '<div style="display:flex;align-items:center;gap:8px"><div class="av" style="position:static;width:38px;height:38px;border:2px solid #fff;box-shadow:none;background-image:'+faceBg(r.avatar)+'"></div><div class="uname">'+esc(r.username)+'</div></div>'+
+        '<div class="val">'+fmt(r.points)+'</div>';
+      more.appendChild(row);
+    });
+
     TOP100 = items.slice(0,100);
-    // keep page aligned left just in case
     document.documentElement.scrollLeft = 0; document.body.scrollLeft = 0;
   }
 
@@ -344,7 +364,7 @@ function renderTerms(){
   </div>`;
 }
 
-/* COMMUNITY */
+/* COMMUNITY (same as before) */
 function renderCommunity(){
   const socials=[
     {name:'Facebook',  url:'https://facebook.com/yourbrand',  icon:'facebook'},
