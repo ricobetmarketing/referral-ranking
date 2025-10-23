@@ -14,6 +14,7 @@
   *{box-sizing:border-box}
   html,body{margin:0;height:100%;background:radial-gradient(1000px 700px at 50% -10%, #1b1c3f 0%, transparent 60%), linear-gradient(180deg,#0b0c1a,#070813);color:var(--ink);font:15px/1.5 Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;-webkit-tap-highlight-color:transparent}
   .app{max-width:520px;margin:0 auto;min-height:100dvh;display:grid;grid-template-rows:auto 1fr auto}
+
   /* Header */
   header{position:sticky;top:0;background:linear-gradient(180deg,#10112a,#0d0e23);border-bottom:1px solid var(--edge);padding:12px 16px;z-index:20}
   .hrow{display:flex;align-items:center;justify-content:space-between}
@@ -30,32 +31,43 @@
   h3{margin:0 0 8px;font-size:16px}
   p{margin:0 0 8px;color:#dfe5ff}
 
-  /* Ranks */
-  .podiumWrap{position:relative;border-radius:22px;background:linear-gradient(180deg,#d7c9ff,#b59bff);border:1px solid rgba(255,255,255,.55);box-shadow:0 30px 80px rgba(0,0,0,.45);overflow:hidden}
-  .cap{position:absolute;top:8px;left:0;right:0;text-align:center;color:#2b135f;font-size:11px;font-weight:900;letter-spacing:.4px}
-  .podium{display:grid;grid-template-columns:1fr 1.2fr 1fr;gap:8px;align-items:end;padding:56px 10px 10px}
-  .step{position:relative;border-radius:14px;background:linear-gradient(180deg,#efe7ff,#d4c6ff);border:1px solid rgba(80,40,140,.28);box-shadow:inset 0 -12px 18px rgba(80,40,140,.18),0 8px 18px rgba(0,0,0,.15);padding:8px 6px 10px;display:grid;place-items:center}
-  .s1{height:96px}.s2{height:78px}.s3{height:74px}
-  .rankDot{position:absolute;top:-18px;left:50%;transform:translateX(-50%);width:52px;height:52px;border-radius:50%;display:grid;place-items:center;font-weight:900;color:#2b135f;background:radial-gradient(circle at 35% 30%, #fff 0%, #ffe5a6 50%, #ffc44d 70%);border:2px solid rgba(0,0,0,.08);box-shadow:0 6px 14px rgba(0,0,0,.25)}
-  .crown{position:absolute;top:-42px;left:50%;transform:translateX(-50%);width:34px;height:34px;background:radial-gradient(circle at 35% 30%, #fff 0%, #ffe5a6 48%, #ffc44d 62%);border-radius:8px;box-shadow:0 6px 14px rgba(0,0,0,.2)}
-  .avatar{position:absolute;top:-56px;left:50%;transform:translateX(-50%);width:68px;height:68px;border-radius:50%;border:3px solid #fff;box-shadow:0 8px 20px rgba(0,0,0,.35);background:#fff center/cover no-repeat}
-  .name{margin-top:14px;font-weight:900;color:#2b135f;font-size:12px;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .scoreMini{color:#55308f;font-size:11px;margin-top:2px}
+  /* ====== WEEKLY RANKING (podium + top15) ====== */
+  .controls{display:flex;align-items:center;gap:8px}
+  .select, .wbtn{appearance:none;border:0;border-radius:10px;padding:9px 10px;font-weight:800}
+  .select{background:#ffffffbf;color:#2d1b55}
+  .wbtn{background:#ffd86a;color:#3a2400;box-shadow:0 4px 0 rgba(0,0,0,.12);cursor:pointer}
+  .wbtn:active{transform:translateY(1px);box-shadow:0 2px 0 rgba(0,0,0,.12)}
 
-  .search{display:grid;grid-template-columns:1fr auto;gap:8px}
+  .podiumCard{margin-top:12px;border-radius:22px;padding:16px 12px 12px;background:linear-gradient(180deg,#f0e6ff,#f9f1ff);border:1px solid rgba(255,255,255,.55);color:#2b2350;box-shadow:0 24px 60px rgba(36,18,66,.35)}
+  .cap{display:flex;justify-content:center;gap:10px;align-items:center;color:#876dc9;font-weight:900;font-size:12px;letter-spacing:.4px;margin-bottom:10px}
+  .podium{display:grid;grid-template-columns:1fr 1.2fr 1fr;gap:10px;align-items:end}
+  .step{position:relative;border-radius:16px 16px 10px 10px;background:linear-gradient(180deg,#ffffff,#f0ecff);padding:10px 8px 12px;border:1px solid rgba(44,26,74,.12);box-shadow: inset 0 -12px 18px rgba(100,70,180,.10), 0 8px 18px rgba(0,0,0,.10);display:grid;place-items:center}
+  .s1{height:110px}.s2{height:90px}.s3{height:86px}
+  .badge{position:absolute;top:-20px;left:50%;transform:translateX(-50%);width:58px;height:58px;border-radius:50%;display:grid;place-items:center;font-weight:900;border:2px solid rgba(0,0,0,.06);box-shadow:0 6px 14px rgba(0,0,0,.18)}
+  .b1{background:radial-gradient(circle at 35% 30%, #fff, #ffcf5a 65%);color:#5a4300}
+  .b2{background:radial-gradient(circle at 35% 30%, #fff, #dbe6ff 65%);color:#1d2945}
+  .b3{background:radial-gradient(circle at 35% 30%, #fff, #ffd9b3 65%);color:#4a2c12}
+  .avatar{position:absolute;top:-64px;left:50%;transform:translateX(-50%);width:76px;height:76px;border-radius:50%;border:4px solid #fff;box-shadow:0 10px 22px rgba(0,0,0,.25);background:#fff center/cover no-repeat}
+  .name{margin-top:14px;font-weight:900;color:#32245c;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .scoreMini{color:#6b5d9c;font-size:12px;margin-top:2px}
+
+  .swrap{margin-top:12px;position:relative}
+  .hintRow{display:flex;justify-content:space-between;align-items:center;margin:2px 2px 6px;color:#efecffcc;font-size:12px}
+  .arrow{background:rgba(255,255,255,.25);border:1px solid rgba(255,255,255,.35);width:28px;height:28px;border-radius:50%;display:grid;place-items:center;cursor:pointer}
+  .arrow:active{transform:translateY(1px)}
+  .rail{display:grid;grid-auto-flow:column;grid-auto-columns:calc(50% - 10px);gap:10px;overflow:auto;padding:6px;scroll-snap-type:x mandatory}
+  @media (min-width:560px){ .rail{grid-auto-columns:calc(33.33% - 10px)} }
+  .chip{scroll-snap-align:start;background:linear-gradient(180deg,rgba(255,255,255,.9),rgba(255,255,255,.75));border:1px solid rgba(0,0,0,.06);border-radius:14px;padding:10px;display:grid;grid-template-columns:42px 1fr auto;gap:8px;align-items:center;color:#2b2350}
+  .rk{display:grid;place-items:center;width:38px;height:38px;border-radius:12px;font-weight:900;background:#f0ecff;border:1px solid rgba(0,0,0,.06)}
+  .chip .avatar{position:static;width:38px;height:38px;border:2px solid #fff;box-shadow:none}
+  .uname{font-weight:800}
+  .val{font-weight:900;color:#5b4bb4}
+
+  .search{margin-top:12px;display:grid;grid-template-columns:1fr auto;gap:8px}
   .input{border-radius:12px;border:1px solid var(--edge);background:#0f1030;color:#eff3ff;padding:10px 12px}
-  .btn{appearance:none;border:0;border-radius:12px;background:linear-gradient(180deg,var(--p2),var(--p1));color:#fff;font-weight:900;padding:10px 12px;cursor:pointer}
-  .table{border:1px solid var(--edge);border-radius:16px;overflow:hidden;margin-top:10px}
-  .th,.tr{display:grid;grid-template-columns:60px 1fr 110px;gap:8px;align-items:center}
-  .th{background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.03));padding:8px 10px;color:#dfe6ff;font-weight:800}
-  .tr{background:linear-gradient(180deg,#0f1133,#0c1030);border-top:1px solid #0a0e28;padding:8px 10px}
-  .rk{display:inline-flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:50%;font-weight:900;background:radial-gradient(circle at 35% 30%, #fff, #ffe5a6 55%, #ffc44d 70%);color:#3a2a00;border:2px solid rgba(0,0,0,.06)}
-  .rk.silver{background:radial-gradient(circle at 35% 30%, #fff, #eef3ff 55%, #d7e5ff 70%);color:#243152}
-  .rk.bronze{background:radial-gradient(circle at 35% 30%, #fff, #ffd8b3 55%, #e7a86f 70%);color:#4a2c12}
-  .user{display:flex;align-items:center;gap:10px}
-  .face{width:38px;height:38px;border-radius:50%;background:#eee center/cover no-repeat;border:2px solid #fff22}
-  .points{justify-self:end;font-weight:900}
-  .me{outline:2px solid var(--good);box-shadow:0 0 0 4px rgba(75,225,160,.18)}
+  .go{appearance:none;border:0;border-radius:12px;padding:10px 12px;background:#ffd86a;color:#3a2400;font-weight:900;cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,.12)}
+  .go:active{transform:translateY(1px);box-shadow:0 2px 0 rgba(0,0,0,.12)}
+  .result{margin-top:8px;background:rgba(255,255,255,.92);border:1px solid rgba(0,0,0,.08);color:#2b2350;border-radius:12px;padding:10px 12px;font-weight:700;display:none}
 
   /* Bottom tabs */
   nav{position:sticky;bottom:0;background:linear-gradient(180deg,#10112a,#0b0c1f);border-top:1px solid var(--edge);padding:8px 10px;z-index:30}
@@ -68,41 +80,33 @@
   details+details{margin-top:8px}
   summary{cursor:pointer;font-weight:800}
 
-  /* Share */
-  .shareRow{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  .shareBtn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px;border-radius:12px;border:1px solid var(--edge);background:#14143a;color:#eaf0ff;font-weight:800;cursor:pointer}
-  .icons{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px}
-  .social{display:grid;place-items:center;border:1px solid var(--edge);background:#14143a;padding:12px;border-radius:12px}
-  .social svg{width:22px;height:22px}
-
   /* === Community Social List === */
-.socialCard{
-  background: radial-gradient(120% 140% at 0% 0%, #5d2fff 0%, #4c22d8 35%, #3b1dbb 70%);
-  border: 1px solid rgba(255,255,255,.18);
-  border-radius: 20px;
-  padding: 12px;
-  box-shadow: 0 20px 50px rgba(0,0,0,.35);
-}
-.socialItem{
-  display:grid; grid-template-columns:1fr auto; align-items:center;
-  background: rgba(255,255,255,.08);
-  border:1px solid rgba(255,255,255,.16);
-  border-radius:14px; padding:10px 12px;
-}
-.socialItem + .socialItem{ margin-top:10px }
-.sLeft{ display:flex; align-items:center; gap:10px; min-width:0 }
-.sIcon{
-  width:34px; height:34px; border-radius:10px; display:grid; place-items:center;
-  background:#fff; color:#111; box-shadow:0 6px 14px rgba(0,0,0,.18); overflow:hidden
-}
-.sName{ font-weight:800; letter-spacing:.2px }
-.subBtn{
-  appearance:none; border:0; padding:9px 14px; border-radius:10px;
-  background:#fff; color:#222; font-weight:900; cursor:pointer;
-  box-shadow: 0 4px 0 rgba(0,0,0,.12);
-}
-.subBtn:active{ transform:translateY(1px); box-shadow:0 2px 0 rgba(0,0,0,.12) }
-
+  .socialCard{
+    background: radial-gradient(120% 140% at 0% 0%, #5d2fff 0%, #4c22d8 35%, #3b1dbb 70%);
+    border: 1px solid rgba(255,255,255,.18);
+    border-radius: 20px;
+    padding: 12px;
+    box-shadow: 0 20px 50px rgba(0,0,0,.35);
+  }
+  .socialItem{
+    display:grid; grid-template-columns:1fr auto; align-items:center;
+    background: rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.16);
+    border-radius:14px; padding:10px 12px;
+  }
+  .socialItem + .socialItem{ margin-top:10px }
+  .sLeft{ display:flex; align-items:center; gap:10px; min-width:0 }
+  .sIcon{
+    width:34px; height:34px; border-radius:10px; display:grid; place-items:center;
+    background:#fff; color:#111; box-shadow:0 6px 14px rgba(0,0,0,.18); overflow:hidden
+  }
+  .sName{ font-weight:800; letter-spacing:.2px }
+  .subBtn{
+    appearance:none; border:0; padding:9px 14px; border-radius:10px;
+    background:#fff; color:#222; font-weight:900; cursor:pointer;
+    box-shadow: 0 4px 0 rgba(0,0,0,.12);
+  }
+  .subBtn:active{ transform:translateY(1px); box-shadow:0 2px 0 rgba(0,0,0,.12) }
 </style>
 </head>
 <body>
@@ -112,6 +116,7 @@
       <div class="title" id="hdrTitle">Referral Race</div>
       <div class="muted" style="font-size:12px">v1 • demo</div>
     </div>
+    <!-- this old segment is hidden for Ranks now -->
     <div id="rangeSeg" class="seg">
       <button type="button" data-range="daily"   class="active">Daily</button>
       <button type="button" data-range="monthly">Monthly</button>
@@ -132,152 +137,253 @@
 </div>
 
 <script>
-(function(){
-  /* --- Sample data --- */
-  var DAILY = [
-    {username:'Masuma',        score:1490, avatar:''},
-    {username:'Hasan Sajjad',  score:1800, avatar:''},
-    {username:'Tanim',         score:1205, avatar:''},
-    {username:'Sadia Afrin',   score:1000, avatar:''},
-    {username:'Rejaul karim',  score:900,  avatar:''},
-    {username:'Hasnat',        score:800,  avatar:''},
-    {username:'Nishat jahan',  score:750,  avatar:''},
-    {username:'Sajjad (YOU)',  score:720,  avatar:''}
-  ];
-  var MONTHLY = DAILY.map(function(x,i){ return {username:x.username, score:Math.round(x.score*3.2 - i*20), avatar:x.avatar}; });
-  var ALL     = DAILY.map(function(x,i){ return {username:x.username, score:Math.round(x.score*7.1 - i*50), avatar:x.avatar}; });
+/* ================= CONFIG (Google Sheets) ================= */
+var SHEET_ID   = "YOUR_SHEET_ID_HERE";   // <-- put your Sheet ID
+var SHEET_NAME = "Referral";             // <-- put your tab name
+// Column auto-map (case-insensitive includes)
+var MAP = {
+  rank:["rank","#"],
+  username:["username","user","player","name"],
+  points:["points","score","total","referrals"],
+  avatar:["avatar","image","img","photo","icon","avatarurl"],
+  week:["week","period"]                  // e.g. Week 1, Week 2...
+};
 
-  /* --- helpers --- */
-  function $(s,el){ return (el||document).querySelector(s); }
-  function $all(s,el){ return Array.prototype.slice.call((el||document).querySelectorAll(s)); }
-  function fmt(n){ return Number(n||0).toLocaleString(); }
-  function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(m){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]; }); }
-  function faceBg(url){ return url ? 'url("'+url+'")' : 'url("data:image/svg+xml;utf8,'+encodeURIComponent(svgAvatar())+'")'; }
-  function svgAvatar(){return "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0%' stop-color='%23ffdef2'/><stop offset='100%' stop-color='%238b5dff'/></linearGradient></defs><rect width='64' height='64' rx='16' fill='url(%23g)'/><circle cx='32' cy='26' r='12' fill='white' opacity='.9'/><rect x='14' y='40' width='36' height='16' rx='8' fill='white' opacity='.9'/></svg>"; }
+/* ================= Helpers ================= */
+function $(s,el){ return (el||document).querySelector(s); }
+function $all(s,el){ return [].slice.call((el||document).querySelectorAll(s)); }
+function fmt(n){ n=Number(n||0); if(n>=1000) return (Math.round(n/100)/10).toLocaleString()+"K"; return n.toLocaleString(); }
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(m){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]; }); }
+function faceBg(url){ return url ? 'url("'+url+'")' : 'url("data:image/svg+xml;utf8,'+encodeURIComponent(svgAvatar())+'")'; }
+function svgAvatar(){return "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0%' stop-color='%23a0c4ff'/><stop offset='100%' stop-color='%238f6bff'/></linearGradient></defs><rect width='64' height='64' rx='16' fill='url(%23g)'/><circle cx='32' cy='26' r='12' fill='white' opacity='.9'/><rect x='14' y='40' width='36' height='16' rx='8' fill='white' opacity='.9'/></svg>"; }
+function getParam(k){var m=location.search.match(new RegExp("[?&]"+k+"=([^&]+)","i"));return m?decodeURIComponent(m[1]):null}
+function pickIndex(headers, aliases){ var L=headers.map(function(h){return String(h||'').toLowerCase()}); for(var i=0;i<aliases.length;i++){ var a=aliases[i]; var j=L.findIndex(function(h){return h.indexOf(a)>-1}); if(j>-1) return j; } return -1; }
 
-  /* --- state --- */
-  var state = { tab:'home', range:'daily', sets:{daily:DAILY, monthly:MONTHLY, all:ALL} };
+/* ================= Fetch Google Sheet (GViz) ================= */
+function fetchGViz(){
+  var url="https://docs.google.com/spreadsheets/d/"+SHEET_ID+"/gviz/tq?tqx=out:json&sheet="+encodeURIComponent(SHEET_NAME);
+  return fetch(url,{cache:"no-store"}).then(function(r){return r.text()}).then(function(text){
+    var jsonStr=(text.match(/google\.visualization\.Query\.setResponse\((.*)\);?/s)||[])[1];
+    if(!jsonStr) throw new Error("GViz JSON parse failed");
+    var data=JSON.parse(jsonStr);
+    var headers=data.table.cols.map(function(c){return c.label||c.id||""});
+    var rows=data.table.rows.filter(function(r){return r&&r.c}).map(function(r){return r.c.map(function(c){return c?(c.f!=null?c.f:c.v):""})});
+    return {headers:headers, rows:rows};
+  });
+}
+function normalize(payload){
+  var h=payload.headers, rows=payload.rows;
+  var ri=pickIndex(h,MAP.rank), ui=pickIndex(h,MAP.username), pi=pickIndex(h,MAP.points), ai=pickIndex(h,MAP.avatar), wi=pickIndex(h,MAP.week);
+  if(ui<0 || pi<0 || wi<0) throw new Error("Missing required columns: Username, Points, Week");
+  return rows.map(function(r){
+    var pts = Number(String(r[pi]).replace(/[^\d.\-]/g,''))||0;
+    return {
+      rank: (ri>-1? Number(String(r[ri]).replace(/[^\d.\-]/g,'')) : null),
+      username: String(r[ui]||"").trim(),
+      points: pts,
+      avatar: String((ai>-1? r[ai] :"")||"").trim(),
+      week: String(r[wi]||"").trim()
+    };
+  }).filter(function(x){return x.username});
+}
 
-  /* --- renderers --- */
-  function render(){
-    $('#hdrTitle').textContent = state.tab==='ranks' ? 'Leaderboard' :
-                                 state.tab==='terms' ? 'Terms & FAQ' :
-                                 state.tab==='community' ? 'Community' : 'Referral Race';
-    $('#rangeSeg').style.display = state.tab==='ranks' ? 'inline-flex' : 'none';
-    $all('.tab').forEach(function(b){ b.classList.toggle('active', b.getAttribute('data-tab')===state.tab); });
-    $all('#rangeSeg button').forEach(function(b){ b.classList.toggle('active', b.getAttribute('data-range')===state.range); });
+/* ================= App State ================= */
+var state = { tab:'home' };
+var ALL=[], WEEKS=[], CUR_WEEK="", TOP100=[];
 
-    if(state.tab==='home')      renderHome();
-    else if(state.tab==='ranks')renderRanks();
-    else if(state.tab==='terms')renderTerms();
-    else                        renderCommunity();
+/* ================= Views ================= */
+function render(){
+  $('#hdrTitle').textContent = state.tab==='ranks' ? 'Referral Ranking' :
+                               state.tab==='terms' ? 'Terms & FAQ' :
+                               state.tab==='community' ? 'Community' : 'Referral Race';
+  $('#rangeSeg').style.display = 'none'; // not used now
+
+  $all('.tab').forEach(function(b){ b.classList.toggle('active', b.getAttribute('data-tab')===state.tab); });
+
+  if(state.tab==='home')      renderHome();
+  else if(state.tab==='ranks')renderRanks();
+  else if(state.tab==='terms')renderTerms();
+  else                        renderCommunity();
+}
+
+/* ---- HOME ---- */
+function renderHome(){
+  $('#view').innerHTML =
+    '<div class="card">'+
+      '<h2>Referral Race</h2>'+
+      '<p>Invite friends, climb the leaderboard, and win weekly rewards.</p>'+
+      '<p><b>How it works</b></p>'+
+      '<ul style="margin:6px 0 0 18px;color:#dfe5ff">'+
+        '<li>Share your referral link with friends.</li>'+
+        '<li>Every verified signup = <b>+1 point</b>.</li>'+
+        '<li><b>Weekly</b> leaderboard resets every Monday.</li>'+
+      '</ul>'+
+    '</div>';
+}
+
+/* ---- RANKS (weekly, by Week column) ---- */
+function buildWeekOptions(){
+  var set={}, list=[];
+  ALL.forEach(function(x){ if(x.week) set[x.week]=true; });
+  for(var k in set) list.push(k);
+  list.sort(function(a,b){
+    var na=(a.match(/\d+/)||[])[0], nb=(b.match(/\d+/)||[])[0];
+    if(na&&nb) return Number(na)-Number(nb);
+    return a.localeCompare(b);
+  });
+  WEEKS=list;
+  var fromParam=getParam("week");
+  CUR_WEEK = fromParam && WEEKS.indexOf(fromParam)>-1 ? fromParam : (WEEKS[WEEKS.length-1]||"");
+}
+function byWeek(week){
+  var arr = ALL.filter(function(x){return x.week===week});
+  arr.sort(function(a,b){return b.points-a.points});
+  arr.forEach(function(x,i){ if(x.rank==null) x.rank=i+1; });
+  return arr;
+}
+function renderRanks(){
+  // Header controls (week selector + arrows)
+  var html =
+    '<div class="card">'+
+      '<div class="controls">'+
+        '<select id="weekSel" class="select" title="Select week"></select>'+
+        '<button id="prevBtn" class="wbtn" type="button">◀</button>'+
+        '<button id="nextBtn" class="wbtn" type="button">▶</button>'+
+      '</div>'+
+    '</div>'+
+    '<div class="podiumCard">'+
+      '<div class="cap">Weekly Podium</div>'+
+      '<div class="podium">'+
+        '<div class="step s2"><div class="badge b2">2</div><div class="avatar" id="p2a"></div><div class="name" id="p2n">—</div><div class="scoreMini" id="p2s"></div></div>'+
+        '<div class="step s1"><div class="badge b1">1</div><div class="avatar" id="p1a"></div><div class="name" id="p1n">—</div><div class="scoreMini" id="p1s"></div></div>'+
+        '<div class="step s3"><div class="badge b3">3</div><div class="avatar" id="p3a"></div><div class="name" id="p3n">—</div><div class="scoreMini" id="p3s"></div></div>'+
+      '</div>'+
+    '</div>'+
+    '<div class="swrap">'+
+      '<div class="hintRow"><div>Top 15 — swipe ▶</div><div><button class="arrow" id="left">⬅</button> <button class="arrow" id="right">➡</button></div></div>'+
+      '<div class="rail" id="rail"></div>'+
+    '</div>'+
+    '<div class="search"><input id="q" class="input" placeholder="Search username (top 100)…"/><button id="find" class="go" type="button">Find</button></div>'+
+    '<div id="mine" class="result"></div>';
+
+  $('#view').innerHTML = html;
+
+  // Data load (first time)
+  if(!ALL.length){
+    fetchGViz()
+      .then(normalize)
+      .then(function(items){ ALL=items; buildWeekOptions(); fillWeekUI(); })
+      .catch(function(err){
+        console.warn('Sheets failed, demo data used. Reason:', err.message);
+        // fallback demo
+        var demo=[];
+        function pushW(w,arr){ arr.forEach(function(x){ x.week=w; demo.push(x); }); }
+        pushW('Week 1',[
+          {username:'evelin0510',points:1000000,avatar:''},
+          {username:'송도르',points:455300,avatar:''},
+          {username:'Gumiya',points:372600,avatar:''},
+          {username:'Deathaura',points:269200,avatar:''},
+          {username:'Player1063389294',points:200000,avatar:''},
+          {username:'薇樂莉Jo',points:134200,avatar:''},
+          {username:'talia bentley',points:130200,avatar:''},
+          {username:'User8',points:120000,avatar:''},
+          {username:'User9',points:118000,avatar:''},
+          {username:'User10',points:110000,avatar:''},
+          {username:'User11',points:108000,avatar:''},
+          {username:'User12',points:104000,avatar:''},
+          {username:'User13',points:101000,avatar:''},
+          {username:'User14',points:98000,avatar:''},
+          {username:'User15',points:96000,avatar:''}
+        ]);
+        pushW('Week 2', demo.map(function(x){return {username:x.username,points:Math.round(x.points*0.92),avatar:x.avatar}}));
+        pushW('Week 3', demo.map(function(x){return {username:x.username,points:Math.round(x.points*1.05),avatar:x.avatar}}));
+        ALL=demo; buildWeekOptions(); fillWeekUI();
+      });
+  } else {
+    buildWeekOptions(); fillWeekUI();
   }
 
-  function renderHome(){
-    $('#view').innerHTML =
-      '<div class="card">'+
-        '<h2>Referral Race</h2>'+
-        '<p>Invite friends, climb the leaderboard, and win weekly rewards.</p>'+
-        '<p><b>How it works</b></p>'+
-        '<ul style="margin:6px 0 0 18px;color:#dfe5ff">'+
-          '<li>Share your referral link with friends.</li>'+
-          '<li>Every verified signup = <b>+1 point</b>.</li>'+
-          '<li>Daily podium (1–3) and Top list reset at midnight.</li>'+
-          '<li>Monthly champions win bigger prizes.</li>'+
-        '</ul>'+
-      '</div>'+
-      '<div class="card">'+
-        '<h3>Today’s Boosts</h3>'+
-        '<p>🎉 +2 points for first 5 referrals today.</p>'+
-        '<p>⏰ Streak bonus: 5 days in a row = extra 15 points.</p>'+
-      '</div>';
+  function fillWeekUI(){
+    var sel=$("#weekSel"); sel.innerHTML="";
+    WEEKS.forEach(function(w){ var o=document.createElement("option"); o.value=w; o.textContent=w; sel.appendChild(o); });
+    sel.value=CUR_WEEK;
+
+    // render this week
+    renderWeek();
+
+    // events
+    $("#left").onclick=function(){ $("#rail").scrollBy({left:-220,behavior:"smooth"}) }
+    $("#right").onclick=function(){ $("#rail").scrollBy({left:220,behavior:"smooth"}) }
+    $("#find").onclick=findUser;
+    $("#q").addEventListener("keydown",function(e){ if(e.key==="Enter") findUser(); });
+    $("#weekSel").onchange=function(){ CUR_WEEK=this.value; renderWeek(); }
+    $("#prevBtn").onclick=function(){ var i=WEEKS.indexOf(CUR_WEEK); if(i>0){ CUR_WEEK=WEEKS[i-1]; $("#weekSel").value=CUR_WEEK; renderWeek(); } }
+    $("#nextBtn").onclick=function(){ var i=WEEKS.indexOf(CUR_WEEK); if(i<WEEKS.length-1){ CUR_WEEK=WEEKS[i+1]; $("#weekSel").value=CUR_WEEK; renderWeek(); } }
   }
 
-  function renderRanks(){
-    var items = state.sets[state.range].slice().sort(function(a,b){ return b.score-a.score; });
-    var first  = items[0] || null;
-    var second = items[1] || null;
-    var third  = items[2] || null;
-
-    $('#view').innerHTML =
-      '<div class="podiumWrap">'+
-        '<div class="cap">'+(state.range.charAt(0).toUpperCase()+state.range.slice(1))+' Podium</div>'+
-        '<div class="podium">'+
-          '<div class="step s2"><div class="rankDot">2</div><div class="avatar" id="p2a"></div><div class="name" id="p2n">—</div><div class="scoreMini" id="p2s"></div></div>'+
-          '<div class="step s1"><div class="crown"></div><div class="rankDot">1</div><div class="avatar" id="p1a"></div><div class="name" id="p1n">—</div><div class="scoreMini" id="p1s"></div></div>'+
-          '<div class="step s3"><div class="rankDot">3</div><div class="avatar" id="p3a"></div><div class="name" id="p3n">—</div><div class="scoreMini" id="p3s"></div></div>'+
-        '</div>'+
-      '</div>'+
-      '<div class="card" style="margin-top:12px">'+
-        '<div class="search">'+
-          '<input id="searchName" class="input" placeholder="Search username…"/>'+
-          '<button type="button" class="btn" id="findBtn">Find</button>'+
-        '</div>'+
-        '<div class="table" style="margin-top:10px">'+
-          '<div class="th"><div>Rank</div><div>Player</div><div>Points</div></div>'+
-          '<div id="tbody"></div>'+
-        '</div>'+
-        '<div id="meSpot" class="card" style="display:none;margin-top:10px;background:#0f1d3a">'+
-          '<div id="meText" class="muted">Your position</div>'+
-        '</div>'+
-      '</div>';
-
-    function setPodium(id,row){
-      $('#'+id+'a').style.backgroundImage = faceBg(row && row.avatar ? row.avatar : '');
-      $('#'+id+'n').textContent = row && row.username ? row.username : '—';
-      $('#'+id+'s').textContent = row ? fmt(row.score)+' points' : '';
+  function renderWeek(){
+    var items = byWeek(CUR_WEEK);
+    // podium
+    function setPod(id,row){
+      $('#p'+id+'a').style.backgroundImage = faceBg(row?row.avatar:'');
+      $('#p'+id+'n').textContent = row?row.username:'—';
+      $('#p'+id+'s').textContent = row? (fmt(row.points)+' pts') : '';
     }
-    setPodium('p1',first); setPodium('p2',second); setPodium('p3',third);
+    setPod(1,items[0]); setPod(2,items[1]); setPod(3,items[2]);
 
-    var body = $('#tbody'); body.innerHTML='';
-    items.forEach(function(r,i){
-      var place=i+1, cls=(place===2?'silver':(place===3?'bronze':'')), label=(place<=3?(place===1?'1st':place===2?'2nd':'3rd'):place);
-      var tr=document.createElement('div'); tr.className='tr'; tr.setAttribute('data-user', r.username.toLowerCase());
-      tr.innerHTML = '<div class="rk '+cls+'">'+label+'</div>'+
-        '<div class="user"><div class="face" style="background-image:'+faceBg(r.avatar)+'"></div><div>'+esc(r.username)+'</div></div>'+
-        '<div class="points">'+fmt(r.score)+' pts</div>';
-      body.appendChild(tr);
+    // top15 rail
+    var rail=$("#rail"); rail.innerHTML='';
+    items.slice(3,18).forEach(function(r){
+      var div=document.createElement('div'); div.className='chip';
+      div.innerHTML = '<div class="rk">'+r.rank+'</div>'+
+        '<div style="display:flex;align-items:center;gap:8px"><div class="avatar" style="width:38px;height:38px;border:2px solid #fff;box-shadow:none;position:static;background-image:'+faceBg(r.avatar)+'"></div><div class="uname">'+esc(r.username)+'</div></div>'+
+        '<div class="val">'+fmt(r.points)+'</div>';
+      rail.appendChild(div);
     });
 
-    $('#findBtn').onclick = function(){
-      var val = ($('#searchName').value||'').trim().toLowerCase();
-      if(!val) return;
-      var idx = -1;
-      for(var j=0;j<items.length;j++){ if(items[j].username.toLowerCase()===val){ idx=j; break; } }
-      if(idx<0){ $('#meText').textContent='No match found.'; $('#meSpot').style.display='block'; return; }
-      var row = items[idx], place = idx+1;
-      $('#meText').innerHTML = '<b>'+esc(row.username)+'</b> — Rank <b>'+place+'</b> • '+fmt(row.score)+' points';
-      $('#meSpot').style.display='block';
-      var hit = $('.tr[data-user="'+val+'"]'); if(hit){ hit.classList.add('me'); hit.scrollIntoView({behavior:'smooth',block:'center'}); setTimeout(function(){ hit.classList.remove('me'); },1600); }
-    };
+    TOP100 = items.slice(0,100);
   }
 
-  function renderTerms(){
-    $('#view').innerHTML =
-      '<div class="card"><h2>Terms & Conditions</h2><p>By joining the Referral Race, you agree to the rules below.</p></div>'+
-      '<div class="card"><h3>FAQ</h3>'+
-        '<details open><summary>How do I earn points?</summary><p>Each verified signup via your link grants <b>+1 point</b>. Bonus events may add extra points.</p></details>'+
-        '<details><summary>When are winners announced?</summary><p>Daily winners after midnight; monthly champions on the 1st of each month.</p></details>'+
-        '<details><summary>How do payouts work?</summary><p>Rewards are credited within 24 hours (daily) and 3 days (monthly).</p></details>'+
-        '<details><summary>What about fake signups?</summary><p>Anti-fraud checks remove invalid referrals; repeat abuse may lead to disqualification.</p></details>'+
-        '<details><summary>Can I change my username?</summary><p>Yes in your profile; ranking history remains attached to your account.</p></details>'+
-      '</div>';
+  function findUser(){
+    var q = ($('#q').value||'').trim().toLowerCase();
+    var res=$("#mine");
+    if(!q){ res.style.display='block'; res.textContent='Enter a username'; return; }
+    var idx = -1;
+    for(var i=0;i<TOP100.length;i++){ if(TOP100[i].username.toLowerCase()===q){ idx=i; break; } }
+    if(idx<0){ res.style.display='block'; res.textContent='No match in Top 100.'; return; }
+    var row=TOP100[idx];
+    res.style.display='block';
+    res.innerHTML='<b>'+esc(row.username)+'</b> — Rank <b>'+row.rank+'</b> • '+fmt(row.points)+' pts • '+esc(row.week);
+    if(row.rank>=4 && row.rank<=18){
+      var el=$("#rail").children[row.rank-4]; if(el){ el.scrollIntoView({behavior:'smooth',inline:'center'}); }
+    }
   }
+}
 
- function renderCommunity(){
-  // Configure your links here
+/* ---- TERMS ---- */
+function renderTerms(){
+  $('#view').innerHTML =
+    '<div class="card"><h2>Terms & Conditions</h2><p>By joining the Referral Race, you agree to the rules below.</p></div>'+
+    '<div class="card"><h3>FAQ</h3>'+
+      '<details open><summary>How do I earn points?</summary><p>Each verified signup via your link grants <b>+1 point</b>. Bonus events may add extra points.</p></details>'+
+      '<details><summary>When are winners announced?</summary><p>Weekly winners every Monday.</p></details>'+
+      '<details><summary>How do payouts work?</summary><p>Rewards are credited within 72 hours after announcement.</p></details>'+
+      '<details><summary>Anti-fraud</summary><p>Duplicate or fake signups will be removed; repeated abuse may lead to disqualification.</p></details>'+
+    '</div>';
+}
+
+/* ---- COMMUNITY ---- */
+function renderCommunity(){
   var socials = [
     {name:'Facebook',  url:'https://facebook.com/yourbrand',  icon:'facebook'},
     {name:'Instagram', url:'https://instagram.com/yourbrand', icon:'instagram'},
     {name:'Pinterest', url:'https://pinterest.com/yourbrand', icon:'pinterest'},
     {name:'Telegram',  url:'https://t.me/yourchannel',        icon:'telegram'},
     {name:'Threads',   url:'https://www.threads.net/@yourid', icon:'threads'},
-    {name:'Whatsapp',  url:'https://wa.me/message/XXXXXXXX',  icon:'whatsapp'},
+    {name:'Whatsapp',  url:'https://wa.me/?text='+encodeURIComponent('Join the Referral Race: '+location.href), icon:'whatsapp'},
     {name:'X',         url:'https://twitter.com/yourbrand',   icon:'x'},
     {name:'Youtube',   url:'https://youtube.com/@yourbrand',  icon:'youtube'}
   ];
-
-  // tiny SVG icon helper (all inline, no external assets)
   function iconSVG(key){
     var s = {
       facebook:'<svg viewBox="0 0 24 24"><path fill="#1877F2" d="M24 12.07C24 5.405 18.627 0 12 0S0 5.405 0 12.07C0 18.1 4.388 23.093 10.125 24v-8.44H7.078v-3.49h3.047V9.413c0-3.017 1.792-4.687 4.533-4.687 1.313 0 2.686.235 2.686.235v2.97h-1.514c-1.492 0-1.956.929-1.956 1.884v2.26h3.328l-.532 3.49h-2.796V24C19.612 23.093 24 18.1 24 12.07z"/></svg>',
@@ -291,52 +397,22 @@
     };
     return s[key] || s['x'];
   }
-
-  // Build the list
   var rows = socials.map(function(s){
-    return (
-      '<div class="socialItem">' +
-        '<div class="sLeft">' +
-          '<div class="sIcon">'+ iconSVG(s.icon) +'</div>' +
-          '<div class="sName">'+ s.name +'</div>' +
-        '</div>' +
-        '<a class="subBtn" href="'+ s.url +'" target="_blank" rel="noopener">Subscribe</a>' +
-      '</div>'
-    );
+    return '<div class="socialItem"><div class="sLeft"><div class="sIcon">'+iconSVG(s.icon)+'</div><div class="sName">'+s.name+'</div></div><a class="subBtn" href="'+s.url+'" target="_blank" rel="noopener">Subscribe</a></div>';
   }).join('');
+  $('#view').innerHTML = '<div class="socialCard">'+rows+'</div>';
+}
 
-  // Inject
-  $('#view').innerHTML =
-    '<div class="socialCard">' + rows + '</div>';
-    var sharePayload = { title:title, text:title, url:url };
-    $('#shareTelegram').onclick = function(){
-      try{ if(navigator.share){ navigator.share(sharePayload); return; } }catch(e){}
-      var tg='https://t.me/share/url?url='+encodeURIComponent(url)+'&text='+encodeURIComponent(title);
-      window.open(tg,'_blank','noopener');
-    };
-    $('#shareWhatsApp').onclick = function(){
-      var wa='https://wa.me/?text='+encodeURIComponent(title+' '+url);
-      window.open(wa,'_blank','noopener');
-    };
-  }
-
-  /* --- events --- */
-  $all('.tab').forEach(function(btn){
-    btn.addEventListener('click', function(){
-      state.tab = btn.getAttribute('data-tab');
-      render();
-    });
+/* ================= Events ================= */
+$all('.tab').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    state.tab = btn.getAttribute('data-tab');
+    render();
   });
-  $all('#rangeSeg button').forEach(function(btn){
-    btn.addEventListener('click', function(){
-      state.range = btn.getAttribute('data-range');
-      render();
-    });
-  });
+});
 
-  /* --- boot --- */
-  render();
-})();
+/* ================= Boot ================= */
+render();
 </script>
 </body>
 </html>
