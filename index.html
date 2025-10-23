@@ -19,10 +19,12 @@
     -webkit-tap-highlight-color:transparent}
   .app{max-width:520px;margin:0 auto;min-height:100dvh;display:grid;grid-template-rows:auto 1fr auto;overflow-x:hidden}
 
+  /* Header */
   header{position:sticky;top:0;background:linear-gradient(180deg,#10112a,#0d0e23);border-bottom:1px solid var(--edge);padding:12px 16px;z-index:20}
   .hrow{display:flex;align-items:center;justify-content:space-between}
   .title{font-weight:900;font-size:18px;letter-spacing:.4px}
 
+  /* Content */
   main{padding:14px 14px 96px}
   .card{background:linear-gradient(180deg,#151533,#10112a);border:1px solid var(--edge);border-radius:16px;padding:14px;margin-bottom:12px}
   h2{margin:0 0 8px;font-size:18px}
@@ -56,35 +58,21 @@
 
   .rr .av{position:absolute;top:-64px;left:50%;transform:translateX(-50%);width:76px;height:76px;border-radius:50%;
     border:4px solid #fff;box-shadow:0 10px 22px rgba(0,0,0,.25);background:#fff center/cover no-repeat}
-  /* crown over avatar (top-3) */
+  /* crowns for top-3 */
   .rr .tiara{position:absolute;top:-86px;left:50%;transform:translateX(-50%);width:46px;height:30px;pointer-events:none}
   .rr .name{margin-top:14px;font-weight:900;color:#32245c;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .rr .scoreMini{color:#6b5d9c;font-size:12px;margin-top:2px}
 
-  .rr .swrap{margin-top:12px;position:relative;width:100%}
-  .rr .hintRow{display:flex;justify-content:space-between;align-items:center;margin:2px 2px 6px;color:#efecffcc;font-size:12px}
-  .rr .arrow{background:rgba(255,255,255,.25);border:1px solid rgba(255,255,255,.35);width:28px;height:28px;border-radius:50%;display:grid;place-items:center;cursor:pointer}
-  .rr .arrow:active{transform:translateY(1px)}
-  .rr .rail{display:grid;grid-auto-flow:column;grid-auto-columns:calc(50% - 10px);gap:10px;overflow:auto;padding:6px 6px 12px;
-    scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;max-width:100%}
-  @media (min-width:560px){ .rr .rail{grid-auto-columns:calc(33.33% - 10px)} }
-  .rr .rail::-webkit-scrollbar{height:0}
-  .rr .rail{scrollbar-width:none}
-  .rr .chip{scroll-snap-align:start;background:linear-gradient(180deg,rgba(255,255,255,.9),rgba(255,255,255,.75));
-    border:1px solid rgba(0,0,0,.06);border-radius:14px;padding:10px;display:grid;
-    grid-template-columns:42px 1fr auto;gap:8px;align-items:center;color:#2b2350;min-width:0}
+  /* Top 15 list (vertical) */
+  .rr .list{margin-top:12px;display:grid;gap:8px}
+  .rr .row{display:grid;grid-template-columns:46px 1fr auto;gap:8px;align-items:center;
+    background:linear-gradient(180deg,rgba(255,255,255,.9),rgba(255,255,255,.75));
+    border:1px solid rgba(0,0,0,.06);border-radius:14px;padding:10px;color:#2b2350}
   .rr .rk{display:grid;place-items:center;width:38px;height:38px;border-radius:12px;font-weight:900;background:#f0ecff;border:1px solid rgba(0,0,0,.06)}
-  .rr .chip .av{position:static;width:38px;height:38px;border:2px solid #fff;box-shadow:none}
+  .rr .face{width:38px;height:38px;border-radius:50%;background:#eee center/cover no-repeat;border:2px solid #fff;margin-right:8px}
   .rr .uname{font-weight:800}
   .rr .val{font-weight:900;color:#5b4bb4}
-
-  /* extra list (ranks 19–20) */
-  .rr .more{margin-top:10px}
-  .rr .row{display:grid;grid-template-columns:46px 1fr auto;gap:8px;align-items:center;
-    background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.05));border:1px solid rgba(255,255,255,.1);
-    border-radius:14px;padding:10px}
-  .rr .row + .row{margin-top:8px}
-  .rr .row .rk{width:38px;height:38px}
+  .rr .row .left{display:flex;align-items:center;gap:8px}
 
   .rr .search{margin-top:12px;display:grid;grid-template-columns:1fr auto;gap:8px}
   .rr .input{border-radius:12px;border:1px solid var(--edge);background:#0f1030;color:#eff3ff;padding:10px 12px}
@@ -92,15 +80,52 @@
   .rr .go:active{transform:translateY(1px);box-shadow:0 2px 0 rgba(0,0,0,.12)}
   .rr .result{margin-top:8px;background:rgba(255,255,255,.92);border:1px solid rgba(0,0,0,.08);color:#2b2350;border-radius:12px;padding:10px 12px;font-weight:700;display:none}
 
-  nav{position:sticky;bottom:0;background:linear-gradient(180deg,#10112a,#0b0c1f);border-top:1px solid var(--edge);padding:8px 10px;z-index:30}
-  .tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-  .tab{appearance:none;border:1px solid var(--edge);background:#14143a;color:#cdd7ff;border-radius:12px;padding:10px 8px;font-weight:800;cursor:pointer}
-  .tab.active{background:linear-gradient(180deg,var(--p2),var(--p1));color:#fff;box-shadow:0 6px 18px var(--glow)}
+  /* === Icon Bottom Nav === */
+  .iconnav{
+    position: sticky; bottom: 0; inset-inline: 0;
+    display: grid; grid-template-columns: repeat(4,1fr); gap: 8px;
+    padding: 10px 12px; background: linear-gradient(180deg,#10112a,#0b0c1f);
+    border-top: 1px solid rgba(255,255,255,.08); z-index: 30;
+    --hot:#ff4fd8; --hot2:#ff9ae8; --ink:#eaf0ff;
+    --ix: 0; /* active index, JS updates this */
+  }
+  .iconnav .itab{
+    position: relative; isolation:isolate;
+    appearance:none; border:0; background:transparent; cursor:pointer;
+    display:flex; flex-direction:column; align-items:center; gap:6px;
+    padding: 10px 6px; color:#cdd7ff; font-weight:800; border-radius:14px;
+  }
+  .iconnav .itab span{ font-size:11px; letter-spacing:.2px; line-height:1; }
+  .iconnav .ico{
+    width:26px; height:26px; display:block;
+    fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round;
+    transition: transform .25s ease, color .25s ease;
+  }
+  .iconnav .itab.active .ico{ transform: translateY(-2px) scale(1.06); }
+  .iconnav .itab.active, .iconnav .itab:focus-visible{ color:#fff; }
 
+  .iconnav .inkbar{
+    position:absolute; left:0; right:0; bottom:8px; height:44px; z-index:0;
+    pointer-events:none;
+    --col: radial-gradient(90% 140% at 10% 0%, var(--hot) 0%, var(--hot2) 60%, #ffcabf 100%);
+    width: calc(25% - 8px); /* 4 items */
+    border-radius:16px; background: var(--col);
+    box-shadow: 0 12px 26px rgba(255,79,216,.35), inset 0 -2px 6px rgba(0,0,0,.18);
+    transform: translateX(calc(var(--ix) * 100%)) translateX(calc(var(--ix) * 8px));
+    transition: transform .28s cubic-bezier(.22,.9,.24,1), width .15s ease;
+  }
+  .iconnav .itab:active .ico{ transform:translateY(0) scale(.98) }
+  .iconnav .itab.active span{
+    background: linear-gradient(90deg, var(--hot), var(--hot2));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+
+  /* FAQ */
   details{background:#14143a;border:1px solid var(--edge);border-radius:12px;padding:10px}
   details+details{margin-top:8px}
   summary{cursor:pointer;font-weight:800}
 
+  /* Community */
   .socialCard{background: radial-gradient(120% 140% at 0% 0%, #5d2fff 0%, #4c22d8 35%, #3b1dbb 70%);border:1px solid rgba(255,255,255,.18);border-radius:20px;padding:12px;box-shadow:0 20px 50px rgba(0,0,0,.35)}
   .socialItem{display:grid;grid-template-columns:1fr auto;align-items:center;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:14px;padding:10px 12px}
   .socialItem + .socialItem{margin-top:10px}
@@ -115,26 +140,38 @@
 <div class="app">
   <header>
     <div class="hrow">
-      <div class="title" id="hdrTitle">Referral Ranking</div>
+      <div class="title" id="hdrTitle">Referral Race</div>
       <div class="muted" style="font-size:12px">v1 • demo</div>
     </div>
   </header>
 
   <main id="view"></main>
 
-  <nav>
-    <div class="tabs">
-      <button type="button" class="tab active" data-tab="ranks">Ranks</button>
-      <button type="button" class="tab" data-tab="home">Home</button>
-      <button type="button" class="tab" data-tab="terms">T&amp;C</button>
-      <button type="button" class="tab" data-tab="community">Community</button>
-    </div>
+  <!-- Icon Bottom Nav -->
+  <nav class="iconnav" aria-label="Primary">
+    <div class="inkbar" aria-hidden="true"></div>
+    <button type="button" class="itab active" data-tab="home" data-idx="0" aria-label="Home">
+      <svg class="ico" viewBox="0 0 24 24"><path d="M4 10.5l8-6 8 6V20a2 2 0 0 1-2 2h-3.5a1.5 1.5 0 0 1-1.5-1.5V16a2 2 0 0 0-2-2 2 2 0 0 0-2 2v4.5A1.5 1.5 0 0 1 7.5 22H4a2 2 0 0 1-2-2v-9.5z"/></svg>
+      <span>Home</span>
+    </button>
+    <button type="button" class="itab" data-tab="ranks" data-idx="1" aria-label="Ranks">
+      <svg class="ico" viewBox="0 0 24 24"><path d="M7 22V11a2 2 0 0 1 2-2h6v13H7zM3 22v-7a2 2 0 0 1 2-2h1v9H3zM17 22V5a2 2 0 0 1 2-2h2v19h-4zM10 5l2-3 2 3"/></svg>
+      <span>Ranks</span>
+    </button>
+    <button type="button" class="itab" data-tab="terms" data-idx="2" aria-label="T & C">
+      <svg class="ico" viewBox="0 0 24 24"><path d="M6 3h9l4 4v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zM15 3v4h4M8 11h8M8 15h8M8 7h4"/></svg>
+      <span>T&amp;C</span>
+    </button>
+    <button type="button" class="itab" data-tab="community" data-idx="3" aria-label="Community">
+      <svg class="ico" viewBox="0 0 24 24"><path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4zm0 2c-4 0-8 2-8 5v1h16v-1c0-3-4-5-8-5zM18.5 11.5a3 3 0 1 0-2.5-5 5.8 5.8 0 0 1 .7 2.5 5.8 5.8 0 0 1-.6 2.5 3 3 0 0 0 2.4 0z"/></svg>
+      <span>Community</span>
+    </button>
   </nav>
 </div>
 
 <script>
 /* ============ CONFIG (Google Sheets) ============ */
-var SHEET_ID   = "YOUR_SHEET_ID_HERE"; // put your id later
+var SHEET_ID   = "YOUR_SHEET_ID_HERE"; // put your sheet id later
 var SHEET_NAME = "Referral";           // your tab name
 var MAP = {
   rank:["rank","#"],
@@ -182,18 +219,22 @@ function normalize(payload){
 }
 
 /* app state */
-let state={tab:'ranks'}
+let state={tab:'home'}
 let ALL=[],WEEKS=[],CUR_WEEK='',TOP100=[]
+
+function moveInk(ix){ document.querySelector('.iconnav').style.setProperty('--ix', ix); }
 
 function render(){
   $('#hdrTitle').textContent = state.tab==='ranks' ? 'Referral Ranking' :
                                state.tab==='terms' ? 'Terms & FAQ' :
                                state.tab==='community' ? 'Community' : 'Referral Race';
-  $all('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===state.tab))
+  $all('.iconnav .itab').forEach(b=>b.classList.toggle('active',b.dataset.tab===state.tab));
+  moveInk(parseInt(document.querySelector('.iconnav .itab.active')?.dataset.idx||'0',10));
+
   if(state.tab==='ranks') renderRanks()
-  else if(state.tab==='home') renderHome()
   else if(state.tab==='terms') renderTerms()
-  else renderCommunity()
+  else if(state.tab==='community') renderCommunity()
+  else renderHome()
 }
 
 /* HOME */
@@ -202,10 +243,15 @@ function renderHome(){
     <div class="card">
       <h2>Referral Race</h2>
       <p>Invite friends, climb the leaderboard, and win weekly rewards.</p>
+      <ul style="margin:6px 0 0 18px;color:#dfe5ff">
+        <li>Share your referral link with friends.</li>
+        <li>Every verified signup = <b>+1 point</b>.</li>
+        <li><b>Weekly</b> leaderboard resets every Monday.</li>
+      </ul>
     </div>`;
 }
 
-/* RANKS (Weekly via Week column) */
+/* RANKS — podium + Top 15 vertical list (4–15) */
 function renderRanks(){
   $('#view').innerHTML = `
   <div class="rr">
@@ -236,12 +282,7 @@ function renderRanks(){
       </div>
     </div>
 
-    <div class="swrap">
-      <div class="hintRow"><div>Top 15 — swipe ▶</div><div><button class="arrow" id="rr-left">⬅</button> <button class="arrow" id="rr-right">➡</button></div></div>
-      <div class="rail" id="rr-rail"></div>
-    </div>
-
-    <div class="more" id="rr-more"></div>
+    <div class="list" id="rr-list"></div>
 
     <div class="search"><input id="rr-q" class="input" placeholder="Search username (top 100)…"/><button id="rr-find" class="go" type="button">Find</button></div>
     <div id="rr-mine" class="result"></div>
@@ -290,8 +331,6 @@ function renderRanks(){
     sel.value=CUR_WEEK;
     renderWeek();
 
-    $('#rr-left').onclick = ()=> $('#rr-rail').scrollBy({left:-220,behavior:'smooth'});
-    $('#rr-right').onclick = ()=> $('#rr-rail').scrollBy({left:220,behavior:'smooth'});
     $('#rr-find').onclick = findUser;
     $('#rr-q').addEventListener('keydown',e=>{ if(e.key==='Enter') findUser(); });
     $('#weekSel').onchange = function(){ CUR_WEEK=this.value; renderWeek(); };
@@ -314,24 +353,14 @@ function renderRanks(){
     }
     setPod(1,items[0]||null); setPod(2,items[1]||null); setPod(3,items[2]||null);
 
-    // Swipe shows ranks 4..18 (Top 15 after podium)
-    const rail = $('#rr-rail'); rail.innerHTML='';
-    items.slice(3,18).forEach(r=>{
-      const div=document.createElement('div'); div.className='chip';
-      div.innerHTML = '<div class="rk">'+r.rank+'</div>'+
-        '<div style="display:flex;align-items:center;gap:8px"><div class="av" style="position:static;width:38px;height:38px;border:2px solid #fff;box-shadow:none;background-image:'+faceBg(r.avatar)+'"></div><div class="uname">'+esc(r.username)+'</div></div>'+
-        '<div class="val">'+fmt(r.points)+'</div>';
-      rail.appendChild(div);
-    });
-
-    // Extra list ranks 19..20 (scroll down)
-    const more = $('#rr-more'); more.innerHTML='';
-    items.slice(18,20).forEach(r=>{
+    // Top 15 list: ranks 4..15
+    const list = $('#rr-list'); list.innerHTML='';
+    items.slice(3,15).forEach(r=>{
       const row=document.createElement('div'); row.className='row';
-      row.innerHTML='<div class="rk">'+r.rank+'</div>'+
-        '<div style="display:flex;align-items:center;gap:8px"><div class="av" style="position:static;width:38px;height:38px;border:2px solid #fff;box-shadow:none;background-image:'+faceBg(r.avatar)+'"></div><div class="uname">'+esc(r.username)+'</div></div>'+
+      row.innerHTML = '<div class="rk">'+r.rank+'</div>'+
+        '<div class="left"><div class="face" style="background-image:'+faceBg(r.avatar)+'"></div><div class="uname">'+esc(r.username)+'</div></div>'+
         '<div class="val">'+fmt(r.points)+'</div>';
-      more.appendChild(row);
+      list.appendChild(row);
     });
 
     TOP100 = items.slice(0,100);
@@ -346,9 +375,6 @@ function renderRanks(){
     if(!hit){ res.style.display='block'; res.textContent='No match in Top 100.'; return; }
     res.style.display='block';
     res.innerHTML = '<b>'+esc(hit.username)+'</b> — Rank <b>'+hit.rank+'</b> • '+fmt(hit.points)+' pts • '+esc(hit.week);
-    if(hit.rank>=4 && hit.rank<=18){
-      const el=$('#rr-rail').children[hit.rank-4]; if(el){ el.scrollIntoView({behavior:'smooth',inline:'center'}); }
-    }
   }
 }
 
@@ -364,25 +390,19 @@ function renderTerms(){
   </div>`;
 }
 
-/* COMMUNITY (same as before) */
+/* COMMUNITY */
 function renderCommunity(){
   const socials=[
     {name:'Facebook',  url:'https://facebook.com/yourbrand',  icon:'facebook'},
     {name:'Instagram', url:'https://instagram.com/yourbrand', icon:'instagram'},
-    {name:'Pinterest', url:'https://pinterest.com/yourbrand', icon:'pinterest'},
     {name:'Telegram',  url:'https://t.me/yourchannel',        icon:'telegram'},
-    {name:'Threads',   url:'https://www.threads.net/@yourid', icon:'threads'},
-    {name:'Whatsapp',  url:'https://wa.me/?text='+encodeURIComponent('Join the Referral Race: '+location.href), icon:'whatsapp'},
     {name:'X',         url:'https://twitter.com/yourbrand',   icon:'x'},
     {name:'Youtube',   url:'https://youtube.com/@yourbrand',  icon:'youtube'}
   ];
   function iconSVG(key){
     const s={facebook:'<svg viewBox="0 0 24 24"><path fill="#1877F2" d="M24 12.07C24 5.405 18.627 0 12 0S0 5.405 0 12.07C0 18.1 4.388 23.093 10.125 24v-8.44H7.078v-3.49h3.047V9.413c0-3.017 1.792-4.687 4.533-4.687 1.313 0 2.686.235 2.686.235v2.97h-1.514c-1.492 0-1.956.929-1.956 1.884v2.26h3.328l-.532 3.49h-2.796V24C19.612 23.093 24 18.1 24 12.07z"/></svg>',
       instagram:'<svg viewBox="0 0 24 24"><defs><linearGradient id="ig" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#feda75"/><stop offset="50%" stop-color="#d62976"/><stop offset="100%" stop-color="#4f5bd5"/></linearGradient></defs><rect x="2" y="2" width="20" height="20" rx="5" fill="url(#ig)"/><circle cx="12" cy="12" r="4.5" fill="#fff"/><circle cx="17.2" cy="6.8" r="1.3" fill="#fff"/></svg>',
-      pinterest:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#E60023"/><path fill="#fff" d="M12.24 7.5c-2.67 0-4.01 1.92-4.01 3.52 0 .97.37 1.82 1.16 2.14.13.05.24 0 .28-.14.02-.1.09-.37.12-.48.04-.14.02-.19-.08-.31-.23-.27-.38-.62-.38-1.12 0-1.44 1.08-2.73 2.82-2.73 1.54 0 2.39.94 2.39 2.2 0 1.65-.73 3.05-1.82 3.05-.6 0-1.05-.5-.9-1.12.17-.71.5-1.48.5-1.99 0-.46-.25-.85-.78-.85-.62 0-1.11.63-1.11 1.48 0 .54.18.9.18.9s-.6 2.52-.7 2.96c-.21.9-.03 2 .03 2.1.02.03.03.03.05.02.02 0 .77-1 .99-1.93.07-.29.39-1.54.39-1.54.19.36.76.68 1.36.68 1.79 0 3.01-1.64 3.01-3.84 0-1.66-1.41-3.2-3.54-3.2z"/></svg>',
       telegram:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#27A7E7"/><path fill="#fff" d="M9.7 17.3l.3-3.2 7.3-6.6c.3-.3-.1-.4-.5-.2l-9 5.7-3.1-1c-.7-.2-.7-.7.1-1l12.1-4.7c.6-.2 1.1.1.9 1l-2.1 10.6c-.1.7-.5.9-1.1.6l-3-2.2-2 1.9c-.1.2-.5.1-.7 0z"/></svg>',
-      threads:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#000"/><path fill="#fff" d="M16.9 11.8c-.2-2.5-1.8-4.1-4.5-4.1-1.8 0-3.1.7-3.8 2l2 .9c.3-.7.8-1 1.7-1 1.3 0 2 .7 2.1 1.9-1-.3-2.1-.4-3.2-.1-2 .6-2.6 2.2-2.2 3.5.4 1.4 1.9 2.3 3.7 2.3 1.3 0 2.4-.4 3.1-1.1.1.4.3.8.6 1.2l1.7-1.2c-.5-.7-.9-1.5-1-.2 0-.7 0-1.3-.2-2zM12.2 15c-.9 0-1.5-.4-1.7-1-.2-.7.3-1.3 1.2-1.6.8-.2 1.7-.2 2.6 0-.1 1.3-1 2.6-2.1 2.6z"/></svg>',
-      whatsapp:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#25D366"/><path fill="#fff" d="M17.8 13.35c-.18-.1-1.08-.58-1.25-.64-.17-.06-.3-.1-.43.1-.13.2-.49.64-.6.77-.11.13-.22.15-.4.05-.18-.1-.77-.31-1.46-.9-.54-.48-.9-1.08-1.01-1.26-.11-.18-.01-.28.08-.37.08-.08.18-.2.27-.29.09-.1.12-.17.18-.28.06-.12.03-.21-.02-.3-.05-.09-.43-.92-.59-1.26-.15-.33-.31-.28-.43-.28h-.37c-.13 0-.32.05-.49.23-.17.18-.65.63-.65 1.52s.67 1.76.77 1.88c.1.12 1.33 1.98 3.22 2.78.45.19.8.3 1.08.39.45.14.86.12 1.19.08.36-.05 1.11-.44 1.27-.86.16-.42.16-.78.11-.86-.05-.08-.18-.12-.36-.21z"/></svg>',
       x:'<svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" fill="#000"/><path fill="#fff" d="M6 6l6.3 8.3L10 18h2.1l1.5-2.2L18 18h2l-6.7-8.7L16 6h-2l-1.3 2-1 1.5L9 6H6z"/></svg>',
       youtube:'<svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="4" fill="#FF0000"/><path fill="#fff" d="M10 9l6 3-6 3z"/></svg>'
     };
@@ -392,9 +412,17 @@ function renderCommunity(){
   $('#view').innerHTML = `<div class="card"><h2>Share & Follow</h2><p>Invite friends and follow us.</p></div><div class="socialCard">${rows}</div>`;
 }
 
-/* tabs */
-$all('.tab').forEach(btn=> btn.addEventListener('click', ()=>{ state.tab=btn.dataset.tab; render(); }));
+/* nav events */
+$all('.iconnav .itab').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    state.tab = btn.getAttribute('data-tab');
+    render();
+  });
+});
+
+/* boot */
 render();
+moveInk(0);
 </script>
 </body>
 </html>
