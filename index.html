@@ -25,7 +25,7 @@
   .title{font-weight:900;font-size:18px;letter-spacing:.4px}
 
   /* Content */
-  main{padding:14px 14px 116px} /* extra space so content never hides behind fixed tab bar */
+  main{padding:14px 14px 116px} /* extra space for fixed tab bar */
   .card{background:linear-gradient(180deg,#151533,#10112a);border:1px solid var(--edge);border-radius:16px;padding:14px;margin-bottom:12px}
   h2{margin:0 0 8px;font-size:18px}
   h3{margin:0 0 8px;font-size:16px}
@@ -143,6 +143,22 @@
   .sName{font-weight:800;letter-spacing:.2px}
   .subBtn{appearance:none;border:0;padding:9px 14px;border-radius:10px;background:#fff;color:#222;font-weight:900;cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,.12)}
   .subBtn:active{transform:translateY(1px);box-shadow:0 2px 0 rgba(0,0,0,.12)}
+
+  /* Floating sound toggle */
+  .soundBtn{
+    position: fixed; right: 12px; bottom: calc(72px + env(safe-area-inset-bottom,0));
+    background: rgba(255,255,255,.95); color:#111;
+    border:1px solid rgba(0,0,0,.08); border-radius:14px;
+    padding:10px 12px; display:none; gap:8px; align-items:center;
+    font-weight:900; z-index:1100; box-shadow:0 10px 24px rgba(0,0,0,.25);
+  }
+  .soundBtn.show{ display:inline-flex; }
+  .soundBtn.active{ background: linear-gradient(90deg,#ffd86a,#ffc24d); }
+  .soundBtn .ic{ width:22px; height:22px; fill:none; stroke:currentColor; stroke-width:1.8;
+    stroke-linecap:round; stroke-linejoin:round; }
+  @media (min-width:560px){
+    .soundBtn{ bottom: calc(92px + env(safe-area-inset-bottom,0)); }
+  }
 </style>
 </head>
 <body>
@@ -177,6 +193,15 @@
     <span>Community</span>
   </button>
 </nav>
+
+<!-- Background Music -->
+<audio id="bgm" src="theme.mp3" preload="auto" loop playsinline muted></audio>
+
+<!-- Floating sound toggle -->
+<button id="soundBtn" class="soundBtn" aria-label="Toggle sound" title="Sound">
+  <svg viewBox="0 0 24 24" class="ic"><path d="M4 10h4l5-4v12l-5-4H4zM17 8a5 5 0 010 8"/></svg>
+  <span>Sound</span>
+</button>
 
 <script>
 /* ============ CONFIG (Google Sheets) ============ */
@@ -356,14 +381,14 @@ function renderRanks(){
   function renderWeek(){
     const items = byWeek(CUR_WEEK);
     function setPod(id,row){
-      $('#rr-p'+id+'a').style.backgroundImage = faceBg(row?row.avatar:'');
-      $('#rr-p'+id+'n').textContent = row?row.username:'—';
-      $('#rr-p'+id+'s').textContent = row? (fmt(row.points)+' pts') : '';
+      document.getElementById('rr-p'+id+'a').style.backgroundImage = faceBg(row?row.avatar:'');
+      document.getElementById('rr-p'+id+'n').textContent = row?row.username:'—';
+      document.getElementById('rr-p'+id+'s').textContent = row? (fmt(row.points)+' pts') : '';
     }
     setPod(1,items[0]||null); setPod(2,items[1]||null); setPod(3,items[2]||null);
 
     // Top 15 list: ranks 4..15
-    const list = $('#rr-list'); list.innerHTML='';
+    const list = document.getElementById('rr-list'); list.innerHTML='';
     items.slice(3,15).forEach(r=>{
       const row=document.createElement('div'); row.className='row';
       row.innerHTML = '<div class="rk">'+r.rank+'</div>'+
@@ -377,8 +402,8 @@ function renderRanks(){
   }
 
   function findUser(){
-    const q = ($('#rr-q').value||'').trim().toLowerCase();
-    const res = $('#rr-mine');
+    const q = (document.getElementById('rr-q').value||'').trim().toLowerCase();
+    const res = document.getElementById('rr-mine');
     if(!q){ res.style.display='block'; res.textContent='Enter a username'; return; }
     const hit = TOP100.find(x=>x.username.toLowerCase()===q);
     if(!hit){ res.style.display='block'; res.textContent='No match in Top 100.'; return; }
@@ -389,7 +414,7 @@ function renderRanks(){
 
 /* TERMS */
 function renderTerms(){
-  $('#view').innerHTML = `
+  document.getElementById('view').innerHTML = `
   <div class="card"><h2>Terms & Conditions</h2><p>By joining the Referral Race, you agree to the rules below.</p></div>
   <div class="card"><h3>FAQ</h3>
     <details open><summary>How do I earn points?</summary><p>Each verified signup via your link grants <b>+1 point</b>. Bonus events may add extra points.</p></details>
@@ -418,7 +443,7 @@ function renderCommunity(){
     return s[key]||s['x'];
   }
   const rows = socials.map(s=>`<div class="socialItem"><div class="sLeft"><div class="sIcon">${iconSVG(s.icon)}</div><div class="sName">${s.name}</div></div><a class="subBtn" href="${s.url}" target="_blank" rel="noopener">Subscribe</a></div>`).join('');
-  $('#view').innerHTML = `<div class="card"><h2>Share & Follow</h2><p>Invite friends and follow us.</p></div><div class="socialCard">${rows}</div>`;
+  document.getElementById('view').innerHTML = `<div class="card"><h2>Share & Follow</h2><p>Invite friends and follow us.</p></div><div class="socialCard">${rows}</div>`;
 }
 
 /* nav events */
@@ -432,6 +457,62 @@ $all('.iconnav .itab').forEach(btn=>{
 /* boot */
 render();
 moveInk(0);
+
+/* === Background music controller === */
+(function(){
+  const audio = document.getElementById('bgm');
+  const btn   = document.getElementById('soundBtn');
+  if(!audio || !btn) return;
+
+  // Restore last choice
+  const saved = localStorage.getItem('bgm_pref'); // 'on' | 'off' | null
+  if(saved === 'on'){ audio.muted = false; }
+  if(saved === 'off'){ audio.muted = true; }
+
+  // Try autoplay on load
+  document.addEventListener('DOMContentLoaded', tryPlay, {once:true});
+  async function tryPlay(){
+    try{
+      await audio.play();        // might throw if blocked
+      if(!audio.muted) btn.classList.remove('show'); // user previously allowed
+      else {
+        // If still muted, unmute and re-play (may still get blocked)
+        audio.muted = false;
+        await audio.play();
+        btn.classList.remove('show');
+        localStorage.setItem('bgm_pref','on');
+      }
+    }catch(e){
+      // Autoplay blocked – show button for user gesture
+      btn.classList.add('show');
+    }
+  }
+
+  // Toggle on click
+  btn.addEventListener('click', async ()=>{
+    try{
+      if(audio.paused){ audio.muted = false; await audio.play(); }
+      else { audio.muted = !audio.muted; if(audio.muted) await audio.pause(); else await audio.play(); }
+      const on = !audio.paused && !audio.muted;
+      btn.classList.toggle('active', on);
+      btn.classList.remove('show');      // hide once started
+      localStorage.setItem('bgm_pref', on ? 'on' : 'off');
+    }catch(e){
+      // If still blocked, keep button visible
+      btn.classList.add('show');
+    }
+  });
+
+  // Optional: pause when page hidden, resume when visible (if user enabled)
+  document.addEventListener('visibilitychange', async ()=>{
+    const want = localStorage.getItem('bgm_pref') === 'on';
+    if(document.hidden){ if(!audio.paused) audio.pause(); }
+    else if(want){
+      try{ audio.muted = false; await audio.play(); btn.classList.remove('show'); }
+      catch(e){ btn.classList.add('show'); }
+    }
+  });
+})();
 </script>
 </body>
 </html>
