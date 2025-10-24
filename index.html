@@ -3,13 +3,11 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-<title>Referral Race</title>
+<title>Referral Race + Mini Games</title>
 <style>
   :root{
-    --bg:#0c0c12; --ink:#eef2ff; --muted:#a0a7c9;
-    --panel:#141424; --edge:rgba(255,255,255,.08);
-    --p1:#8b5dff; --p2:#aa74ff; --glow:rgba(153,120,255,.3);
-    --acc:#ffd86a; --good:#4be1a0;
+    --bg:#0c0c12; --ink:#eef2ff; --muted:#a0a7c9; --edge:rgba(255,255,255,.08);
+    --p1:#8b5dff; --p2:#aa74ff; --glow:rgba(153,120,255,.3); --acc:#ffd86a;
   }
   *{box-sizing:border-box}
   html,body{margin:0;height:100%;overflow-x:hidden;
@@ -58,12 +56,10 @@
 
   .rr .av{position:absolute;top:-64px;left:50%;transform:translateX(-50%);width:76px;height:76px;border-radius:50%;
     border:4px solid #fff;box-shadow:0 10px 22px rgba(0,0,0,.25);background:#fff center/cover no-repeat}
-  /* crowns for top-3 */
   .rr .tiara{position:absolute;top:-86px;left:50%;transform:translateX(-50%);width:46px;height:30px;pointer-events:none}
   .rr .name{margin-top:14px;font-weight:900;color:#32245c;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .rr .scoreMini{color:#6b5d9c;font-size:12px;margin-top:2px}
 
-  /* Top 15 list (vertical) */
   .rr .list{margin-top:12px;display:grid;gap:8px}
   .rr .row{display:grid;grid-template-columns:46px 1fr auto;gap:8px;align-items:center;
     background:linear-gradient(180deg,rgba(255,255,255,.9),rgba(255,255,255,.75));
@@ -80,54 +76,29 @@
   .rr .go:active{transform:translateY(1px);box-shadow:0 2px 0 rgba(0,0,0,.12)}
   .rr .result{margin-top:8px;background:rgba(255,255,255,.92);border:1px solid rgba(0,0,0,.08);color:#2b2350;border-radius:12px;padding:10px 12px;font-weight:700;display:none}
 
-  /* === Icon Bottom Nav — fixed like an app tab bar === */
+  /* === Icon Bottom Nav — fixed (5 items now) === */
   .iconnav{
-    position: fixed;
-    left: 50%;
-    transform: translateX(-50%);
+    position: fixed; left: 50%; transform: translateX(-50%);
     bottom: max(8px, env(safe-area-inset-bottom));
     width: min(520px, 100% - 12px);
-    display: grid; grid-template-columns: repeat(4,1fr); gap: 8px;
-    padding: 10px 12px;
-    background: rgba(16,17,42,.98);
-    backdrop-filter: blur(6px);
-    border: 1px solid rgba(255,255,255,.08);
-    border-radius: 16px;
-    box-shadow: 0 18px 38px rgba(0,0,0,.28), 0 2px 0 rgba(255,255,255,.04) inset;
-    z-index: 1000;
-    --hot:#ff4fd8; --hot2:#ff9ae8; --ink:#eaf0ff;
-    --ix: 0; /* active index */
+    display: grid; grid-template-columns: repeat(5,1fr); gap: 8px;
+    padding: 10px 12px; background: rgba(16,17,42,.98); backdrop-filter: blur(6px);
+    border: 1px solid rgba(255,255,255,.08); border-radius: 16px;
+    box-shadow: 0 18px 38px rgba(0,0,0,.28), 0 2px 0 rgba(255,255,255,.04) inset; z-index: 1000;
+    --hot:#ff4fd8; --hot2:#ff9ae8; --ix: 0;
   }
-  .iconnav .itab{
-    position: relative; isolation:isolate;
-    appearance:none; border:0; background:transparent; cursor:pointer;
-    display:flex; flex-direction:column; align-items:center; gap:6px;
-    padding: 10px 6px; color:#cdd7ff; font-weight:800; border-radius:14px;
-  }
-  .iconnav .itab span{ font-size:11px; letter-spacing:.2px; line-height:1; }
-  .iconnav .ico{
-    width:26px; height:26px; display:block;
-    fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round;
-    transition: transform .25s ease, color .25s ease;
-  }
-  .iconnav .itab.active .ico{ transform: translateY(-2px) scale(1.06); }
-  .iconnav .itab.active, .iconnav .itab:focus-visible{ color:#fff; }
-
-  .iconnav .inkbar{
-    position:absolute; bottom:10px; height:44px; z-index:0; pointer-events:none;
-    left:12px; right:12px;
-    --col: radial-gradient(90% 140% at 10% 0%, var(--hot) 0%, var(--hot2) 60%, #ffcabf 100%);
-    width: calc((100% - 24px - 8px*3)/4);  /* 4 items, respect side padding + gaps */
-    border-radius:16px; background: var(--col);
-    box-shadow: 0 12px 26px rgba(255,79,216,.35), inset 0 -2px 6px rgba(0,0,0,.18);
-    transform: translateX(calc(var(--ix) * (100% + 8px)));
-    transition: transform .28s cubic-bezier(.22,.9,.24,1), width .15s ease;
-  }
-  .iconnav .itab:active .ico{ transform:translateY(0) scale(.98) }
-  .iconnav .itab.active span{
-    background: linear-gradient(90deg, var(--hot), var(--hot2));
-    -webkit-background-clip: text; background-clip: text; color: transparent;
-  }
+  .iconnav .itab{position:relative;isolation:isolate;appearance:none;border:0;background:transparent;cursor:pointer;
+    display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 6px;color:#cdd7ff;font-weight:800;border-radius:14px}
+  .iconnav .itab span{font-size:11px;letter-spacing:.2px;line-height:1}
+  .iconnav .ico{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transition:transform .25s,color .25s}
+  .iconnav .itab.active .ico{transform:translateY(-2px) scale(1.06)}
+  .iconnav .itab.active,.iconnav .itab:focus-visible{color:#fff}
+  .iconnav .inkbar{position:absolute;bottom:10px;height:44px;z-index:0;pointer-events:none;left:12px;right:12px;
+    width: calc((100% - 24px - 8px*4)/5); /* 5 items */
+    border-radius:16px;background:radial-gradient(90% 140% at 10% 0%,var(--hot) 0%,var(--hot2) 60%,#ffcabf 100%);
+    box-shadow:0 12px 26px rgba(255,79,216,.35), inset 0 -2px 6px rgba(0,0,0,.18);
+    transform:translateX(calc(var(--ix) * (100% + 8px)));
+    transition:transform .28s cubic-bezier(.22,.9,.24,1), width .15s ease}
 
   /* FAQ */
   details{background:#14143a;border:1px solid var(--edge);border-radius:12px;padding:10px}
@@ -144,21 +115,24 @@
   .subBtn{appearance:none;border:0;padding:9px 14px;border-radius:10px;background:#fff;color:#222;font-weight:900;cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,.12)}
   .subBtn:active{transform:translateY(1px);box-shadow:0 2px 0 rgba(0,0,0,.12)}
 
-  /* Floating sound toggle */
-  .soundBtn{
-    position: fixed; right: 12px; bottom: calc(72px + env(safe-area-inset-bottom,0));
-    background: rgba(255,255,255,.95); color:#111;
-    border:1px solid rgba(0,0,0,.08); border-radius:14px;
-    padding:10px 12px; display:none; gap:8px; align-items:center;
-    font-weight:900; z-index:1100; box-shadow:0 10px 24px rgba(0,0,0,.25);
-  }
-  .soundBtn.show{ display:inline-flex; }
-  .soundBtn.active{ background: linear-gradient(90deg,#ffd86a,#ffc24d); }
-  .soundBtn .ic{ width:22px; height:22px; fill:none; stroke:currentColor; stroke-width:1.8;
-    stroke-linecap:round; stroke-linejoin:round; }
-  @media (min-width:560px){
-    .soundBtn{ bottom: calc(92px + env(safe-area-inset-bottom,0)); }
-  }
+  /* Sound toggle */
+  .soundBtn{position:fixed;right:12px;bottom:calc(72px + env(safe-area-inset-bottom,0));background:rgba(255,255,255,.95);color:#111;border:1px solid rgba(0,0,0,.08);border-radius:14px;padding:10px 12px;display:none;gap:8px;align-items:center;font-weight:900;z-index:1100;box-shadow:0 10px 24px rgba(0,0,0,.25)}
+  .soundBtn.show{display:inline-flex}
+  .soundBtn.active{background:linear-gradient(90deg,#ffd86a,#ffc24d)}
+  .soundBtn .ic{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  @media (min-width:560px){.soundBtn{bottom:calc(92px + env(safe-area-inset-bottom,0))}}
+
+  /* ===== Mini Game ===== */
+  .mg-tabs{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+  .mg-tabs button{appearance:none;border:1px solid var(--edge);background:#15153a;color:#eaf0ff;border-radius:12px;padding:10px 12px;font-weight:900;cursor:pointer}
+  .mg-tabs button.active{background:linear-gradient(180deg,var(--p2),var(--p1));box-shadow:0 6px 18px var(--glow)}
+  .mg-wrap{border:1px solid var(--edge);border-radius:16px;overflow:hidden;background:linear-gradient(180deg,#0f1030,#0b0c26)}
+  .mg-head{display:flex;align-items:center;justify-content:space-between;padding:10px;border-bottom:1px solid #0a0e28}
+  .mg-head .title{font-weight:900}
+  .mg-head .ctrls{display:flex;gap:8px}
+  .mg-btn{appearance:none;border:0;border-radius:10px;background:#ffd86a;color:#361e00;font-weight:900;padding:8px 12px;cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,.12)}
+  .mg-canvas{display:block;width:100%;height:340px;background:linear-gradient(180deg,#0a0e24,#060814)}
+  .tip{font-size:12px;color:#b7c3ff;margin-top:8px}
 </style>
 </head>
 <body>
@@ -173,7 +147,7 @@
   <main id="view"></main>
 </div>
 
-<!-- Icon Bottom Nav (fixed) -->
+<!-- Bottom Nav (5 tabs: Home, Ranks, T&C, Community, Mini Game) -->
 <nav class="iconnav" aria-label="Primary">
   <div class="inkbar" aria-hidden="true"></div>
   <button type="button" class="itab active" data-tab="home" data-idx="0" aria-label="Home">
@@ -192,31 +166,26 @@
     <svg class="ico" viewBox="0 0 24 24"><path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4zm0 2c-4 0-8 2-8 5v1h16v-1c0-3-4-5-8-5zM18.5 11.5a3 3 0 1 0-2.5-5 5.8 5.8 0 0 1 .7 2.5 5.8 5.8 0 0 1-.6 2.5 3 3 0 0 0 2.4 0z"/></svg>
     <span>Community</span>
   </button>
+  <button type="button" class="itab" data-tab="minigame" data-idx="4" aria-label="Mini Game">
+    <svg class="ico" viewBox="0 0 24 24"><path d="M4 8a4 4 0 0 1 4-4h2a2 2 0 0 1 2 2v1h2a2 2 0 0 1 2 2v1h2a2 2 0 0 1 2 2v2h-4l-2 3H8l-2-3H2v-3a3 3 0 0 1 2-3z"/></svg>
+    <span>Mini Game</span>
+  </button>
 </nav>
 
 <!-- Background Music -->
 <audio id="bgm" src="theme.mp3" preload="auto" loop playsinline autoplay></audio>
-
-
-<!-- Floating sound toggle -->
 <button id="soundBtn" class="soundBtn" aria-label="Toggle sound" title="Sound">
   <svg viewBox="0 0 24 24" class="ic"><path d="M4 10h4l5-4v12l-5-4H4zM17 8a5 5 0 010 8"/></svg>
   <span>Sound</span>
 </button>
 
 <script>
-/* ============ CONFIG (Google Sheets) ============ */
-var SHEET_ID   = "YOUR_SHEET_ID_HERE"; // put your sheet id later
-var SHEET_NAME = "Referral";           // your tab name
-var MAP = {
-  rank:["rank","#"],
-  username:["username","user","player","name"],
-  points:["points","score","total","referrals"],
-  avatar:["avatar","image","img","photo","icon","avatarurl"],
-  week:["week","period"]                // e.g., Week 1, Week 2
-};
+/* ======= CONFIG (Sheets for Ranks) ======= */
+var SHEET_ID   = "YOUR_SHEET_ID_HERE"; // set later
+var SHEET_NAME = "Referral";           // set later
+var MAP = { rank:["rank","#"], username:["username","user","player","name"], points:["points","score","total","referrals"], avatar:["avatar","image","img","photo","icon","avatarurl"], week:["week","period"] };
 
-/* helpers */
+/* Helpers */
 function $(s,el){return (el||document).querySelector(s)}
 function $all(s,el){return [].slice.call((el||document).querySelectorAll(s))}
 function fmt(n){n=Number(n||0);if(n>=1000)return (Math.round(n/100)/10).toLocaleString()+"K";return n.toLocaleString()}
@@ -225,54 +194,35 @@ function faceBg(url){return url?'url("'+url+'")':'url("data:image/svg+xml;utf8,'
 function svgAvatar(){return "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0%' stop-color='%23a0c4ff'/><stop offset='100%' stop-color='%238f6bff'/></linearGradient></defs><rect width='64' height='64' rx='16' fill='url(%23g)'/><circle cx='32' cy='26' r='12' fill='white' opacity='.9'/><rect x='14' y='40' width='36' height='16' rx='8' fill='white' opacity='.9'/></svg>"}
 function getParam(k){var m=location.search.match(new RegExp("[?&]"+k+"=([^&]+)","i"));return m?decodeURIComponent(m[1]):null}
 function pickIndex(headers, aliases){var L=headers.map(h=>String(h||'').toLowerCase());for(var i=0;i<aliases.length;i++){var a=aliases[i];var j=L.findIndex(h=>h.indexOf(a)>-1);if(j>-1)return j;}return -1}
-
-function fetchGViz(){
-  var url="https://docs.google.com/spreadsheets/d/"+SHEET_ID+"/gviz/tq?tqx=out:json&sheet="+encodeURIComponent(SHEET_NAME);
-  return fetch(url,{cache:"no-store"}).then(r=>r.text()).then(text=>{
-    var jsonStr=(text.match(/google\.visualization\.Query\.setResponse\((.*)\);?/s)||[])[1];
-    if(!jsonStr) throw new Error("GViz JSON parse failed");
-    var data=JSON.parse(jsonStr);
-    var headers=data.table.cols.map(c=>c.label||c.id||"");
-    var rows=data.table.rows.filter(r=>r&&r.c).map(r=> r.c.map(c=> c?(c.f!=null?c.f:c.v):""));
-    return {headers, rows};
-  });
-}
-function normalize(payload){
-  var h=payload.headers, rows=payload.rows;
-  var ri=pickIndex(h,MAP.rank), ui=pickIndex(h,MAP.username), pi=pickIndex(h,MAP.points), ai=pickIndex(h,MAP.avatar), wi=pickIndex(h,MAP.week);
+function fetchGViz(){var url="https://docs.google.com/spreadsheets/d/"+SHEET_ID+"/gviz/tq?tqx=out:json&sheet="+encodeURIComponent(SHEET_NAME);
+  return fetch(url,{cache:"no-store"}).then(r=>r.text()).then(text=>{var j=(text.match(/google\.visualization\.Query\.setResponse\((.*)\);?/s)||[])[1]; if(!j) throw new Error("GViz parse failed");
+    var data=JSON.parse(j); var headers=data.table.cols.map(c=>c.label||c.id||""); var rows=data.table.rows.filter(r=>r&&r.c).map(r=> r.c.map(c=> c?(c.f!=null?c.f:c.v):"")); return {headers,rows};});}
+function normalize(payload){var h=payload.headers, rows=payload.rows; var ri=pickIndex(h,MAP.rank), ui=pickIndex(h,MAP.username), pi=pickIndex(h,MAP.points), ai=pickIndex(h,MAP.avatar), wi=pickIndex(h,MAP.week);
   if(ui<0 || pi<0 || wi<0) throw new Error("Missing required columns: Username, Points, Week");
-  return rows.map(r=>{
-    var pts=Number(String(r[pi]).replace(/[^\d.\-]/g,''))||0;
-    return {
-      rank:(ri>-1? Number(String(r[ri]).replace(/[^\d.\-]/g,'')) : null),
-      username:String(r[ui]||"").trim(),
-      points:pts,
-      avatar:String((ai>-1? r[ai] :"")||"").trim(),
-      week:String(r[wi]||"").trim()
-    };
-  }).filter(x=>x.username);
-}
+  return rows.map(r=>({ rank:(ri>-1? Number(String(r[ri]).replace(/[^\d.\-]/g,'')) : null), username:String(r[ui]||"").trim(),
+    points:Number(String(r[pi]).replace(/[^\d.\-]/g,''))||0, avatar:String((ai>-1? r[ai] :"")||"").trim(), week:String(r[wi]||"").trim() })).filter(x=>x.username);}
 
-/* app state */
-let state={tab:'home'}
-let ALL=[],WEEKS=[],CUR_WEEK='',TOP100=[]
-
+/* App State */
+let state={tab:'home'}; let ALL=[],WEEKS=[],CUR_WEEK='',TOP100=[];
 function moveInk(ix){ document.querySelector('.iconnav').style.setProperty('--ix', ix); }
 
+/* Render Router */
 function render(){
   $('#hdrTitle').textContent = state.tab==='ranks' ? 'Referral Ranking' :
                                state.tab==='terms' ? 'Terms & FAQ' :
-                               state.tab==='community' ? 'Community' : 'Referral Race';
+                               state.tab==='community' ? 'Community' :
+                               state.tab==='minigame' ? 'Mini Game' : 'Referral Race';
   $all('.iconnav .itab').forEach(b=>b.classList.toggle('active',b.dataset.tab===state.tab));
   moveInk(parseInt(document.querySelector('.iconnav .itab.active')?.dataset.idx||'0',10));
 
-  if(state.tab==='ranks') renderRanks()
-  else if(state.tab==='terms') renderTerms()
-  else if(state.tab==='community') renderCommunity()
-  else renderHome()
+  if(state.tab==='ranks') renderRanks();
+  else if(state.tab==='terms') renderTerms();
+  else if(state.tab==='community') renderCommunity();
+  else if(state.tab==='minigame') renderMiniGame();
+  else renderHome();
 }
 
-/* HOME */
+/* Home */
 function renderHome(){
   $('#view').innerHTML = `
     <div class="card">
@@ -286,7 +236,7 @@ function renderHome(){
     </div>`;
 }
 
-/* RANKS — podium + Top 15 vertical list (4–15) */
+/* Ranks */
 function renderRanks(){
   $('#view').innerHTML = `
   <div class="rr">
@@ -299,21 +249,9 @@ function renderRanks(){
     <div class="podiumCard">
       <div class="cap">Weekly Podium</div>
       <div class="podium">
-        <div class="step s2">
-          <div class="badge b2">2</div>
-          <svg class="tiara" viewBox="0 0 64 36" fill="none"><path d="M5 32h54l-5-16-10 8-7-12-7 12-10-8-15 16z" fill="#E7EEF9"/><path d="M5 32h54l-5-16-10 8-7-12-7 12-10-8-15 16z" fill="#D7E3FF" opacity=".6"/><circle cx="32" cy="10" r="4" fill="#fff"/><circle cx="12" cy="15" r="3" fill="#fff"/><circle cx="52" cy="15" r="3" fill="#fff"/></svg>
-          <div class="av" id="rr-p2a"></div><div class="name" id="rr-p2n">—</div><div class="scoreMini" id="rr-p2s"></div>
-        </div>
-        <div class="step s1">
-          <div class="badge b1">1</div>
-          <svg class="tiara" viewBox="0 0 64 36" fill="none"><path d="M5 32h54l-6-18-11 9-7-13-7 13-11-9-12 18z" fill="#FFE79B"/><path d="M5 32h54l-6-18-11 9-7-13-7 13-11-9-12 18z" fill="#FFD86A" opacity=".7"/><circle cx="32" cy="10" r="5" fill="#fff"/><circle cx="15" cy="14" r="3.5" fill="#fff"/><circle cx="49" cy="14" r="3.5" fill="#fff"/></svg>
-          <div class="av" id="rr-p1a"></div><div class="name" id="rr-p1n">—</div><div class="scoreMini" id="rr-p1s"></div>
-        </div>
-        <div class="step s3">
-          <div class="badge b3">3</div>
-          <svg class="tiara" viewBox="0 0 64 36" fill="none"><path d="M5 32h54l-4-14-10 8-7-12-7 12-10-8-16 14z" fill="#FFE0C2"/><path d="M5 32h54l-4-14-10 8-7-12-7 12-10-8-16 14z" fill="#FFC99F" opacity=".6"/><circle cx="32" cy="10" r="4" fill="#fff"/><circle cx="13" cy="15" r="3" fill="#fff"/><circle cx="51" cy="15" r="3" fill="#fff"/></svg>
-          <div class="av" id="rr-p3a"></div><div class="name" id="rr-p3n">—</div><div class="scoreMini" id="rr-p3s"></div>
-        </div>
+        <div class="step s2"><div class="badge b2">2</div><div class="av" id="rr-p2a"></div><div class="name" id="rr-p2n">—</div><div class="scoreMini" id="rr-p2s"></div></div>
+        <div class="step s1"><div class="badge b1">1</div><div class="av" id="rr-p1a"></div><div class="name" id="rr-p1n">—</div><div class="scoreMini" id="rr-p1s"></div></div>
+        <div class="step s3"><div class="badge b3">3</div><div class="av" id="rr-p3a"></div><div class="name" id="rr-p3n">—</div><div class="scoreMini" id="rr-p3s"></div></div>
       </div>
     </div>
 
@@ -324,30 +262,20 @@ function renderRanks(){
   </div>`;
 
   if(!ALL.length){
-    fetchGViz()
-      .then(normalize)
-      .then(items=>{ ALL=items; buildWeeks(); fillWeekUI(); })
-      .catch(err=>{
-        console.warn('Sheets failed, demo used:', err.message);
-        let demo=[];
-        function seed(week,arr){ arr.forEach(x=>{ x.week=week; demo.push(x); }); }
-        seed('Week 1',[
-          {username:'evelin0510',points:1000000},
-          {username:'송도르',points:502000},
-          {username:'Gumiya',points:391200},
-          {username:'Deathaura',points:282700},
-          {username:'Player1063389294',points:200000},
-          {username:'薇樂莉Jo',points:140000},
-          {username:'talia bentley',points:130200},
-          {username:'U8',points:120000},{username:'U9',points:118000},{username:'U10',points:110000},
-          {username:'U11',points:108000},{username:'U12',points:104000},{username:'U13',points:101000},
-          {username:'U14',points:98000},{username:'U15',points:96000},{username:'U16',points:92000},
-          {username:'U17',points:90000},{username:'U18',points:88000},{username:'U19',points:86000},{username:'U20',points:84000}
-        ]);
-        seed('Week 2', demo.slice(0,20).map(x=>({username:x.username,points:Math.round(x.points*0.92)})));
-        seed('Week 3', demo.slice(0,20).map(x=>({username:x.username,points:Math.round(x.points*1.05)})));
-        ALL=demo; buildWeeks(); fillWeekUI();
-      });
+    fetchGViz().then(normalize).then(items=>{ ALL=items; buildWeeks(); fillWeekUI(); })
+    .catch(err=>{
+      console.warn('Sheets failed, demo used:', err.message);
+      let demo=[];
+      function seed(week,arr){ arr.forEach(x=>{ x.week=week; demo.push(x); }); }
+      seed('Week 1',[{username:'evelin0510',points:1000000},{username:'송도르',points:502000},{username:'Gumiya',points:391200},{username:'Deathaura',points:282700},
+        {username:'Player1063389294',points:200000},{username:'薇樂莉Jo',points:140000},{username:'talia bentley',points:130200},
+        {username:'U8',points:120000},{username:'U9',points:118000},{username:'U10',points:110000},{username:'U11',points:108000},{username:'U12',points:104000},
+        {username:'U13',points:101000},{username:'U14',points:98000},{username:'U15',points:96000},{username:'U16',points:92000},{username:'U17',points:90000},{username:'U18',points:88000},{username:'U19',points:86000},{username:'U20',points:84000}
+      ]);
+      seed('Week 2', demo.slice(0,20).map(x=>({username:x.username,points:Math.round(x.points*0.92)})));
+      seed('Week 3', demo.slice(0,20).map(x=>({username:x.username,points:Math.round(x.points*1.05)})));
+      ALL=demo; buildWeeks(); fillWeekUI();
+    });
   } else { buildWeeks(); fillWeekUI(); }
 
   function buildWeeks(){
@@ -355,16 +283,13 @@ function renderRanks(){
     ALL.forEach(x=>{ if(x.week) set[x.week]=true; });
     for(const k in set) list.push(k);
     list.sort((a,b)=>{ const na=(a.match(/\d+/)||[])[0], nb=(b.match(/\d+/)||[])[0]; if(na&&nb) return na-nb; return a.localeCompare(b); });
-    WEEKS=list;
-    const fromParam=getParam('week');
-    CUR_WEEK = fromParam && WEEKS.includes(fromParam) ? fromParam : (WEEKS[WEEKS.length-1]||'');
+    WEEKS=list; CUR_WEEK = (WEEKS[WEEKS.length-1]||'');
   }
 
   function fillWeekUI(){
     const sel = $('#weekSel'); sel.innerHTML='';
     WEEKS.forEach(w=>{ const o=document.createElement('option'); o.value=w; o.textContent=w; sel.appendChild(o); });
-    sel.value=CUR_WEEK;
-    renderWeek();
+    sel.value=CUR_WEEK; renderWeek();
 
     $('#rr-find').onclick = findUser;
     $('#rr-q').addEventListener('keydown',e=>{ if(e.key==='Enter') findUser(); });
@@ -382,14 +307,13 @@ function renderRanks(){
   function renderWeek(){
     const items = byWeek(CUR_WEEK);
     function setPod(id,row){
-      document.getElementById('rr-p'+id+'a').style.backgroundImage = faceBg(row?row.avatar:'');
-      document.getElementById('rr-p'+id+'n').textContent = row?row.username:'—';
-      document.getElementById('rr-p'+id+'s').textContent = row? (fmt(row.points)+' pts') : '';
+      $('#rr-p'+id+'a').style.backgroundImage = faceBg(row?row.avatar:'');
+      $('#rr-p'+id+'n').textContent = row?row.username:'—';
+      $('#rr-p'+id+'s').textContent = row? (fmt(row.points)+' pts') : '';
     }
     setPod(1,items[0]||null); setPod(2,items[1]||null); setPod(3,items[2]||null);
 
-    // Top 15 list: ranks 4..15
-    const list = document.getElementById('rr-list'); list.innerHTML='';
+    const list = $('#rr-list'); list.innerHTML='';
     items.slice(3,15).forEach(r=>{
       const row=document.createElement('div'); row.className='row';
       row.innerHTML = '<div class="rk">'+r.rank+'</div>'+
@@ -399,12 +323,11 @@ function renderRanks(){
     });
 
     TOP100 = items.slice(0,100);
-    document.documentElement.scrollLeft = 0; document.body.scrollLeft = 0;
   }
 
   function findUser(){
-    const q = (document.getElementById('rr-q').value||'').trim().toLowerCase();
-    const res = document.getElementById('rr-mine');
+    const q = ($('#rr-q').value||'').trim().toLowerCase();
+    const res = $('#rr-mine');
     if(!q){ res.style.display='block'; res.textContent='Enter a username'; return; }
     const hit = TOP100.find(x=>x.username.toLowerCase()===q);
     if(!hit){ res.style.display='block'; res.textContent='No match in Top 100.'; return; }
@@ -413,9 +336,9 @@ function renderRanks(){
   }
 }
 
-/* TERMS */
+/* Terms */
 function renderTerms(){
-  document.getElementById('view').innerHTML = `
+  $('#view').innerHTML = `
   <div class="card"><h2>Terms & Conditions</h2><p>By joining the Referral Race, you agree to the rules below.</p></div>
   <div class="card"><h3>FAQ</h3>
     <details open><summary>How do I earn points?</summary><p>Each verified signup via your link grants <b>+1 point</b>. Bonus events may add extra points.</p></details>
@@ -425,7 +348,7 @@ function renderTerms(){
   </div>`;
 }
 
-/* COMMUNITY */
+/* Community */
 function renderCommunity(){
   const socials=[
     {name:'Facebook',  url:'https://facebook.com/yourbrand',  icon:'facebook'},
@@ -440,104 +363,276 @@ function renderCommunity(){
       telegram:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#27A7E7"/><path fill="#fff" d="M9.7 17.3l.3-3.2 7.3-6.6c.3-.3-.1-.4-.5-.2l-9 5.7-3.1-1c-.7-.2-.7-.7.1-1l12.1-4.7c.6-.2 1.1.1.9 1l-2.1 10.6c-.1.7-.5.9-1.1.6l-3-2.2-2 1.9c-.1.2-.5.1-.7 0z"/></svg>',
       x:'<svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" fill="#000"/><path fill="#fff" d="M6 6l6.3 8.3L10 18h2.1l1.5-2.2L18 18h2l-6.7-8.7L16 6h-2l-1.3 2-1 1.5L9 6H6z"/></svg>',
       youtube:'<svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="4" fill="#FF0000"/><path fill="#fff" d="M10 9l6 3-6 3z"/></svg>'
-    };
-    return s[key]||s['x'];
+    }; return s[key]||s['x'];
   }
   const rows = socials.map(s=>`<div class="socialItem"><div class="sLeft"><div class="sIcon">${iconSVG(s.icon)}</div><div class="sName">${s.name}</div></div><a class="subBtn" href="${s.url}" target="_blank" rel="noopener">Subscribe</a></div>`).join('');
-  document.getElementById('view').innerHTML = `<div class="card"><h2>Share & Follow</h2><p>Invite friends and follow us.</p></div><div class="socialCard">${rows}</div>`;
+  $('#view').innerHTML = `<div class="card"><h2>Share & Follow</h2><p>Invite friends and follow us.</p></div><div class="socialCard">${rows}</div>`;
 }
 
-/* nav events */
-$all('.iconnav .itab').forEach(btn=>{
-  btn.addEventListener('click', ()=>{
-    state.tab = btn.getAttribute('data-tab');
-    render();
+/* ===== Mini Game Tab ===== */
+function renderMiniGame(){
+  $('#view').innerHTML = `
+    <div class="card"><h2>Mini Game</h2>
+      <p class="tip">No points for now (fun mode). For fair rewards later: verify sessions (JWT), server-side score checks, cool-downs, replay caps, bot detection, and signed results.</p>
+    </div>
+    <div class="card">
+      <div class="mg-tabs">
+        <button class="mg-t active" data-game="flappy">Flappy Spin</button>
+        <button class="mg-t" data-game="plinko">Lucky Drop</button>
+        <button class="mg-t" data-game="jump">Jump to Win</button>
+      </div>
+      <div class="mg-wrap">
+        <div class="mg-head">
+          <div class="title" id="mgTitle">Flappy Spin</div>
+          <div class="ctrls">
+            <button class="mg-btn" id="mgStart">Start</button>
+            <button class="mg-btn" id="mgStop">Stop</button>
+          </div>
+        </div>
+        <canvas id="mgCanvas" class="mg-canvas" width="480" height="340"></canvas>
+      </div>
+      <div class="tip" id="mgTip">Tap / Space to flap. Don’t hit the chips!</div>
+    </div>
+  `;
+  const canvas = $('#mgCanvas'), ctx = canvas.getContext('2d');
+  const title = $('#mgTitle'), tip = $('#mgTip');
+  let game='flappy', RAF=null, running=false;
+  function setCanvasSize(){ const w = canvas.clientWidth; canvas.width = Math.round(w); canvas.height = 340; }
+  setCanvasSize(); addEventListener('resize', setCanvasSize);
+
+  // Switcher
+  $all('.mg-t').forEach(b=>b.onclick=()=>{
+    $all('.mg-t').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active'); game=b.dataset.game;
+    stopGame();
+    if(game==='flappy'){ title.textContent='Flappy Spin'; tip.textContent='Tap / Space to flap. Don’t hit the chips!'; }
+    if(game==='plinko'){ title.textContent='Lucky Drop'; tip.textContent='Tap / Click to drop a ball. Watch it bounce!'; }
+    if(game==='jump'){ title.textContent='Jump to Win'; tip.textContent='Tilt/Arrows to move. Auto-jump on platforms.'; }
   });
+
+  $('#mgStart').onclick=()=> startGame();
+  $('#mgStop').onclick=()=> stopGame();
+
+  // ====== GAME ENGINES (simple, no points) ======
+
+  /* --- 1) Flappy Spin --- */
+  function runFlappy(){
+    const w=canvas.width, h=canvas.height;
+    let bird={x:w*0.28,y:h*0.45,r:12,vy:0};
+    let pipes=[], gap=110, t=0, gravity=0.45, jump=-6.5, alive=true;
+
+    function spawn(){
+      const top=40+Math.random()*(h-gap-80);
+      pipes.push({x:w+20, top:top, bot:top+gap, w:38});
+    }
+    function flap(){ if(!alive) return; bird.vy=jump; }
+    canvas.onclick=flap; window.onkeydown=(e)=>{ if(e.code==='Space') flap(); };
+
+    function drawChip(x,y,r){
+      ctx.save(); ctx.translate(x,y); ctx.rotate(((t+x)*0.01)%Math.PI*2);
+      ctx.fillStyle='#ffd86a'; ctx.beginPath(); ctx.arc(0,0,r,0,Math.PI*2); ctx.fill();
+      ctx.fillStyle='#5a3b00'; ctx.font='bold 12px Inter, sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText('¢',0,0);
+      ctx.restore();
+    }
+    function loop(){
+      RAF=requestAnimationFrame(loop); t++;
+      ctx.clearRect(0,0,w,h);
+      // bg
+      ctx.fillStyle='#081025'; ctx.fillRect(0,0,w,h);
+      // pipes
+      if(t%90===0) spawn();
+      for(let i=pipes.length-1;i>=0;i--){
+        const p=pipes[i]; p.x-=2.2;
+        ctx.fillStyle='#1b2b66';
+        ctx.fillRect(p.x,0,p.w,p.top);
+        ctx.fillRect(p.x,p.bot,p.w,h-p.bot);
+        drawChip(p.x+p.w/2,p.top-18,10);
+        drawChip(p.x+p.w/2,p.bot+18,10);
+        if(p.x+p.w<0) pipes.splice(i,1);
+        // collision
+        if(bird.x>p.x-bird.r && bird.x<p.x+p.w+bird.r){
+          if(bird.y-bird.r<p.top || bird.y+bird.r>p.bot) alive=false;
+        }
+      }
+      // bird physics
+      bird.vy+=gravity; bird.y+=bird.vy;
+      // bird draw
+      ctx.fillStyle='#7fe3ff'; ctx.beginPath(); ctx.arc(bird.x,bird.y,bird.r,0,Math.PI*2); ctx.fill();
+      // crown-ish
+      ctx.fillStyle='#ffd86a'; ctx.fillRect(bird.x-10,bird.y-bird.r-10,20,6);
+      // ground/bounds
+      if(bird.y>h-10 || bird.y<10) alive=false;
+      if(!alive){
+        ctx.fillStyle='rgba(0,0,0,.45)'; ctx.fillRect(0,0,w,h);
+        ctx.fillStyle='#fff'; ctx.font='bold 20px Inter'; ctx.textAlign='center';
+        ctx.fillText('Game Over', w/2,h/2); cancelAnimationFrame(RAF);
+      }
+    }
+    loop();
+    return ()=>{ canvas.onclick=null; window.onkeydown=null; };
+  }
+
+  /* --- 2) Lucky Drop (Plinko) --- */
+  function runPlinko(){
+    const w=canvas.width, h=canvas.height;
+    const pins=[], cols=9, rows=7, spacing=w/(cols+1);
+    const offsetY=70;
+    for(let r=0;r<rows;r++){
+      for(let c=0;c<cols;c++){
+        const x = spacing*(c+1) + (r%2? spacing/2:0);
+        const y = offsetY + r*38;
+        if(x>20 && x<w-20) pins.push({x,y});
+      }
+    }
+    let ball=null;
+    function drop(x){ if(ball) return; ball={x:x||w/2,y:30,vx:0,vy:0,r:8}; }
+    canvas.onclick=(e)=>{ const rect=canvas.getBoundingClientRect(); drop(e.clientX-rect.left); };
+
+    function loop(){
+      RAF=requestAnimationFrame(loop);
+      ctx.clearRect(0,0,w,h);
+      // bg
+      ctx.fillStyle='#060b1a'; ctx.fillRect(0,0,w,h);
+      // slots
+      for(let s=0;s<cols+1;s++){
+        const sx = spacing*s + spacing/2;
+        ctx.fillStyle='#11245a'; ctx.fillRect(sx-2,h-50,4,50);
+      }
+      // pins
+      ctx.fillStyle='#8aa3ff';
+      pins.forEach(p=>{ ctx.beginPath(); ctx.arc(p.x,p.y,4,0,Math.PI*2); ctx.fill(); });
+      // ball
+      if(ball){
+        ball.vy+=0.35; ball.x+=ball.vx; ball.y+=ball.vy;
+        // collisions with walls
+        if(ball.x<ball.r){ ball.x=ball.r; ball.vx*=-0.6; }
+        if(ball.x>w-ball.r){ ball.x=w-ball.r; ball.vx*=-0.6; }
+        // pins collisions
+        pins.forEach(p=>{
+          const dx=ball.x-p.x, dy=ball.y-p.y; const d=Math.hypot(dx,dy);
+          if(d<ball.r+5){
+            const ang=Math.atan2(dy,dx); const speed=Math.hypot(ball.vx,ball.vy)*0.9 + 1;
+            const dir=(Math.random()<0.5?-1:1)*0.9;
+            ball.vx = Math.cos(ang)*speed*dir;
+            ball.vy = Math.sin(ang)*speed;
+            // push out
+            const overlap=ball.r+5-d; ball.x+=Math.cos(ang)*overlap; ball.y+=Math.sin(ang)*overlap;
+          }
+        });
+        // floor/slots
+        if(ball.y>h-10){ ball.vy*=-0.35; ball.y=h-10; ball.vx*=0.95; if(Math.abs(ball.vy)<0.5) ball=null; }
+        // draw ball
+        ctx.fillStyle='#ffd86a'; ctx.beginPath(); ctx.arc(ball.x,ball.y,ball.r,0,Math.PI*2); ctx.fill();
+      } else {
+        // hint arrow
+        const x = (Date.now()/8)%w; ctx.fillStyle='#fff8';
+        ctx.fillRect(x,30,2,20);
+      }
+    }
+    loop();
+    return ()=>{ canvas.onclick=null; };
+  }
+
+  /* --- 3) Jump to Win (Doodle Jump lite) --- */
+  function runJump(){
+    const w=canvas.width, h=canvas.height;
+    let player={x:w/2,y:h-40,vx:0,vy:-8,r:12};
+    let plats=[]; const count=12;
+    for(let i=0;i<count;i++){ plats.push({x:Math.random()*(w-80)+40, y:i*(h/count)}); }
+    let ax=0;
+    function onKey(e,down){ if(e.code==='ArrowLeft') ax=down?-0.4:0; if(e.code==='ArrowRight') ax=down?0.4:0; }
+    window.addEventListener('keydown', e=>onKey(e,true)); window.addEventListener('keyup', e=>onKey(e,false));
+    if(window.DeviceMotionEvent){ window.addEventListener('deviceorientation',e=>{ if(e.gamma!=null) ax = Math.max(-0.5, Math.min(0.5, e.gamma/50)); }); }
+
+    function loop(){
+      RAF=requestAnimationFrame(loop);
+      ctx.clearRect(0,0,w,h);
+      ctx.fillStyle='#050a18'; ctx.fillRect(0,0,w,h);
+      // physics
+      player.vx += ax; player.vx *= 0.98; player.x += player.vx;
+      player.vy += 0.25; player.y += player.vy;
+      if(player.x<player.r) {player.x=player.r; player.vx*=-0.6;}
+      if(player.x>w-player.r){player.x=w-player.r; player.vx*=-0.6;}
+      // camera up: when player climbs above middle
+      if(player.y < h*0.4){
+        const dy = (h*0.4 - player.y);
+        player.y += dy;
+        plats.forEach(p=> p.y += dy);
+      }
+      // platforms recycle
+      plats.forEach(p=>{
+        ctx.fillStyle='#273a8c'; ctx.fillRect(p.x-30,p.y,60,8);
+        // bounce
+        if(player.vy>0 && player.y+player.r<p.y+8 && player.y+player.r>p.y && Math.abs(player.x - p.x) < 34){
+          player.vy = -7.8;
+        }
+        if(p.y>h+20){ p.y = -20; p.x = Math.random()*(w-80)+40; }
+      });
+      // draw player
+      ctx.fillStyle='#7fe3ff'; ctx.beginPath(); ctx.arc(player.x,player.y,player.r,0,Math.PI*2); ctx.fill();
+      ctx.fillStyle='#ffd86a'; ctx.fillRect(player.x-10,player.y-player.r-10,20,6);
+      // fail (fall too far)
+      if(player.y>h+80){
+        ctx.fillStyle='rgba(0,0,0,.45)'; ctx.fillRect(0,0,w,h);
+        ctx.fillStyle='#fff'; ctx.font='bold 20px Inter'; ctx.textAlign='center'; ctx.fillText('You fell!', w/2,h/2);
+        cancelAnimationFrame(RAF);
+      }
+    }
+    loop();
+    return ()=>{ window.onkeydown=null; window.onkeyup=null; };
+  }
+
+  // orchestrator
+  let cleanup=null;
+  function startGame(){
+    stopGame();
+    running=true;
+    if(game==='flappy') cleanup=runFlappy();
+    else if(game==='plinko') cleanup=runPlinko();
+    else cleanup=runJump();
+  }
+  function stopGame(){
+    running=false;
+    if(RAF) cancelAnimationFrame(RAF);
+    if(cleanup) { try{cleanup();}catch(e){} cleanup=null; }
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle='#0a0f22'; ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle='#fff'; ctx.font='bold 16px Inter'; ctx.textAlign='center'; ctx.fillText('Press Start', canvas.width/2, canvas.height/2);
+  }
+  stopGame();
+}
+
+/* Bottom Nav Events */
+$all('.iconnav .itab').forEach(btn=>{
+  btn.addEventListener('click', ()=>{ state.tab = btn.getAttribute('data-tab'); render(); });
 });
 
-/* boot */
-render();
-moveInk(0);
+/* Boot */
+render(); moveInk(0);
 
-// === Background music controller (autoplay-first, global gesture fallback) ===
+/* ===== Background music (autoplay attempt + global unlock) ===== */
 (function(){
-  const audio = document.getElementById('bgm');
-  const btn   = document.getElementById('soundBtn');
-  if(!audio || !btn) return;
-
-  // Remember user's last choice
-  const saved = localStorage.getItem('bgm_pref'); // 'on' | 'off' | null
-  if(saved === 'off'){ audio.muted = true; }  // respect "off"
-  if(saved === 'on'){  audio.muted = false; } // respect "on"
-
-  // Try autoplay right away
+  const audio=document.getElementById('bgm'); const btn=document.getElementById('soundBtn'); if(!audio||!btn) return;
+  const saved=localStorage.getItem('bgm_pref'); if(saved==='off'){ audio.muted=true; } if(saved==='on'){ audio.muted=false; }
   document.addEventListener('DOMContentLoaded', tryPlay, {once:true});
-
   async function tryPlay(){
     try{
-      // If user previously set 'off', don't auto-start
-      if(localStorage.getItem('bgm_pref') === 'off'){
-        btn.classList.add('show'); // let them turn it back on
-        return;
-      }
-      audio.muted = false;
-      await audio.play();               // May be blocked by the browser
-      btn.classList.remove('show');     // Success: hide button
-      localStorage.setItem('bgm_pref','on');
-    }catch(e){
-      // Autoplay blocked: show button AND bind a one-time global unlock
-      btn.classList.add('show');
-      bindGlobalUnlock();
-    }
+      if(localStorage.getItem('bgm_pref')==='off'){ btn.classList.add('show'); return; }
+      audio.muted=false; await audio.play(); btn.classList.remove('show'); localStorage.setItem('bgm_pref','on');
+    }catch(e){ btn.classList.add('show'); bindGlobalUnlock(); }
   }
-
   function bindGlobalUnlock(){
-    const unlock = async () => {
-      try{
-        audio.muted = false;
-        await audio.play();
-        btn.classList.remove('show');
-        btn.classList.add('active');
-        localStorage.setItem('bgm_pref','on');
-        removeListeners();
-      }catch(e){
-        // still blocked; keep listeners
-      }
-    };
-    const removeListeners = () => {
-      document.removeEventListener('pointerdown', unlock);
-      document.removeEventListener('keydown', unlock);
-      document.removeEventListener('touchstart', unlock, {passive:true});
-    };
-    document.addEventListener('pointerdown', unlock, {once:false});
-    document.addEventListener('keydown', unlock, {once:false});
-    document.addEventListener('touchstart', unlock, {once:false, passive:true});
+    const unlock=async()=>{ try{ audio.muted=false; await audio.play(); btn.classList.remove('show'); btn.classList.add('active'); localStorage.setItem('bgm_pref','on'); remove(); }catch(e){} };
+    const remove=()=>{ document.removeEventListener('pointerdown',unlock); document.removeEventListener('keydown',unlock); document.removeEventListener('touchstart',unlock,{passive:true}); };
+    document.addEventListener('pointerdown',unlock); document.addEventListener('keydown',unlock); document.addEventListener('touchstart',unlock,{passive:true});
   }
-
-  // Button toggle (still available)
   btn.addEventListener('click', async ()=>{
     try{
-      if(audio.paused){ audio.muted = false; await audio.play(); }
-      else { audio.muted = !audio.muted; if(audio.muted) await audio.pause(); else await audio.play(); }
-      const on = !audio.paused && !audio.muted;
-      btn.classList.toggle('active', on);
-      if(on){ btn.classList.remove('show'); }
-      localStorage.setItem('bgm_pref', on ? 'on' : 'off');
-    }catch(e){
-      // If blocked, keep the button visible and rely on global unlock
-      bindGlobalUnlock();
-      btn.classList.add('show');
-    }
-  });
-
-  // Pause when tab hidden; resume if user wants music
-  document.addEventListener('visibilitychange', async ()=>{
-    const want = localStorage.getItem('bgm_pref') === 'on';
-    if(document.hidden){ if(!audio.paused) audio.pause(); }
-    else if(want){
-      try{ await audio.play(); btn.classList.remove('show'); }
-      catch(e){ btn.classList.add('show'); bindGlobalUnlock(); }
-    }
+      if(audio.paused){ audio.muted=false; await audio.play(); }
+      else { audio.muted=!audio.muted; if(audio.muted) await audio.pause(); else await audio.play(); }
+      const on=!audio.paused && !audio.muted; btn.classList.toggle('active',on); if(on) btn.classList.remove('show');
+      localStorage.setItem('bgm_pref', on?'on':'off');
+    }catch(e){ bindGlobalUnlock(); btn.classList.add('show'); }
   });
 })();
 </script>
