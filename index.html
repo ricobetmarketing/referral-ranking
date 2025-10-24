@@ -17,7 +17,7 @@
                linear-gradient(180deg,#0b0c1a,#070813);
     color:var(--ink);font:15px/1.5 Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
     -webkit-tap-highlight-color:transparent}
-  .app{max-width:520px;margin:0 auto;min-height:100dvh;display:grid;grid-template-rows:auto 1fr auto;overflow-x:hidden}
+  .app{max-width:520px;margin:0 auto;min-height:100dvh;display:grid;grid-template-rows:auto 1fr;overflow-x:hidden}
 
   /* Header */
   header{position:sticky;top:0;background:linear-gradient(180deg,#10112a,#0d0e23);border-bottom:1px solid var(--edge);padding:12px 16px;z-index:20}
@@ -25,7 +25,7 @@
   .title{font-weight:900;font-size:18px;letter-spacing:.4px}
 
   /* Content */
-  main{padding:14px 14px 96px}
+  main{padding:14px 14px 116px} /* extra space so content never hides behind fixed tab bar */
   .card{background:linear-gradient(180deg,#151533,#10112a);border:1px solid var(--edge);border-radius:16px;padding:14px;margin-bottom:12px}
   h2{margin:0 0 8px;font-size:18px}
   h3{margin:0 0 8px;font-size:16px}
@@ -80,14 +80,23 @@
   .rr .go:active{transform:translateY(1px);box-shadow:0 2px 0 rgba(0,0,0,.12)}
   .rr .result{margin-top:8px;background:rgba(255,255,255,.92);border:1px solid rgba(0,0,0,.08);color:#2b2350;border-radius:12px;padding:10px 12px;font-weight:700;display:none}
 
-  /* === Icon Bottom Nav === */
+  /* === Icon Bottom Nav — fixed like an app tab bar === */
   .iconnav{
-    position: sticky; bottom: 0; inset-inline: 0;
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: max(8px, env(safe-area-inset-bottom));
+    width: min(520px, 100% - 12px);
     display: grid; grid-template-columns: repeat(4,1fr); gap: 8px;
-    padding: 10px 12px; background: linear-gradient(180deg,#10112a,#0b0c1f);
-    border-top: 1px solid rgba(255,255,255,.08); z-index: 30;
+    padding: 10px 12px;
+    background: rgba(16,17,42,.98);
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 16px;
+    box-shadow: 0 18px 38px rgba(0,0,0,.28), 0 2px 0 rgba(255,255,255,.04) inset;
+    z-index: 1000;
     --hot:#ff4fd8; --hot2:#ff9ae8; --ink:#eaf0ff;
-    --ix: 0; /* active index, JS updates this */
+    --ix: 0; /* active index */
   }
   .iconnav .itab{
     position: relative; isolation:isolate;
@@ -105,13 +114,13 @@
   .iconnav .itab.active, .iconnav .itab:focus-visible{ color:#fff; }
 
   .iconnav .inkbar{
-    position:absolute; left:0; right:0; bottom:8px; height:44px; z-index:0;
-    pointer-events:none;
+    position:absolute; bottom:10px; height:44px; z-index:0; pointer-events:none;
+    left:12px; right:12px;
     --col: radial-gradient(90% 140% at 10% 0%, var(--hot) 0%, var(--hot2) 60%, #ffcabf 100%);
-    width: calc(25% - 8px); /* 4 items */
+    width: calc((100% - 24px - 8px*3)/4);  /* 4 items, respect side padding + gaps */
     border-radius:16px; background: var(--col);
     box-shadow: 0 12px 26px rgba(255,79,216,.35), inset 0 -2px 6px rgba(0,0,0,.18);
-    transform: translateX(calc(var(--ix) * 100%)) translateX(calc(var(--ix) * 8px));
+    transform: translateX(calc(var(--ix) * (100% + 8px)));
     transition: transform .28s cubic-bezier(.22,.9,.24,1), width .15s ease;
   }
   .iconnav .itab:active .ico{ transform:translateY(0) scale(.98) }
@@ -146,28 +155,28 @@
   </header>
 
   <main id="view"></main>
-
-  <!-- Icon Bottom Nav -->
-  <nav class="iconnav" aria-label="Primary">
-    <div class="inkbar" aria-hidden="true"></div>
-    <button type="button" class="itab active" data-tab="home" data-idx="0" aria-label="Home">
-      <svg class="ico" viewBox="0 0 24 24"><path d="M4 10.5l8-6 8 6V20a2 2 0 0 1-2 2h-3.5a1.5 1.5 0 0 1-1.5-1.5V16a2 2 0 0 0-2-2 2 2 0 0 0-2 2v4.5A1.5 1.5 0 0 1 7.5 22H4a2 2 0 0 1-2-2v-9.5z"/></svg>
-      <span>Home</span>
-    </button>
-    <button type="button" class="itab" data-tab="ranks" data-idx="1" aria-label="Ranks">
-      <svg class="ico" viewBox="0 0 24 24"><path d="M7 22V11a2 2 0 0 1 2-2h6v13H7zM3 22v-7a2 2 0 0 1 2-2h1v9H3zM17 22V5a2 2 0 0 1 2-2h2v19h-4zM10 5l2-3 2 3"/></svg>
-      <span>Ranks</span>
-    </button>
-    <button type="button" class="itab" data-tab="terms" data-idx="2" aria-label="T & C">
-      <svg class="ico" viewBox="0 0 24 24"><path d="M6 3h9l4 4v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zM15 3v4h4M8 11h8M8 15h8M8 7h4"/></svg>
-      <span>T&amp;C</span>
-    </button>
-    <button type="button" class="itab" data-tab="community" data-idx="3" aria-label="Community">
-      <svg class="ico" viewBox="0 0 24 24"><path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4zm0 2c-4 0-8 2-8 5v1h16v-1c0-3-4-5-8-5zM18.5 11.5a3 3 0 1 0-2.5-5 5.8 5.8 0 0 1 .7 2.5 5.8 5.8 0 0 1-.6 2.5 3 3 0 0 0 2.4 0z"/></svg>
-      <span>Community</span>
-    </button>
-  </nav>
 </div>
+
+<!-- Icon Bottom Nav (fixed) -->
+<nav class="iconnav" aria-label="Primary">
+  <div class="inkbar" aria-hidden="true"></div>
+  <button type="button" class="itab active" data-tab="home" data-idx="0" aria-label="Home">
+    <svg class="ico" viewBox="0 0 24 24"><path d="M4 10.5l8-6 8 6V20a2 2 0 0 1-2 2h-3.5a1.5 1.5 0 0 1-1.5-1.5V16a2 2 0 0 0-2-2 2 2 0 0 0-2 2v4.5A1.5 1.5 0 0 1 7.5 22H4a2 2 0 0 1-2-2v-9.5z"/></svg>
+    <span>Home</span>
+  </button>
+  <button type="button" class="itab" data-tab="ranks" data-idx="1" aria-label="Ranks">
+    <svg class="ico" viewBox="0 0 24 24"><path d="M7 22V11a2 2 0 0 1 2-2h6v13H7zM3 22v-7a2 2 0 0 1 2-2h1v9H3zM17 22V5a2 2 0 0 1 2-2h2v19h-4zM10 5l2-3 2 3"/></svg>
+    <span>Ranks</span>
+  </button>
+  <button type="button" class="itab" data-tab="terms" data-idx="2" aria-label="T & C">
+    <svg class="ico" viewBox="0 0 24 24"><path d="M6 3h9l4 4v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zM15 3v4h4M8 11h8M8 15h8M8 7h4"/></svg>
+    <span>T&amp;C</span>
+  </button>
+  <button type="button" class="itab" data-tab="community" data-idx="3" aria-label="Community">
+    <svg class="ico" viewBox="0 0 24 24"><path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4zm0 2c-4 0-8 2-8 5v1h16v-1c0-3-4-5-8-5zM18.5 11.5a3 3 0 1 0-2.5-5 5.8 5.8 0 0 1 .7 2.5 5.8 5.8 0 0 1-.6 2.5 3 3 0 0 0 2.4 0z"/></svg>
+    <span>Community</span>
+  </button>
+</nav>
 
 <script>
 /* ============ CONFIG (Google Sheets) ============ */
