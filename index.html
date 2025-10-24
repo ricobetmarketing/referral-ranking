@@ -195,7 +195,8 @@
 </nav>
 
 <!-- Background Music -->
-<audio id="bgm" src="theme.mp3" preload="auto" loop playsinline muted></audio>
+<audio id="bgm" src="theme.mp3" preload="auto" loop playsinline autoplay></audio>
+
 
 <!-- Floating sound toggle -->
 <button id="soundBtn" class="soundBtn" aria-label="Toggle sound" title="Sound">
@@ -458,58 +459,84 @@ $all('.iconnav .itab').forEach(btn=>{
 render();
 moveInk(0);
 
-/* === Background music controller === */
+// === Background music controller (autoplay-first, global gesture fallback) ===
 (function(){
   const audio = document.getElementById('bgm');
   const btn   = document.getElementById('soundBtn');
   if(!audio || !btn) return;
 
-  // Restore last choice
+  // Remember user's last choice
   const saved = localStorage.getItem('bgm_pref'); // 'on' | 'off' | null
-  if(saved === 'on'){ audio.muted = false; }
-  if(saved === 'off'){ audio.muted = true; }
+  if(saved === 'off'){ audio.muted = true; }  // respect "off"
+  if(saved === 'on'){  audio.muted = false; } // respect "on"
 
-  // Try autoplay on load
+  // Try autoplay right away
   document.addEventListener('DOMContentLoaded', tryPlay, {once:true});
+
   async function tryPlay(){
     try{
-      await audio.play();        // might throw if blocked
-      if(!audio.muted) btn.classList.remove('show'); // user previously allowed
-      else {
-        // If still muted, unmute and re-play (may still get blocked)
-        audio.muted = false;
-        await audio.play();
-        btn.classList.remove('show');
-        localStorage.setItem('bgm_pref','on');
+      // If user previously set 'off', don't auto-start
+      if(localStorage.getItem('bgm_pref') === 'off'){
+        btn.classList.add('show'); // let them turn it back on
+        return;
       }
+      audio.muted = false;
+      await audio.play();               // May be blocked by the browser
+      btn.classList.remove('show');     // Success: hide button
+      localStorage.setItem('bgm_pref','on');
     }catch(e){
-      // Autoplay blocked – show button for user gesture
+      // Autoplay blocked: show button AND bind a one-time global unlock
       btn.classList.add('show');
+      bindGlobalUnlock();
     }
   }
 
-  // Toggle on click
+  function bindGlobalUnlock(){
+    const unlock = async () => {
+      try{
+        audio.muted = false;
+        await audio.play();
+        btn.classList.remove('show');
+        btn.classList.add('active');
+        localStorage.setItem('bgm_pref','on');
+        removeListeners();
+      }catch(e){
+        // still blocked; keep listeners
+      }
+    };
+    const removeListeners = () => {
+      document.removeEventListener('pointerdown', unlock);
+      document.removeEventListener('keydown', unlock);
+      document.removeEventListener('touchstart', unlock, {passive:true});
+    };
+    document.addEventListener('pointerdown', unlock, {once:false});
+    document.addEventListener('keydown', unlock, {once:false});
+    document.addEventListener('touchstart', unlock, {once:false, passive:true});
+  }
+
+  // Button toggle (still available)
   btn.addEventListener('click', async ()=>{
     try{
       if(audio.paused){ audio.muted = false; await audio.play(); }
       else { audio.muted = !audio.muted; if(audio.muted) await audio.pause(); else await audio.play(); }
       const on = !audio.paused && !audio.muted;
       btn.classList.toggle('active', on);
-      btn.classList.remove('show');      // hide once started
+      if(on){ btn.classList.remove('show'); }
       localStorage.setItem('bgm_pref', on ? 'on' : 'off');
     }catch(e){
-      // If still blocked, keep button visible
+      // If blocked, keep the button visible and rely on global unlock
+      bindGlobalUnlock();
       btn.classList.add('show');
     }
   });
 
-  // Optional: pause when page hidden, resume when visible (if user enabled)
+  // Pause when tab hidden; resume if user wants music
   document.addEventListener('visibilitychange', async ()=>{
     const want = localStorage.getItem('bgm_pref') === 'on';
     if(document.hidden){ if(!audio.paused) audio.pause(); }
     else if(want){
-      try{ audio.muted = false; await audio.play(); btn.classList.remove('show'); }
-      catch(e){ btn.classList.add('show'); }
+      try{ await audio.play(); btn.classList.remove('show'); }
+      catch(e){ btn.classList.add('show'); bindGlobalUnlock(); }
     }
   });
 })();
