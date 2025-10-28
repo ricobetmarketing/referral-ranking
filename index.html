@@ -8,16 +8,17 @@
 
 <style>
   :root{
-    --bg:#0a0b17;--ink:#eaf0ff;--dim:#b9c4ff;--edge:#ffffff14;
-    --vio1:#8b5dff;--vio2:#aa74ff;--vio3:#c9a8ff;--acc:#ffd86a;
-    --card:#121333;--card2:#0e1029;--glass:#ffffff10;--glass2:#00000050;
-    --pill:#2d2f58;
+    --bg0:#0a0c16; --bg1:#0f1026; --edge:#ffffff18;
+    --ink:#eaf2ff; --dim:#b8c6ff;
+    --teal:#37e0d7; --vio:#a975ff; --vio2:#7a5cff; --acc:#ffd86a;
+    --card1:#121433; --card2:#0d0f2a;
   }
   *{box-sizing:border-box}
-  html,body{margin:0;height:100%;overflow-x:hidden;color:var(--ink);
+  html,body{
+    margin:0;height:100%;overflow-x:hidden;color:var(--ink);
     font:15px/1.5 Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif;
     background:
-      radial-gradient(1100px 800px at 50% -10%, #1b1d42 0%, transparent 60%),
+      radial-gradient(1200px 800px at 50% -10%, #2b1f55 0%, transparent 60%),
       linear-gradient(180deg,#0b0c1a,#070813);
   }
   .app{max-width:520px;margin:0 auto;min-height:100dvh;display:grid;grid-template-rows:auto 1fr}
@@ -29,11 +30,15 @@
   .title{font-weight:1000;letter-spacing:.2px;font-size:22px}
 
   main{padding:14px 14px 116px}
-  .card{background:
-        linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.00)),
-        linear-gradient(180deg,var(--card),var(--card2));
-        border:1px solid var(--edge);border-radius:18px;padding:14px;margin-bottom:12px;
-        box-shadow:0 18px 50px #00000050, inset 0 0 0 1px #ffffff05}
+  .card{
+    background:
+      radial-gradient(600px 140px at 10% -30%, rgba(55,224,215,.18), transparent 60%),
+      radial-gradient(600px 140px at 90% -30%, rgba(169,117,255,.18), transparent 60%),
+      linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.00)),
+      linear-gradient(180deg,var(--card1),var(--card2));
+    border:1px solid var(--edge);border-radius:18px;padding:14px;margin-bottom:12px;
+    box-shadow:0 18px 50px #00000050, inset 0 0 0 1px #ffffff05
+  }
   h2,h3{margin:0 0 8px}
   p{margin:0 0 8px;color:#dfe5ff}
 
@@ -41,66 +46,76 @@
   .lbHead{display:flex;align-items:center;justify-content:space-between}
   .seg{display:flex;gap:8px;background:#0f1030;border:1px solid var(--edge);padding:6px;border-radius:14px}
   .seg button{appearance:none;border:0;background:transparent;color:#cfd4ff;font-weight:900;padding:9px 14px;border-radius:10px;cursor:pointer}
-  .seg button.active{background:linear-gradient(180deg,var(--vio2),var(--vio1));
-    color:#fff;box-shadow:0 10px 26px rgba(153,120,255,.45), inset 0 -2px 10px rgba(0,0,0,.25)}
-
+  .seg button.active{color:#fff;background:linear-gradient(180deg,var(--vio),var(--vio2));box-shadow:0 10px 26px rgba(153,120,255,.45), inset 0 -2px 10px rgba(0,0,0,.25)}
   .filters{display:flex;gap:8px;margin-top:10px}
   .pick{appearance:none;background:#0f1030;color:#eaf0ff;border:1px solid var(--edge);
     border-radius:12px;padding:10px 12px;font-weight:800}
   .scope{font-size:12px;color:var(--dim);margin-top:6px}
 
-  /* Podium (6D style) */
-  .podiumWrap{margin-top:14px;border-radius:24px;padding:18px 10px 12px;
+  /* Podium */
+  .podiumWrap{
+    margin-top:14px;border-radius:24px;padding:18px 10px 12px;
     background:
-      radial-gradient(240px 80px at 50% 0%, rgba(170,116,255,.35), transparent 70%),
-      linear-gradient(180deg,#1a1643,#151236);
+      radial-gradient(240px 80px at 50% 0%, rgba(55,224,215,.25), transparent 70%),
+      linear-gradient(180deg,#171442,#121238);
     border:1px solid #ffffff22; box-shadow:
       0 20px 60px rgba(36,18,66,.55),
       inset 0 10px 30px rgba(255,255,255,.05),
-      inset 0 -20px 30px rgba(0,0,0,.25)}
+      inset 0 -20px 30px rgba(0,0,0,.25)
+  }
   .podium{display:grid;grid-template-columns:1fr 1.2fr 1fr;gap:10px;align-items:end}
-  .step{position:relative;border-radius:18px 18px 12px 12px;
+  .step{
+    position:relative;border-radius:18px 18px 12px 12px;
     background:linear-gradient(180deg,#221a54,#16113b);
-    padding:12px 8px;border:1px solid #ffffff1c;
+    padding:12px 8px 16px;border:1px solid #ffffff1c;
     box-shadow:inset 0 -14px 22px rgba(120,90,210,.25), 0 10px 24px rgba(0,0,0,.35);
-    display:grid;place-items:center;min-height:92px}
-  .s1{min-height:130px}.s2{min-height:108px}.s3{min-height:102px}
-  .av{position:absolute;top:-66px;left:50%;transform:translateX(-50%);width:78px;height:78px;border-radius:50%;
-    border:5px solid #ffffff;box-shadow:
-      0 12px 26px rgba(0,0,0,.35), 0 0 0 8px rgba(138,104,255,.15);
-    background:#fff center/cover no-repeat;z-index:2}
-  .crown{position:absolute;top:-92px;left:50%;transform:translateX(-50%);
-    width:46px;height:46px;border-radius:50%;display:grid;place-items:center;
-    background:radial-gradient(circle at 35% 30%,#fff,var(--acc) 65%);
-    color:#5a4300;border:2px solid rgba(0,0,0,.08);box-shadow:
-      0 12px 30px rgba(0,0,0,.35), 0 0 0 10px rgba(255,216,106,.12);z-index:3}
-  /* small "crowd" arc in front of avatars (not covering fully) */
-  .crowd{position:absolute;left:50%;transform:translateX(-50%);bottom:-2px;width:86px;height:24px;border-radius:12px 12px 12px 12px/14px 14px 8px 8px;
-    background:radial-gradient(50% 120% at 50% 0%, rgba(255,255,255,.28), rgba(255,255,255,.08) 60%, transparent 100%), linear-gradient(180deg,#ffffff18,#00000022);
-    border:1px solid #ffffff24;box-shadow:0 6px 12px rgba(0,0,0,.35);z-index:4}
-  .name{margin-top:16px;font-weight:1000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .mini{color:#e8deff;font-size:12px;margin-top:2px;display:flex;align-items:center;gap:6px}
-  .badge{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);z-index:5;
+    display:grid;place-items:center;min-height:100px
+  }
+  .s1{min-height:140px}.s2{min-height:116px}.s3{min-height:110px}
+  .av{
+    position:absolute;top:-66px;left:50%;transform:translateX(-50%);
+    width:78px;height:78px;border-radius:50%;border:5px solid #fff;
+    box-shadow:0 12px 26px rgba(0,0,0,.35), 0 0 0 8px rgba(122,92,255,.15);
+    background:#fff center/cover no-repeat;z-index:2
+  }
+  .crown{position:absolute;top:-96px;left:50%;transform:translateX(-50%);z-index:4;font-size:40px;line-height:1}
+  .badge{
+    position:absolute;bottom:8px;left:50%;transform:translateX(-50%);z-index:5;
     background:linear-gradient(180deg,#6f4bff,#9f7bff);color:#fff;border-radius:999px;font-weight:1000;
-    border:2px solid #ffffff;box-shadow:0 6px 16px rgba(0,0,0,.35);padding:2px 8px;font-size:12px}
+    border:2px solid #ffffff;box-shadow:0 6px 16px rgba(0,0,0,.35);padding:2px 8px;font-size:12px
+  }
+  .name{margin-top:18px;font-weight:1000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .mini{color:#e8deff;font-size:12px;margin-top:4px;display:flex;align-items:center;gap:6px} /* small gap BELOW username */
+  .mini .pt{font-weight:900}
 
-  /* Header row */
-  .hdrRow{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;
+  /* Header row — wider spacing (Rank | Player | Points) */
+  .hdrRow{
+    display:grid;grid-template-columns:60px 1fr 110px;gap:10px;align-items:center;
     margin-top:14px;background:linear-gradient(180deg,#2f325f,#26294e);color:#e9ecff;
-    border:1px solid #ffffff22;border-radius:16px;padding:10px 12px;font-weight:900}
+    border:1px solid #ffffff22;border-radius:16px;padding:10px 12px;font-weight:900
+  }
+  .hdrRow div:last-child{text-align:right}
 
-  /* List cards (Top 20) */
+  /* Flat list rows with subtle shadow */
   .list{margin-top:10px;display:grid;gap:10px}
-  .row{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;
-    background:linear-gradient(180deg,rgba(143,106,255,.33),rgba(143,106,255,.18));
-    border:1px solid rgba(166,134,255,.45);border-radius:16px;padding:10px 12px;
-    box-shadow:0 12px 28px rgba(0,0,0,.35), inset 0 -10px 20px rgba(0,0,0,.18)}
-  .rk{display:grid;place-items:center;width:42px;height:42px;border-radius:12px;font-weight:1000;
-    background:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,.06));border:1px solid rgba(255,255,255,.28)}
-  .face{width:38px;height:38px;border-radius:50%;background:#eee center/cover no-repeat;border:2px solid #fff;margin-right:8px;box-shadow:0 6px 14px rgba(0,0,0,.25)}
-  .uname{font-weight:900}
-  .val{font-weight:1000;color:#fff}
-  .left{display:flex;align-items:center;gap:8px}
+  .row{
+    display:grid;grid-template-columns:60px 1fr 110px;gap:10px;align-items:center;
+    background:linear-gradient(180deg,rgba(25,26,55,.9),rgba(22,21,42,.9));
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:14px;padding:10px 12px;
+    box-shadow:0 8px 18px rgba(0,0,0,.35)
+  }
+  .rk{
+    display:grid;place-items:center;width:42px;height:42px;border-radius:12px;font-weight:1000;
+    background:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,.06));border:1px solid rgba(255,255,255,.28)
+  }
+  .face{
+    width:38px;height:38px;border-radius:50%;background:#eee center/cover no-repeat;border:2px solid #fff;margin-right:8px;
+    box-shadow:0 6px 14px rgba(0,0,0,.25)
+  }
+  .left{display:flex;align-items:center;gap:10px}
+  .uname{font-weight:1000}
+  .val{font-weight:900;color:#fff;text-align:right}
 
   /* Search */
   .search{margin-top:12px;display:grid;grid-template-columns:1fr auto;gap:8px}
@@ -109,19 +124,14 @@
   .go:active{transform:translateY(1px);box-shadow:0 2px 0 rgba(0,0,0,.12)}
   .result{margin-top:8px;background:rgba(255,255,255,.92);border:1px solid rgba(0,0,0,.08);color:#2b2350;border-radius:12px;padding:10px 12px;font-weight:800;display:none}
 
-  /* Bottom nav (3 tabs) */
+  /* Bottom nav (text highlight only) */
   .iconnav{position:fixed;left:50%;transform:translateX(-50%);bottom:max(8px,env(safe-area-inset-bottom,0));
     width:min(520px,100% - 12px);display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:10px 12px;
     background:rgba(16,17,42,.98);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.08);
-    border-radius:16px;z-index:1000;--hot:#ff4fd8;--hot2:#ff9ae8;--ix:0}
-  .iconnav .itab{appearance:none;border:0;background:transparent;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 6px;color:#cdd7ff;font-weight:800;border-radius:14px}
-  .iconnav .itab span{font-size:11px}
-  .iconnav .ico{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.8}
-  .iconnav .itab.active{color:#fff}.iconnav .itab.active .ico{transform:translateY(-2px) scale(1.06)}
-  .iconnav .inkbar{position:absolute;bottom:10px;height:44px;left:12px;right:12px;width:calc((100% - 24px - 8px*2)/3);
-    border-radius:16px;background:radial-gradient(90% 140% at 10% 0%,var(--hot) 0%,var(--hot2) 60%,#ffcabf 100%);
-    box-shadow:0 12px 26px rgba(255,79,216,.35), inset 0 -2px 6px rgba(0,0,0,.18);
-    transform:translateX(calc(var(--ix) * (100% + 8px)));transition:transform .28s cubic-bezier(.22,.9,.24,1)}
+    border-radius:16px;z-index:1000}
+  .itab{appearance:none;border:0;background:transparent;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 6px;color:#cdd7ff;font-weight:800;border-radius:14px}
+  .itab.active{color:#fff}
+  .ico{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.8}
 
   /* Sound toggle */
   .soundBtn{position:fixed;right:12px;bottom:calc(72px + env(safe-area-inset-bottom,0));background:#fff;color:#111;border:1px solid rgba(0,0,0,.08);
@@ -129,32 +139,31 @@
   .soundBtn.show{display:inline-flex} .soundBtn.active{background:linear-gradient(90deg,#ffd86a,#ffc24d)}
   .soundBtn .ic{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8}
 
-  /* Community (kept) */
+  /* Community */
   .comm .sharebar{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
   .comm .sharebtn{appearance:none;border:0;border-radius:12px;padding:10px 14px;font-weight:900;cursor:pointer;background:#ffd86a;color:#2a1a00;box-shadow:0 4px 0 rgba(0,0,0,.12)}
   .comm .list{display:grid;gap:14px;margin-top:12px}
   .comm .item{background:linear-gradient(180deg,#5a34dd,#4a2bc7);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:16px;color:#fff;display:flex;align-items:center;justify-content:space-between}
-  .comm .left{display:flex;align-items:center;gap:12px}
   .comm .bubble{width:44px;height:44px;border-radius:12px;background:#fff;display:grid;place-items:center}
-  .comm .sub{appearance:none;border:0;border-radius:12px;padding:10px 14px;background:#fff;color:#2a1a00;font-weight:900;cursor:pointer}
 </style>
 </head>
 <body>
   <div class="app">
     <header>
-      <div class="hrow"><div class="title" id="hdrTitle">Leaderboard</div><div style="font-size:12px;color:#c8d0ff">v4</div></div>
+      <div class="hrow"><div class="title">Leaderboard</div><div style="font-size:12px;color:#c8d0ff">v6</div></div>
     </header>
     <main id="view"></main>
   </div>
 
   <!-- Bottom Nav -->
   <nav class="iconnav" aria-label="Primary">
-    <div class="inkbar" aria-hidden="true"></div>
     <button class="itab active" data-tab="ranks" data-idx="0">
       <svg class="ico" viewBox="0 0 24 24"><path d="M7 22V11a2 2 0 0 1 2-2h6v13H7zM3 22v-7a2 2 0 0 1 2-2h1v9H3zM17 22V5a2 2 0 0 1 2-2h2v19h-4zM10 5l2-3 2 3"/></svg><span>Ranking</span>
     </button>
     <button class="itab" data-tab="home" data-idx="1">
-      <svg class="ico" viewBox="0 0 24 24"><path d="M4 10.5l8-6 8 6V20a2 2 0 0 1-2 2h-3.5a1.5 1.5 0 0 1-1.5-1.5V16a2 2 0 0 0-2-2 2 2 0 0 0-2 2v4.5A1.5 1.5 0 0 1 7.5 22H4a2 2 0 0 1-2-2v-9.5z"/></svg><span>Home</span>
+      <!-- T&C icon -->
+      <svg class="ico" viewBox="0 0 24 24"><path d="M7 3h7l4 4v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zM14 3v5h5"/></svg>
+      <span>T&C</span>
     </button>
     <button class="itab" data-tab="community" data-idx="2">
       <svg class="ico" viewBox="0 0 24 24"><path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4zm0 2c-4 0-8 2-8 5v1h16v-1c0-3-4-5-8-5z"/></svg><span>Community</span>
@@ -168,63 +177,56 @@
   </button>
 
 <script>
-/* ===== CONFIG: Your sheet + tab GIDs ===== */
+/* ===== CONFIG ===== */
 const SHEET_ID   = "1rJg4RYn0AkvsqhVGk5CwhZrYNz0gFC6_7ZPiDXigU-o";
 const GID_DAILY  = "1891032775";   // Daily tab gid
 const GID_WEEKLY = "0";            // Weekly tab gid
 
-/* ===== small helpers ===== */
+/* helpers */
 const $=(s,el)=> (el||document).querySelector(s);
 const $all=(s,el)=> Array.from((el||document).querySelectorAll(s));
 const unique=a=>Array.from(new Set(a));
-const moveInk=ix=>document.querySelector('.iconnav').style.setProperty('--ix',ix);
-const fmtFull=n=>Number(n||0).toLocaleString(); // FULL points, no K format
+const fmtFull=n=>Number(n||0).toLocaleString();
 const faceBg=url=>`url("${url}")`;
 const TROPHY="🏆";
-
-/* mask only the middle 3 characters with *** */
 function maskMiddle3(name){
   const s=String(name||''); if(s.length<3) return s.replace(/.(?=.)/g,'*');
   const mid=Math.floor(s.length/2); const start=Math.max(0,mid-1), end=Math.min(s.length,mid+2);
   return s.slice(0,start) + '***' + s.slice(end);
 }
 
-/* Avatars for ranks 1..20 */
+/* Avatars (DiceBear – CC0). Replace with your own if needed */
 const AVS=[
-  "https://ricomx.ft-crm.com/media-api/serve/30739191-4079-40cd-9154-f15c869c9f35_1.png",
-  "https://ricomx.ft-crm.com/media-api/serve/7e97b3d5-f53f-4211-b7d3-0c012a8e05ff_2.png",
-  "https://ricomx.ft-crm.com/media-api/serve/4120e46c-d810-46bb-924d-fb7769b56c0c_3.png",
-  "https://ricomx.ft-crm.com/media-api/serve/84bc31f3-69d6-47e9-950b-e557dd0cf4f6_4.png",
-  "https://ricomx.ft-crm.com/media-api/serve/d0692e25-3fdf-4004-af72-b572175fd49c_5.png",
-  "https://ricomx.ft-crm.com/media-api/serve/596c02c5-ad1c-42b7-9fb2-da6df154d35b_6.png",
-  "https://ricomx.ft-crm.com/media-api/serve/587f1afe-0e39-4f76-8715-48496452cfdf_7.png",
-  "https://ricomx.ft-crm.com/media-api/serve/6959ee62-92fa-4192-a2d6-f678a4934b4f_8.png",
-  "https://ricomx.ft-crm.com/media-api/serve/a450b16e-9310-4e83-ae66-ea71822a218b_9.png",
-  "https://ricomx.ft-crm.com/media-api/serve/24e07c3f-99fb-4bed-91f1-b91f1e0f7c8d_10.png",
-  "https://ricomx.ft-crm.com/media-api/serve/120d451f-a6dc-4f7b-b3f4-a1b5b8642443_11.png",
-  "https://ricomx.ft-crm.com/media-api/serve/65646abf-45f0-46b4-9c9c-f135f3b429e4_12.png",
-  "https://ricomx.ft-crm.com/media-api/serve/685901d2-f392-4d9f-83bf-b8f5ae4cf3bc_13.png",
-  "https://ricomx.ft-crm.com/media-api/serve/a3e8f9f5-851f-4048-b1ff-e7255de54266_14.png",
-  "https://ricomx.ft-crm.com/media-api/serve/92cde2cb-1afa-4c2e-b0f7-bf77f6b37a4a_15.png",
-  "https://ricomx.ft-crm.com/media-api/serve/1a77dbff-a836-4e7b-831f-77734198c725_16.png",
-  "https://ricomx.ft-crm.com/media-api/serve/ab17bec9-169e-4e99-9e2d-e560fd29403e_17.png",
-  "https://ricomx.ft-crm.com/media-api/serve/a698b757-2f99-49a7-95fb-68318d1637d6_18.png",
-  "https://ricomx.ft-crm.com/media-api/serve/ab8c0632-b1d4-41e5-be64-ba1e96d5ab1b_19.png",
-  "https://ricomx.ft-crm.com/media-api/serve/7c6d505e-174d-4214-9e93-bb7cdcc4098f_20.png",
+  "https://ricobr.ft-crm.com/media-api/serve/8f954107-4d24-4d5c-b2fe-934b14e56215_1010.png",
+  "https://ricobr.ft-crm.com/media-api/serve/5368d6f5-3904-42d6-9ef9-314cd544ad95_11.png",
+  "https://ricobr.ft-crm.com/media-api/serve/738cf89e-f4df-49e2-b359-fd5f9a7095a7_1111-1.png",
+  "https://ricobr.ft-crm.com/media-api/serve/dad111b1-5443-4e26-97b4-b5bf84cb953e_1212.png",
+  "https://ricobr.ft-crm.com/media-api/serve/5aa2965f-6173-4aa4-a2c8-fabd93415637_1313.jpg",
+  "https://ricobr.ft-crm.com/media-api/serve/50079348-7f59-4b35-b2db-0dd9d9cf71b2_1414.png",
+  "https://ricobr.ft-crm.com/media-api/serve/48624ef5-7940-4cac-a364-92e6a3ded6cd_1515.jpg",
+  "https://ricobr.ft-crm.com/media-api/serve/23fe46f7-7713-42fb-b918-11d0173a8b2f_22.png",
+  "https://ricobr.ft-crm.com/media-api/serve/454a5792-2006-449b-b5e4-d549df35cc5c_33.png",
+  "https://ricobr.ft-crm.com/media-api/serve/91f4a46e-038c-45f6-8394-fe83d2e104ad_44.jpg",
+  "https://ricobr.ft-crm.com/media-api/serve/37f48336-28bb-467d-ad32-c352c72e317d_55.jpg",
+  "https://ricobr.ft-crm.com/media-api/serve/c97d00c2-6940-430f-812d-1a2b63337083_88.png",
+  "https://ricobr.ft-crm.com/media-api/serve/044b1d20-a2bd-4743-b113-1b88673be3e6_77.jpg",
+  "https://ricobr.ft-crm.com/media-api/serve/e92e6bae-ece8-44e9-907e-6eda2f2e4267_66.jpg",
+  "https://ricobr.ft-crm.com/media-api/serve/d31d5f4d-d487-44c2-a8f6-441ac6a7539c_99.png",
+  "https://ricobr.ft-crm.com/media-api/serve/5368d6f5-3904-42d6-9ef9-314cd544ad95_11.png",
+  "https://ricobr.ft-crm.com/media-api/serve/738cf89e-f4df-49e2-b359-fd5f9a7095a7_1111-1.png",
+  "https://ricobr.ft-crm.com/media-api/serve/dad111b1-5443-4e26-97b4-b5bf84cb953e_1212.png",
+  "https://ricobr.ft-crm.com/media-api/serve/5aa2965f-6173-4aa4-a2c8-fabd93415637_1313.jpg",
+  "https://ricobr.ft-crm.com/media-api/serve/50079348-7f59-4b35-b2db-0dd9d9cf71b2_1414.png",
 ];
+const rankAvatar=r=>AVS[Math.min(Math.max(1,r),20)-1];
 
-/* Router */
+/* Bottom nav */
 let TAB='ranks';
 $all('.iconnav .itab').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    TAB=btn.dataset.tab;
-    $all('.iconnav .itab').forEach(b=>b.classList.toggle('active',b===btn));
-    moveInk(parseInt(btn.dataset.idx,10));
-    render();
-  });
+  btn.addEventListener('click',()=>{ TAB=btn.dataset.tab; $all('.itab').forEach(b=>b.classList.toggle('active',b===btn)); render();});
 });
 
-/* Music: autoplay + gesture fallback */
+/* Music autoplay + fallback */
 (function(){
   const audio=$('#bgm'), btn=$('#soundBtn'); if(!audio||!btn) return;
   const saved=localStorage.getItem('bgm_pref'); if(saved==='off'){audio.muted=true} if(saved==='on'){audio.muted=false}
@@ -232,19 +234,15 @@ $all('.iconnav .itab').forEach(btn=>{
   async function tryPlay(){try{
     if(localStorage.getItem('bgm_pref')==='off'){btn.classList.add('show');return}
     audio.muted=false; await audio.play(); btn.classList.remove('show'); localStorage.setItem('bgm_pref','on')
-  }catch(e){
-    btn.classList.add('show');
-    ['pointerdown','keydown','touchstart'].forEach(evt=>document.addEventListener(evt,unlock,{once:true}))
-  }}
+  }catch{ btn.classList.add('show'); ['pointerdown','keydown','touchstart'].forEach(evt=>document.addEventListener(evt,unlock,{once:true}))}}
   async function unlock(){try{audio.muted=false;await audio.play();btn.classList.remove('show');btn.classList.add('active');localStorage.setItem('bgm_pref','on')}catch{}}
   btn.addEventListener('click',async()=>{try{
-    if(audio.paused){audio.muted=false;await audio.play()}
-    else {audio.muted=!audio.muted;if(audio.muted)await audio.pause();else await audio.play()}
+    if(audio.paused){audio.muted=false;await audio.play()} else {audio.muted=!audio.muted;if(audio.muted)await audio.pause();else await audio.play()}
     const on=!audio.paused && !audio.muted; btn.classList.toggle('active',on); if(on) btn.classList.remove('show'); localStorage.setItem('bgm_pref',on?'on':'off')
   }catch{}})
 })();
 
-/* ===== GViz fetch + normalize ===== */
+/* GViz fetch + normalize */
 async function gviz(gid){
   const url=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${encodeURIComponent(gid)}`;
   const text=await fetch(url,{cache:"no-store"}).then(r=>r.text());
@@ -271,11 +269,8 @@ function normalize({headers:h,rows}){
   })).filter(x=>x.username && x.rank>0);
 }
 
-/* ===== Leaderboard (exact arrangement) ===== */
-let MODE='daily'; // 'daily' | 'weekly'
-let DAILY=[], WEEKLY=[], DATES=[], WEEKS=[], CUR_DATE='', CUR_WEEK='', CURRENT_FULL=[];
-
-function rankAvatar(r){const i=Math.min(Math.max(1,r),20)-1;return AVS[i]}
+/* Leaderboard */
+let MODE='daily', DAILY=[], WEEKLY=[], DATES=[], WEEKS=[], CUR_DATE='', CUR_WEEK='', CURRENT_FULL=[];
 
 async function renderRanks(){
   $('#view').innerHTML=`
@@ -298,25 +293,22 @@ async function renderRanks(){
       <div class="podium">
         <div class="step s2">
           <div class="av" id="p2a"></div>
-          <div class="crowd"></div>
           <div class="badge">2</div>
           <div class="name" id="p2n">—</div>
-          <div class="mini" id="p2s"></div>
+          <div class="mini"><span id="p2t">🏆</span> <span class="pt" id="p2s"></span> <span>points</span></div>
         </div>
         <div class="step s1">
           <div class="crown">👑</div>
           <div class="av" id="p1a"></div>
-          <div class="crowd"></div>
           <div class="badge">1</div>
           <div class="name" id="p1n">—</div>
-          <div class="mini" id="p1s"></div>
+          <div class="mini"><span id="p1t">🏆</span> <span class="pt" id="p1s"></span> <span>points</span></div>
         </div>
         <div class="step s3">
           <div class="av" id="p3a"></div>
-          <div class="crowd"></div>
           <div class="badge">3</div>
           <div class="name" id="p3n">—</div>
-          <div class="mini" id="p3s"></div>
+          <div class="mini"><span id="p3t">🏆</span> <span class="pt" id="p3s"></span> <span>points</span></div>
         </div>
       </div>
     </div>
@@ -331,11 +323,9 @@ async function renderRanks(){
     <div id="mine" class="result"></div>
   `;
 
-  // Load remote
   if(!DAILY.length){ try{ DAILY = normalize(await gviz(GID_DAILY)); }catch(e){ console.warn('Daily sheet load failed',e); } }
   if(!WEEKLY.length){ try{ WEEKLY = normalize(await gviz(GID_WEEKLY)); }catch(e){ console.warn('Weekly sheet load failed',e); } }
 
-  // Build options
   DATES = unique(DAILY.map(x=>x.date).filter(Boolean)).sort();
   WEEKS = unique(WEEKLY.map(x=>x.week).filter(Boolean)).sort((a,b)=>{
     const na=(a.match(/\d+/)||[])[0], nb=(b.match(/\d+/)||[])[0];
@@ -371,21 +361,21 @@ async function renderRanks(){
     if(MODE==='daily'){ return DAILY.filter(x=> (x.date||'')===CUR_DATE).sort((a,b)=>a.rank-b.rank); }
     return WEEKLY.filter(x=> (x.week||'')===CUR_WEEK).sort((a,b)=>a.rank-b.rank);
   }
-  function scopeText(){ return MODE==='daily' ? `Showing: <b>${CUR_DATE||'—'}</b>` : `Showing: <b>${CUR_WEEK||'—'}</b>`; }
+  function scopeText(){ return MODE==='daily' ? `Showing: <b>${(CUR_DATE||'—').split('-').reverse().join('/')}</b>` : `Showing: <b>${CUR_WEEK||'—'}</b>`; }
 
   function setPod(n,row){
     const av=$(`#p${n}a`), nm=$(`#p${n}n`), sc=$(`#p${n}s`);
     if(row){
       av.style.backgroundImage=faceBg(rankAvatar(row.rank));
       nm.textContent=maskMiddle3(row.username);
-      sc.innerHTML = `<span>${TROPHY}</span> ${fmtFull(row.points)} points`;
+      sc.textContent = fmtFull(row.points); // number only; "points" text is in markup
     }else{ av.style.backgroundImage='none'; nm.textContent='—'; sc.textContent=''; }
   }
 
   function draw(){
     $('#scope').innerHTML = scopeText();
     const rows = currentRows();
-    CURRENT_FULL = rows.slice(); // for search
+    CURRENT_FULL = rows.slice();
 
     setPod(1, rows.find(r=>r.rank===1));
     setPod(2, rows.find(r=>r.rank===2));
@@ -400,7 +390,7 @@ async function renderRanks(){
             <div class="face" style="background-image:${faceBg(rankAvatar(r.rank))}"></div>
             <div class="uname">${maskMiddle3(r.username)}</div>
           </div>
-          <div class="val">${fmtFull(r.points)}</div>
+          <div class="val">${fmtFull(r.points)} points</div>
         </div>`);
     });
   }
@@ -416,25 +406,20 @@ async function renderRanks(){
   }
 }
 
-/* ===== Other tabs ===== */
+/* T&C tab */
 function renderHome(){
   $('#view').innerHTML=`
-    <div class="card"><h2>Referral Race</h2>
-      <p>Invite friends, climb the leaderboard, and win rewards.</p>
+    <div class="card"><h2>Terms & Conditions</h2>
       <ul style="margin:6px 0 0 18px;color:#dfe5ff">
         <li>Each verified signup = <b>+1 point</b>.</li>
         <li><b>Weekly</b> winners announced every Monday.</li>
+        <li>Rewards credited within 72 hours after announcement.</li>
+        <li>Duplicate/fake signups will be removed; abuse may lead to disqualification.</li>
       </ul>
-    </div>
-    <div class="card">
-      <details open><summary><b>FAQ</b></summary>
-        <details open><summary>How do I earn points?</summary><p>Share your referral link. Verified signups give points.</p></details>
-        <details><summary>When are rewards credited?</summary><p>Within 72 hours after winners are announced.</p></details>
-        <details><summary>Anti-fraud</summary><p>Duplicate/fake signups are removed and may lead to disqualification.</p></details>
-      </details>
     </div>`;
 }
 
+/* Community */
 function renderCommunity(){
   const referUrl=location.href;
   $('#view').innerHTML=`
@@ -442,10 +427,8 @@ function renderCommunity(){
       <h2>Share & Follow</h2>
       <p>Invite friends and follow us.</p>
       <div class="sharebar">
-        <a class="sharebtn" target="_blank" rel="noopener"
-           href="https://t.me/share/url?url=${encodeURIComponent(referUrl)}">Share on Telegram</a>
-        <a class="sharebtn" target="_blank" rel="noopener"
-           href="https://api.whatsapp.com/send?text=${encodeURIComponent('Join me: '+referUrl)}">Share on WhatsApp</a>
+        <a class="sharebtn" target="_blank" rel="noopener" href="https://t.me/share/url?url=${encodeURIComponent(referUrl)}">Share on Telegram</a>
+        <a class="sharebtn" target="_blank" rel="noopener" href="https://api.whatsapp.com/send?text=${encodeURIComponent('Join me: '+referUrl)}">Share on WhatsApp</a>
       </div>
     </div>
     <div class="comm">
@@ -462,15 +445,15 @@ function renderCommunity(){
               <div class="bubble"><img alt="" width="26" height="26" src="${icon}"/></div>
               <div style="font-weight:900">${label}</div>
             </div>
-            <a class="sub" href="${href}" target="_blank" rel="noopener">Subscribe</a>
+            <a class="sharebtn" style="background:#fff;color:#2a1a00" href="${href}" target="_blank" rel="noopener">Open</a>
           </div>`).join('')}
       </div>
     </div>`;
 }
 
-/* boot */
+/* Boot */
 function render(){ if(TAB==='ranks') renderRanks(); else if(TAB==='home') renderHome(); else renderCommunity(); }
-render(); moveInk(0);
+render();
 </script>
 </body>
 </html>
