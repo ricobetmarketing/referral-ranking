@@ -5,29 +5,27 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
 <meta name="color-scheme" content="dark"/>
 <title>Leaderboard — Referral Race</title>
-
 <style>
   :root{
-    --bg0:#0a0c16; --bg1:#0f1026; --edge:#ffffff18;
-    --ink:#eaf2ff; --dim:#b8c6ff;
-    --teal:#37e0d7; --vio:#a975ff; --vio2:#7a5cff; --acc:#ffd86a;
-    --card1:#121433; --card2:#0d0f2a;
+    --bg0:#0b0c1a; --edge:#ffffff18; --ink:#eaf2ff; --dim:#b8c6ff;
+    --vio1:#a975ff; --vio2:#7a5cff; --teal:#37e0d7; --acc:#ffd86a;
+    --card1:#14163b; --card2:#0e1030;
   }
   *{box-sizing:border-box}
   html,body{
     margin:0;height:100%;overflow-x:hidden;color:var(--ink);
     font:15px/1.5 Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif;
     background:
-      radial-gradient(1200px 800px at 50% -10%, #2b1f55 0%, transparent 60%),
+      radial-gradient(1200px 780px at 50% -10%, #2b1f55 0%, transparent 60%),
       linear-gradient(180deg,#0b0c1a,#070813);
   }
   .app{max-width:520px;margin:0 auto;min-height:100dvh;display:grid;grid-template-rows:auto 1fr}
 
   /* Header */
-  header{position:sticky;top:0;z-index:20;padding:12px 16px;
+  header{position:sticky;top:0;z-index:20;padding:14px 16px;
     background:linear-gradient(180deg,#10112a,#0d0e23);border-bottom:1px solid var(--edge)}
   .hrow{display:flex;align-items:center;justify-content:space-between}
-  .title{font-weight:1000;letter-spacing:.2px;font-size:22px}
+  .title{font-weight:1000;letter-spacing:.2px;font-size:24px}
 
   main{padding:14px 14px 116px}
   .card{
@@ -39,81 +37,72 @@
     border:1px solid var(--edge);border-radius:18px;padding:14px;margin-bottom:12px;
     box-shadow:0 18px 50px #00000050, inset 0 0 0 1px #ffffff05
   }
-  h2,h3{margin:0 0 8px}
-  p{margin:0 0 8px;color:#dfe5ff}
 
   /* Segmented control */
   .lbHead{display:flex;align-items:center;justify-content:space-between}
   .seg{display:flex;gap:8px;background:#0f1030;border:1px solid var(--edge);padding:6px;border-radius:14px}
   .seg button{appearance:none;border:0;background:transparent;color:#cfd4ff;font-weight:900;padding:9px 14px;border-radius:10px;cursor:pointer}
-  .seg button.active{color:#fff;background:linear-gradient(180deg,var(--vio),var(--vio2));box-shadow:0 10px 26px rgba(153,120,255,.45), inset 0 -2px 10px rgba(0,0,0,.25)}
+  .seg button.active{color:#fff;background:linear-gradient(180deg,var(--vio1),var(--vio2));box-shadow:0 10px 26px rgba(153,120,255,.45), inset 0 -2px 10px rgba(0,0,0,.25)}
   .filters{display:flex;gap:8px;margin-top:10px}
   .pick{appearance:none;background:#0f1030;color:#eaf0ff;border:1px solid var(--edge);
     border-radius:12px;padding:10px 12px;font-weight:800}
   .scope{font-size:12px;color:var(--dim);margin-top:6px}
 
-  /* Podium */
-  .podiumWrap{
-    margin-top:14px;border-radius:24px;padding:18px 10px 12px;
+  /* --- TOP 3 --- */
+  .hero{position:relative;margin-top:6px;padding:26px 8px 14px;border-radius:22px}
+  .p3{display:grid;grid-template-columns:1fr 1.15fr 1fr;gap:10px;align-items:end;place-items:center}
+  .pod{position:relative;display:grid;place-items:center;padding-bottom:4px;isolation:isolate;overflow:visible}
+  .ring{
+    width:96px;height:96px;border-radius:50%;
     background:
-      radial-gradient(240px 80px at 50% 0%, rgba(55,224,215,.25), transparent 70%),
-      linear-gradient(180deg,#171442,#121238);
-    border:1px solid #ffffff22; box-shadow:
-      0 20px 60px rgba(36,18,66,.55),
-      inset 0 10px 30px rgba(255,255,255,.05),
-      inset 0 -20px 30px rgba(0,0,0,.25)
+      radial-gradient(86px 86px at 50% 50%, rgba(169,117,255,.65), rgba(122,92,255,.35) 60%, rgba(122,92,255,0) 61%);
+    display:grid;place-items:center;position:relative;z-index:1;animation:float 3.5s ease-in-out infinite
   }
-  .podium{display:grid;grid-template-columns:1fr 1.2fr 1fr;gap:10px;align-items:end}
-  .step{
-    position:relative;border-radius:18px 18px 12px 12px;
-    background:linear-gradient(180deg,#221a54,#16113b);
-    padding:12px 8px 16px;border:1px solid #ffffff1c;
-    box-shadow:inset 0 -14px 22px rgba(120,90,210,.25), 0 10px 24px rgba(0,0,0,.35);
-    display:grid;place-items:center;min-height:100px
-  }
-  .s1{min-height:140px}.s2{min-height:116px}.s3{min-height:110px}
-  .av{
-    position:absolute;top:-66px;left:50%;transform:translateX(-50%);
-    width:78px;height:78px;border-radius:50%;border:5px solid #fff;
-    box-shadow:0 12px 26px rgba(0,0,0,.35), 0 0 0 8px rgba(122,92,255,.15);
-    background:#fff center/cover no-repeat;z-index:2
-  }
-  .crown{position:absolute;top:-96px;left:50%;transform:translateX(-50%);z-index:4;font-size:40px;line-height:1}
+  .av{width:84px;height:84px;border-radius:50%;
+      background:#ddd center/cover no-repeat; /* no white border */
+      box-shadow:0 12px 26px rgba(0,0,0,.35);position:relative;z-index:2}
   .badge{
-    position:absolute;bottom:8px;left:50%;transform:translateX(-50%);z-index:5;
-    background:linear-gradient(180deg,#6f4bff,#9f7bff);color:#fff;border-radius:999px;font-weight:1000;
-    border:2px solid #ffffff;box-shadow:0 6px 16px rgba(0,0,0,.35);padding:2px 8px;font-size:12px
+    position:absolute;top:68px; /* sits on the ring, not over the text */
+    left:50%;transform:translateX(-50%);
+    background:linear-gradient(180deg,#6f4bff,#9f7bff);color:#fff;border-radius:999px;border:2px solid #fff;
+    font-weight:1000;font-size:12px;padding:2px 8px;box-shadow:0 6px 14px rgba(0,0,0,.35);z-index:5
   }
-  .name{margin-top:18px;font-weight:1000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .mini{color:#e8deff;font-size:12px;margin-top:4px;display:flex;align-items:center;gap:6px} /* small gap BELOW username */
-  .mini .pt{font-weight:900}
+  .crown{position:absolute;top:-24px;left:50%;transform:translateX(-50%);font-size:36px;filter:drop-shadow(0 6px 8px rgba(0,0,0,.35));z-index:9;animation:crownPulse 2.2s ease-in-out infinite}
+  .name{margin-top:10px;font-weight:1000;white-space:nowrap}
+  .score{margin-top:6px;color:#e8deff;font-size:12px;display:flex;align-items:center;gap:6px;z-index:1} /* always below badge */
+  .pod.s1 .ring{width:118px;height:118px}
+  .pod.s1 .av{width:104px;height:104px}
+  .pod.s2{transform:translateY(8px)}
+  .pod.s3{transform:translateY(12px)}
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+  @keyframes crownPulse{0%,100%{transform:translateX(-50%) scale(1)}50%{transform:translateX(-50%) scale(1.08)}}
 
-  /* Header row — wider spacing (Rank | Player | Points) */
+  /* Header row — Rank | Player | Points */
   .hdrRow{
     display:grid;grid-template-columns:60px 1fr 110px;gap:10px;align-items:center;
-    margin-top:14px;background:linear-gradient(180deg,#2f325f,#26294e);color:#e9ecff;
+    margin-top:12px;background:linear-gradient(180deg,#2f325f,#26294e);color:#e9ecff;
     border:1px solid #ffffff22;border-radius:16px;padding:10px 12px;font-weight:900
   }
   .hdrRow div:last-child{text-align:right}
 
-  /* Flat list rows with subtle shadow */
+  /* List rows */
   .list{margin-top:10px;display:grid;gap:10px}
   .row{
     display:grid;grid-template-columns:60px 1fr 110px;gap:10px;align-items:center;
-    background:linear-gradient(180deg,rgba(25,26,55,.9),rgba(22,21,42,.9));
+    background:linear-gradient(180deg,rgba(25,26,55,.9),rgba(22,21,42,.92));
     border:1px solid rgba(255,255,255,.08);
     border-radius:14px;padding:10px 12px;
-    box-shadow:0 8px 18px rgba(0,0,0,.35)
+    box-shadow:0 8px 18px rgba(0,0,0,.35); position:relative;overflow:hidden
   }
-  .rk{
-    display:grid;place-items:center;width:42px;height:42px;border-radius:12px;font-weight:1000;
-    background:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,.06));border:1px solid rgba(255,255,255,.28)
+  .row::after{
+    content:""; position:absolute; inset:0; background:linear-gradient(120deg, transparent 30%, rgba(255,255,255,.06) 50%, transparent 70%);
+    transform:translateX(-120%); animation:shimmer 4.5s ease-in-out infinite
   }
-  .face{
-    width:38px;height:38px;border-radius:50%;background:#eee center/cover no-repeat;border:2px solid #fff;margin-right:8px;
-    box-shadow:0 6px 14px rgba(0,0,0,.25)
-  }
+  @keyframes shimmer{0%{transform:translateX(-120%)}60%{transform:translateX(120%)}100%{transform:translateX(120%)}}
+  .rk{display:grid;place-items:center;width:42px;height:42px;border-radius:12px;font-weight:1000;
+    background:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,.06));border:1px solid rgba(255,255,255,.28)}
   .left{display:flex;align-items:center;gap:10px}
+  .face{width:38px;height:38px;border-radius:50%;background:#eee center/cover no-repeat;box-shadow:0 6px 14px rgba(0,0,0,.25)}
   .uname{font-weight:1000}
   .val{font-weight:900;color:#fff;text-align:right}
 
@@ -124,7 +113,7 @@
   .go:active{transform:translateY(1px);box-shadow:0 2px 0 rgba(0,0,0,.12)}
   .result{margin-top:8px;background:rgba(255,255,255,.92);border:1px solid rgba(0,0,0,.08);color:#2b2350;border-radius:12px;padding:10px 12px;font-weight:800;display:none}
 
-  /* Bottom nav (text highlight only) */
+  /* Bottom nav */
   .iconnav{position:fixed;left:50%;transform:translateX(-50%);bottom:max(8px,env(safe-area-inset-bottom,0));
     width:min(520px,100% - 12px);display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:10px 12px;
     background:rgba(16,17,42,.98);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.08);
@@ -139,7 +128,7 @@
   .soundBtn.show{display:inline-flex} .soundBtn.active{background:linear-gradient(90deg,#ffd86a,#ffc24d)}
   .soundBtn .ic{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8}
 
-  /* Community */
+  /* Community small bits */
   .comm .sharebar{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
   .comm .sharebtn{appearance:none;border:0;border-radius:12px;padding:10px 14px;font-weight:900;cursor:pointer;background:#ffd86a;color:#2a1a00;box-shadow:0 4px 0 rgba(0,0,0,.12)}
   .comm .list{display:grid;gap:14px;margin-top:12px}
@@ -150,28 +139,20 @@
 <body>
   <div class="app">
     <header>
-      <div class="hrow"><div class="title">Leaderboard</div><div style="font-size:12px;color:#c8d0ff">v6</div></div>
+      <div class="hrow"><div class="title">Leaderboard</div><div style="font-size:12px;color:#c8d0ff">v8</div></div>
     </header>
     <main id="view"></main>
   </div>
 
   <!-- Bottom Nav -->
   <nav class="iconnav" aria-label="Primary">
-    <button class="itab active" data-tab="ranks" data-idx="0">
-      <svg class="ico" viewBox="0 0 24 24"><path d="M7 22V11a2 2 0 0 1 2-2h6v13H7zM3 22v-7a2 2 0 0 1 2-2h1v9H3zM17 22V5a2 2 0 0 1 2-2h2v19h-4zM10 5l2-3 2 3"/></svg><span>Ranking</span>
-    </button>
-    <button class="itab" data-tab="home" data-idx="1">
-      <!-- T&C icon -->
-      <svg class="ico" viewBox="0 0 24 24"><path d="M7 3h7l4 4v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zM14 3v5h5"/></svg>
-      <span>T&C</span>
-    </button>
-    <button class="itab" data-tab="community" data-idx="2">
-      <svg class="ico" viewBox="0 0 24 24"><path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4zm0 2c-4 0-8 2-8 5v1h16v-1c0-3-4-5-8-5z"/></svg><span>Community</span>
-    </button>
+    <button class="itab active" data-tab="ranks"><svg class="ico" viewBox="0 0 24 24"><path d="M7 22V11a2 2 0 0 1 2-2h6v13H7zM3 22v-7a2 2 0 0 1 2-2h1v9H3zM17 22V5a2 2 0 0 1 2-2h2v19h-4zM10 5l2-3 2 3"/></svg><span>Ranking</span></button>
+    <button class="itab" data-tab="home"><svg class="ico" viewBox="0 0 24 24"><path d="M7 3h7l4 4v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zM14 3v5h5"/></svg><span>T&C</span></button>
+    <button class="itab" data-tab="community"><svg class="ico" viewBox="0 0 24 24"><path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4zm0 2c-4 0-8 2-8 5v1h16v-1c0-3-4-5-8-5z"/></svg><span>Community</span></button>
   </nav>
 
   <!-- Theme music -->
-  <audio id="bgm" src="theme.mp3" preload="auto" loop playsinline></audio>
+  <audio id="bgm" src="theme.mp3" preload="auto" loop playsinline autoplay></audio>
   <button id="soundBtn" class="soundBtn" aria-label="Toggle sound" title="Sound">
     <svg viewBox="0 0 24 24" class="ic"><path d="M4 10h4l5-4v12l-5-4H4zM17 8a5 5 0 010 8"/></svg><span>Sound</span>
   </button>
@@ -188,14 +169,13 @@ const $all=(s,el)=> Array.from((el||document).querySelectorAll(s));
 const unique=a=>Array.from(new Set(a));
 const fmtFull=n=>Number(n||0).toLocaleString();
 const faceBg=url=>`url("${url}")`;
-const TROPHY="🏆";
-function maskMiddle3(name){
+function maskMid3(name){
   const s=String(name||''); if(s.length<3) return s.replace(/.(?=.)/g,'*');
-  const mid=Math.floor(s.length/2); const start=Math.max(0,mid-1), end=Math.min(s.length,mid+2);
-  return s.slice(0,start) + '***' + s.slice(end);
+  const mid=Math.floor(s.length/2), start=Math.max(0,mid-1), end=Math.min(s.length,mid+2);
+  return s.slice(0,start)+'***'+s.slice(end);
 }
 
-/* Avatars (DiceBear – CC0). Replace with your own if needed */
+/* Avatar URLs (20). Replace with yours at will */
 const AVS=[
   "https://ricobr.ft-crm.com/media-api/serve/8f954107-4d24-4d5c-b2fe-934b14e56215_1010.png",
   "https://ricobr.ft-crm.com/media-api/serve/5368d6f5-3904-42d6-9ef9-314cd544ad95_11.png",
@@ -226,20 +206,19 @@ $all('.iconnav .itab').forEach(btn=>{
   btn.addEventListener('click',()=>{ TAB=btn.dataset.tab; $all('.itab').forEach(b=>b.classList.toggle('active',b===btn)); render();});
 });
 
-/* Music autoplay + fallback */
+/* Music autoplay with fallbacks */
 (function(){
   const audio=$('#bgm'), btn=$('#soundBtn'); if(!audio||!btn) return;
-  const saved=localStorage.getItem('bgm_pref'); if(saved==='off'){audio.muted=true} if(saved==='on'){audio.muted=false}
+  async function tryPlay(){ try{ audio.muted=false; await audio.play(); btn.classList.remove('show'); }catch{ btn.classList.add('show'); } }
+  function unlock(){ tryPlay(); }
   document.addEventListener('DOMContentLoaded',tryPlay,{once:true});
-  async function tryPlay(){try{
-    if(localStorage.getItem('bgm_pref')==='off'){btn.classList.add('show');return}
-    audio.muted=false; await audio.play(); btn.classList.remove('show'); localStorage.setItem('bgm_pref','on')
-  }catch{ btn.classList.add('show'); ['pointerdown','keydown','touchstart'].forEach(evt=>document.addEventListener(evt,unlock,{once:true}))}}
-  async function unlock(){try{audio.muted=false;await audio.play();btn.classList.remove('show');btn.classList.add('active');localStorage.setItem('bgm_pref','on')}catch{}}
-  btn.addEventListener('click',async()=>{try{
+  setTimeout(tryPlay, 1200);
+  ['click','touchstart','keydown','scroll'].forEach(evt=>document.addEventListener(evt,unlock,{once:true,passive:true}));
+  document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible' && audio.paused) tryPlay(); });
+  btn.addEventListener('click',async()=>{ try{
     if(audio.paused){audio.muted=false;await audio.play()} else {audio.muted=!audio.muted;if(audio.muted)await audio.pause();else await audio.play()}
-    const on=!audio.paused && !audio.muted; btn.classList.toggle('active',on); if(on) btn.classList.remove('show'); localStorage.setItem('bgm_pref',on?'on':'off')
-  }catch{}})
+    btn.classList.toggle('active', !audio.paused && !audio.muted);
+  }catch{}});
 })();
 
 /* GViz fetch + normalize */
@@ -254,11 +233,8 @@ async function gviz(gid){
 }
 const pickIndex=(headers,aliases)=>{const L=headers.map(h=>String(h||'').toLowerCase());for(const a of aliases){const j=L.findIndex(h=>h.includes(a));if(j>-1)return j}return -1};
 function normalize({headers:h,rows}){
-  const ri=pickIndex(h,["rank","posição","posicion"]);
-  const ui=pickIndex(h,["username","user","player","name"]);
-  const pi=pickIndex(h,["points","score","pontos"]);
-  const wi=pickIndex(h,["week","semana"]);
-  const di=pickIndex(h,["date","day","fecha"]);
+  const ri=pickIndex(h,["rank"]); const ui=pickIndex(h,["username","user","player","name"]);
+  const pi=pickIndex(h,["points","score"]); const wi=pickIndex(h,["week"]); const di=pickIndex(h,["date","day"]);
   if(ri<0||ui<0||pi<0) throw new Error('Missing Rank/Username/Points columns');
   return rows.map(r=>({
     rank:Number(String(r[ri]).replace(/[^\d.\-]/g,''))||0,
@@ -269,7 +245,7 @@ function normalize({headers:h,rows}){
   })).filter(x=>x.username && x.rank>0);
 }
 
-/* Leaderboard */
+/* Data & UI */
 let MODE='daily', DAILY=[], WEEKLY=[], DATES=[], WEEKS=[], CUR_DATE='', CUR_WEEK='', CURRENT_FULL=[];
 
 async function renderRanks(){
@@ -278,7 +254,7 @@ async function renderRanks(){
       <div class="lbHead">
         <h2 style="margin:0;font-size:22px">Leaderboard</h2>
         <div class="seg">
-          <button id="bDaily"  class="active">Daily</button>
+          <button id="bDaily" class="active">Daily</button>
           <button id="bWeekly">Weekly</button>
         </div>
       </div>
@@ -289,29 +265,29 @@ async function renderRanks(){
       </div>
     </div>
 
-    <div class="podiumWrap">
-      <div class="podium">
-        <div class="step s2">
-          <div class="av" id="p2a"></div>
+    <section class="hero">
+      <div class="p3">
+        <div class="pod s2">
+          <div class="ring"><div class="av" id="p2a"></div></div>
           <div class="badge">2</div>
           <div class="name" id="p2n">—</div>
-          <div class="mini"><span id="p2t">🏆</span> <span class="pt" id="p2s"></span> <span>points</span></div>
+          <div class="score"><span>🏆</span><span id="p2s"></span><span>points</span></div>
         </div>
-        <div class="step s1">
+        <div class="pod s1">
           <div class="crown">👑</div>
-          <div class="av" id="p1a"></div>
+          <div class="ring"><div class="av" id="p1a"></div></div>
           <div class="badge">1</div>
           <div class="name" id="p1n">—</div>
-          <div class="mini"><span id="p1t">🏆</span> <span class="pt" id="p1s"></span> <span>points</span></div>
+          <div class="score"><span>🏆</span><span id="p1s"></span><span>points</span></div>
         </div>
-        <div class="step s3">
-          <div class="av" id="p3a"></div>
+        <div class="pod s3">
+          <div class="ring"><div class="av" id="p3a"></div></div>
           <div class="badge">3</div>
           <div class="name" id="p3n">—</div>
-          <div class="mini"><span id="p3t">🏆</span> <span class="pt" id="p3s"></span> <span>points</span></div>
+          <div class="score"><span>🏆</span><span id="p3s"></span><span>points</span></div>
         </div>
       </div>
-    </div>
+    </section>
 
     <div class="hdrRow"><div>Rank</div><div>Player</div><div>Points</div></div>
     <div class="list" id="lb-list"></div>
@@ -323,37 +299,29 @@ async function renderRanks(){
     <div id="mine" class="result"></div>
   `;
 
-  if(!DAILY.length){ try{ DAILY = normalize(await gviz(GID_DAILY)); }catch(e){ console.warn('Daily sheet load failed',e); } }
-  if(!WEEKLY.length){ try{ WEEKLY = normalize(await gviz(GID_WEEKLY)); }catch(e){ console.warn('Weekly sheet load failed',e); } }
+  if(!DAILY.length){ try{ DAILY = normalize(await gviz(GID_DAILY)); }catch(e){ console.warn('Daily load failed',e); } }
+  if(!WEEKLY.length){ try{ WEEKLY = normalize(await gviz(GID_WEEKLY)); }catch(e){ console.warn('Weekly load failed',e); } }
 
   DATES = unique(DAILY.map(x=>x.date).filter(Boolean)).sort();
   WEEKS = unique(WEEKLY.map(x=>x.week).filter(Boolean)).sort((a,b)=>{
-    const na=(a.match(/\d+/)||[])[0], nb=(b.match(/\d+/)||[])[0];
-    return (na&&nb)? na-nb : a.localeCompare(b);
+    const na=(a.match(/\d+/)||[])[0], nb=(b.match(/\d+/)||[])[0]; return (na&&nb)? na-nb : a.localeCompare(b);
   });
-  CUR_DATE = DATES[DATES.length-1]||"";
-  CUR_WEEK = WEEKS[WEEKS.length-1]||"";
+  CUR_DATE = DATES[DATES.length-1]||""; CUR_WEEK = WEEKS[WEEKS.length-1]||"";
 
   const pDate=$('#pickDate'), pWeek=$('#pickWeek');
   if(CUR_DATE){ pDate.value=CUR_DATE; pDate.min=DATES[0]||""; pDate.max=DATES[DATES.length-1]||""; }
   pWeek.innerHTML=WEEKS.map(w=>`<option>${w}</option>`).join(''); pWeek.value=CUR_WEEK;
 
   const bDaily=$('#bDaily'), bWeekly=$('#bWeekly');
-  const setMode=m=>{
-    MODE=m;
-    bDaily.classList.toggle('active',m==='daily');
-    bWeekly.classList.toggle('active',m==='weekly');
-    pDate.style.display = m==='daily' ? '' : 'none';
-    pWeek.style.display = m==='weekly' ? '' : 'none';
+  const setMode=m=>{ MODE=m;
+    bDaily.classList.toggle('active',m==='daily'); bWeekly.classList.toggle('active',m==='weekly');
+    pDate.style.display = m==='daily' ? '' : 'none'; pWeek.style.display = m==='weekly' ? '' : 'none';
     draw();
   };
-  bDaily.onclick=()=>setMode('daily');
-  bWeekly.onclick=()=>setMode('weekly');
-  pDate.onchange=()=>{CUR_DATE=pDate.value; draw()};
-  pWeek.onchange=()=>{CUR_WEEK=pWeek.value; draw()};
+  bDaily.onclick=()=>setMode('daily'); bWeekly.onclick=()=>setMode('weekly');
+  pDate.onchange=()=>{CUR_DATE=pDate.value; draw()}; pWeek.onchange=()=>{CUR_WEEK=pWeek.value; draw()};
 
-  $('#find').onclick=doSearch;
-  $('#q').addEventListener('keydown',e=>{ if(e.key==='Enter') doSearch(); });
+  $('#find').onclick=doSearch; $('#q').addEventListener('keydown',e=>{ if(e.key==='Enter') doSearch(); });
 
   setMode(MODE);
 
@@ -365,21 +333,15 @@ async function renderRanks(){
 
   function setPod(n,row){
     const av=$(`#p${n}a`), nm=$(`#p${n}n`), sc=$(`#p${n}s`);
-    if(row){
-      av.style.backgroundImage=faceBg(rankAvatar(row.rank));
-      nm.textContent=maskMiddle3(row.username);
-      sc.textContent = fmtFull(row.points); // number only; "points" text is in markup
-    }else{ av.style.backgroundImage='none'; nm.textContent='—'; sc.textContent=''; }
+    if(row){ av.style.backgroundImage=faceBg(rankAvatar(row.rank)); nm.textContent=maskMid3(row.username); sc.textContent=fmtFull(row.points); }
+    else { av.style.backgroundImage='none'; nm.textContent='—'; sc.textContent=''; }
   }
 
   function draw(){
     $('#scope').innerHTML = scopeText();
-    const rows = currentRows();
-    CURRENT_FULL = rows.slice();
+    const rows = currentRows(); CURRENT_FULL = rows.slice();
 
-    setPod(1, rows.find(r=>r.rank===1));
-    setPod(2, rows.find(r=>r.rank===2));
-    setPod(3, rows.find(r=>r.rank===3));
+    setPod(1, rows.find(r=>r.rank===1)); setPod(2, rows.find(r=>r.rank===2)); setPod(3, rows.find(r=>r.rank===3));
 
     const list=$('#lb-list'); list.innerHTML='';
     rows.filter(r=>r.rank>=4 && r.rank<=20).forEach(r=>{
@@ -388,7 +350,7 @@ async function renderRanks(){
           <div class="rk">${r.rank}</div>
           <div class="left">
             <div class="face" style="background-image:${faceBg(rankAvatar(r.rank))}"></div>
-            <div class="uname">${maskMiddle3(r.username)}</div>
+            <div class="uname">${maskMid3(r.username)}</div>
           </div>
           <div class="val">${fmtFull(r.points)} points</div>
         </div>`);
