@@ -3,638 +3,402 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-<title>Referral Race + Mini Games</title>
+<meta name="color-scheme" content="dark"/>
+<title>Leaderboard — Referral Race</title>
 <style>
   :root{
-    --bg:#0c0c12; --ink:#eef2ff; --muted:#a0a7c9; --edge:rgba(255,255,255,.08);
-    --p1:#8b5dff; --p2:#aa74ff; --glow:rgba(153,120,255,.3); --acc:#ffd86a;
+    --bg:#0b0c18;--ink:#eef2ff;--muted:#a0a7c9;--edge:rgba(255,255,255,.08);
+    --p1:#8b5dff;--p2:#aa74ff;--glow:rgba(153,120,255,.3);--acc:#ffd86a;
+    --card:#151533;--card2:#10112a;
   }
   *{box-sizing:border-box}
   html,body{margin:0;height:100%;overflow-x:hidden;
-    background:radial-gradient(1000px 700px at 50% -10%, #1b1c3f 0%, transparent 60%),
+    background:radial-gradient(1000px 700px at 50% -10%,#1b1c3f 0%,transparent 60%),
                linear-gradient(180deg,#0b0c1a,#070813);
-    color:var(--ink);font:15px/1.5 Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-    -webkit-tap-highlight-color:transparent}
-  .app{max-width:520px;margin:0 auto;min-height:100dvh;display:grid;grid-template-rows:auto 1fr;overflow-x:hidden}
+    color:var(--ink);font:15px/1.5 Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif}
+  .app{max-width:520px;margin:0 auto;min-height:100dvh;display:grid;grid-template-rows:auto 1fr}
 
   /* Header */
-  header{position:sticky;top:0;background:linear-gradient(180deg,#10112a,#0d0e23);border-bottom:1px solid var(--edge);padding:12px 16px;z-index:20}
+  header{position:sticky;top:0;background:linear-gradient(180deg,#10112a,#0d0e23);
+    border-bottom:1px solid var(--edge);padding:12px 16px;z-index:10}
   .hrow{display:flex;align-items:center;justify-content:space-between}
-  .title{font-weight:900;font-size:18px;letter-spacing:.4px}
+  .title{font-weight:900;font-size:18px}
 
-  /* Content */
-  main{padding:14px 14px 116px} /* extra space for fixed tab bar */
-  .card{background:linear-gradient(180deg,#151533,#10112a);border:1px solid var(--edge);border-radius:16px;padding:14px;margin-bottom:12px}
-  h2{margin:0 0 8px;font-size:18px}
-  h3{margin:0 0 8px;font-size:16px}
+  main{padding:14px 14px 116px}
+  .card{background:linear-gradient(180deg,var(--card),var(--card2));border:1px solid var(--edge);
+    border-radius:16px;padding:14px;margin-bottom:12px}
+  h2,h3{margin:0 0 8px}
   p{margin:0 0 8px;color:#dfe5ff}
 
-  /* ====== RANKING (namespaced .rr) ====== */
-  .rr{--ink:#2b2350; --gold:#ffcf5a; --silver:#dbe6ff; --bronze:#ffd9b3; width:100%}
-  .rr .controls{display:flex;align-items:center;gap:8px}
-  .rr .select,.rr .wbtn{appearance:none;border:0;border-radius:10px;padding:9px 10px;font-weight:800}
-  .rr .select{background:#ffffffbf;color:#2d1b55}
-  .rr .wbtn{background:#ffd86a;color:#3a2400;box-shadow:0 4px 0 rgba(0,0,0,.12);cursor:pointer}
-  .rr .wbtn:active{transform:translateY(1px);box-shadow:0 2px 0 rgba(0,0,0,.12)}
-
-  .rr .podiumCard{margin-top:12px;border-radius:22px;padding:16px 12px 12px;width:100%;
-    background:linear-gradient(180deg,#f0e6ff,#f9f1ff);border:1px solid rgba(255,255,255,.55);
-    color:var(--ink);box-shadow:0 24px 60px rgba(36,18,66,.35);overflow:hidden}
-  .rr .cap{display:flex;justify-content:center;gap:10px;align-items:center;color:#876dc9;
-    font-weight:900;font-size:12px;letter-spacing:.4px;margin-bottom:10px}
-  .rr .podium{display:grid;grid-template-columns:1fr 1.2fr 1fr;gap:10px;align-items:end}
-  .rr .step{position:relative;border-radius:16px 16px 10px 10px;background:linear-gradient(180deg,#ffffff,#f0ecff);
-    padding:10px 8px 12px;border:1px solid rgba(44,26,74,.12);
-    box-shadow: inset 0 -12px 18px rgba(100,70,180,.10), 0 8px 18px rgba(0,0,0,.10);
-    display:grid;place-items:center;min-height:86px}
-  .rr .s1{min-height:120px}.rr .s2{min-height:100px}.rr .s3{min-height:96px}
-  .rr .badge{position:absolute;top:-20px;left:50%;transform:translateX(-50%);width:58px;height:58px;border-radius:50%;
-    display:grid;place-items:center;font-weight:900;border:2px solid rgba(0,0,0,.06);box-shadow:0 6px 14px rgba(0,0,0,.18)}
-  .rr .b1{background:radial-gradient(circle at 35% 30%, #fff, var(--gold) 65%);color:#5a4300}
-  .rr .b2{background:radial-gradient(circle at 35% 30%, #fff, var(--silver) 65%);color:#1d2945}
-  .rr .b3{background:radial-gradient(circle at 35% 30%, #fff, var(--bronze) 65%);color:#4a2c12}
-
-  .rr .av{position:absolute;top:-64px;left:50%;transform:translateX(-50%);width:76px;height:76px;border-radius:50%;
-    border:4px solid #fff;box-shadow:0 10px 22px rgba(0,0,0,.25);background:#fff center/cover no-repeat}
-  .rr .tiara{position:absolute;top:-86px;left:50%;transform:translateX(-50%);width:46px;height:30px;pointer-events:none}
-  .rr .name{margin-top:14px;font-weight:900;color:#32245c;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .rr .scoreMini{color:#6b5d9c;font-size:12px;margin-top:2px}
-
-  .rr .list{margin-top:12px;display:grid;gap:8px}
-  .rr .row{display:grid;grid-template-columns:46px 1fr auto;gap:8px;align-items:center;
-    background:linear-gradient(180deg,rgba(255,255,255,.9),rgba(255,255,255,.75));
-    border:1px solid rgba(0,0,0,.06);border-radius:14px;padding:10px;color:#2b2350}
-  .rr .rk{display:grid;place-items:center;width:38px;height:38px;border-radius:12px;font-weight:900;background:#f0ecff;border:1px solid rgba(0,0,0,.06)}
-  .rr .face{width:38px;height:38px;border-radius:50%;background:#eee center/cover no-repeat;border:2px solid #fff;margin-right:8px}
-  .rr .uname{font-weight:800}
-  .rr .val{font-weight:900;color:#5b4bb4}
-  .rr .row .left{display:flex;align-items:center;gap:8px}
-
-  .rr .search{margin-top:12px;display:grid;grid-template-columns:1fr auto;gap:8px}
-  .rr .input{border-radius:12px;border:1px solid var(--edge);background:#0f1030;color:#eff3ff;padding:10px 12px}
-  .rr .go{appearance:none;border:0;border-radius:12px;padding:10px 12px;background:#ffd86a;color:#3a2400;font-weight:900;cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,.12)}
-  .rr .go:active{transform:translateY(1px);box-shadow:0 2px 0 rgba(0,0,0,.12)}
-  .rr .result{margin-top:8px;background:rgba(255,255,255,.92);border:1px solid rgba(0,0,0,.08);color:#2b2350;border-radius:12px;padding:10px 12px;font-weight:700;display:none}
-
-  /* === Icon Bottom Nav — fixed (5 items now) === */
-  .iconnav{
-    position: fixed; left: 50%; transform: translateX(-50%);
-    bottom: max(8px, env(safe-area-inset-bottom));
-    width: min(520px, 100% - 12px);
-    display: grid; grid-template-columns: repeat(5,1fr); gap: 8px;
-    padding: 10px 12px; background: rgba(16,17,42,.98); backdrop-filter: blur(6px);
-    border: 1px solid rgba(255,255,255,.08); border-radius: 16px;
-    box-shadow: 0 18px 38px rgba(0,0,0,.28), 0 2px 0 rgba(255,255,255,.04) inset; z-index: 1000;
-    --hot:#ff4fd8; --hot2:#ff9ae8; --ix: 0;
-  }
-  .iconnav .itab{position:relative;isolation:isolate;appearance:none;border:0;background:transparent;cursor:pointer;
-    display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 6px;color:#cdd7ff;font-weight:800;border-radius:14px}
-  .iconnav .itab span{font-size:11px;letter-spacing:.2px;line-height:1}
+  /* Bottom nav */
+  .iconnav{position:fixed;left:50%;transform:translateX(-50%);bottom:max(8px,env(safe-area-inset-bottom,0));
+    width:min(520px,100% - 12px);display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:10px 12px;
+    background:rgba(16,17,42,.98);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.08);
+    border-radius:16px;z-index:1000;--hot:#ff4fd8;--hot2:#ff9ae8;--ix:0}
+  .iconnav .itab{appearance:none;border:0;background:transparent;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 6px;color:#cdd7ff;font-weight:800;border-radius:14px}
+  .iconnav .itab span{font-size:11px}
   .iconnav .ico{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transition:transform .25s,color .25s}
-  .iconnav .itab.active .ico{transform:translateY(-2px) scale(1.06)}
-  .iconnav .itab.active,.iconnav .itab:focus-visible{color:#fff}
-  .iconnav .inkbar{position:absolute;bottom:10px;height:44px;z-index:0;pointer-events:none;left:12px;right:12px;
-    width: calc((100% - 24px - 8px*4)/5); /* 5 items */
+  .iconnav .itab.active .ico{transform:translateY(-2px) scale(1.06)} .iconnav .itab.active{color:#fff}
+  .iconnav .inkbar{position:absolute;bottom:10px;height:44px;left:12px;right:12px;width:calc((100% - 24px - 8px*2)/3);
     border-radius:16px;background:radial-gradient(90% 140% at 10% 0%,var(--hot) 0%,var(--hot2) 60%,#ffcabf 100%);
     box-shadow:0 12px 26px rgba(255,79,216,.35), inset 0 -2px 6px rgba(0,0,0,.18);
-    transform:translateX(calc(var(--ix) * (100% + 8px)));
-    transition:transform .28s cubic-bezier(.22,.9,.24,1), width .15s ease}
+    transform:translateX(calc(var(--ix) * (100% + 8px)));transition:transform .28s cubic-bezier(.22,.9,.24,1)}
 
-  /* FAQ */
-  details{background:#14143a;border:1px solid var(--edge);border-radius:12px;padding:10px}
-  details+details{margin-top:8px}
-  summary{cursor:pointer;font-weight:800}
+  /* Leaderboard controls */
+  .lbHead{display:flex;align-items:center;justify-content:space-between}
+  .seg{display:flex;gap:8px;background:#0f1030;border:1px solid var(--edge);padding:6px;border-radius:12px}
+  .seg button{appearance:none;border:0;background:transparent;color:#cfd4ff;font-weight:900;padding:8px 12px;border-radius:8px;cursor:pointer}
+  .seg button.active{background:linear-gradient(180deg,var(--p2),var(--p1));color:#fff;box-shadow:0 8px 18px var(--glow)}
+  .scope{font-size:12px;color:#b8c5ff;margin-top:6px}
+  .filters{display:flex;gap:8px;margin-top:8px}
+  .pick{appearance:none;background:#0f1030;color:#eaf0ff;border:1px solid var(--edge);border-radius:10px;padding:8px 10px;font-weight:800}
 
-  /* Community */
-  .socialCard{background: radial-gradient(120% 140% at 0% 0%, #5d2fff 0%, #4c22d8 35%, #3b1dbb 70%);border:1px solid rgba(255,255,255,.18);border-radius:20px;padding:12px;box-shadow:0 20px 50px rgba(0,0,0,.35)}
-  .socialItem{display:grid;grid-template-columns:1fr auto;align-items:center;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:14px;padding:10px 12px}
-  .socialItem + .socialItem{margin-top:10px}
-  .sLeft{display:flex;align-items:center;gap:10px;min-width:0}
-  .sIcon{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:#fff;color:#111;box-shadow:0 6px 14px rgba(0,0,0,.18)}
-  .sName{font-weight:800;letter-spacing:.2px}
-  .subBtn{appearance:none;border:0;padding:9px 14px;border-radius:10px;background:#fff;color:#222;font-weight:900;cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,.12)}
-  .subBtn:active{transform:translateY(1px);box-shadow:0 2px 0 rgba(0,0,0,.12)}
+  /* Podium */
+  .podiumWrap{margin-top:14px;background:linear-gradient(180deg,#20154a,#17143a);border:1px solid rgba(255,255,255,.12);
+    border-radius:22px;padding:18px 12px 12px;box-shadow:0 24px 60px rgba(36,18,66,.35)}
+  .podium{display:grid;grid-template-columns:1fr 1.2fr 1fr;gap:10px;align-items:end}
+  .step{position:relative;border-radius:16px 16px 10px 10px;background:linear-gradient(180deg,#211a4d,#151038);
+    padding:10px 8px 12px;border:1px solid rgba(255,255,255,.1);box-shadow:inset 0 -12px 18px rgba(100,70,180,.18),0 8px 18px rgba(0,0,0,.20);display:grid;place-items:center;min-height:88px}
+  .s1{min-height:124px}.s2{min-height:104px}.s3{min-height:98px}
+  .av{position:absolute;top:-64px;left:50%;transform:translateX(-50%);width:76px;height:76px;border-radius:50%;border:4px solid #fff;box-shadow:0 10px 22px rgba(0,0,0,.25);background:#fff center/cover no-repeat}
+  .crown{position:absolute;top:-86px;left:50%;transform:translateX(-50%);width:40px;height:40px;border-radius:50%;
+    display:grid;place-items:center;background:radial-gradient(circle at 35% 30%,#fff,var(--acc) 65%);color:#5a4300;border:2px solid rgba(0,0,0,.06);box-shadow:0 6px 14px rgba(0,0,0,.18)}
+  .name{margin-top:14px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .s2 .name,.s3 .name{color:#e6e3ff}.s1 .name{color:#fff}
+  .mini{color:#c7beff;font-size:12px;margin-top:2px}
 
-  /* Sound toggle */
-  .soundBtn{position:fixed;right:12px;bottom:calc(72px + env(safe-area-inset-bottom,0));background:rgba(255,255,255,.95);color:#111;border:1px solid rgba(0,0,0,.08);border-radius:14px;padding:10px 12px;display:none;gap:8px;align-items:center;font-weight:900;z-index:1100;box-shadow:0 10px 24px rgba(0,0,0,.25)}
-  .soundBtn.show{display:inline-flex}
-  .soundBtn.active{background:linear-gradient(90deg,#ffd86a,#ffc24d)}
-  .soundBtn .ic{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-  @media (min-width:560px){.soundBtn{bottom:calc(92px + env(safe-area-inset-bottom,0))}}
+  /* Table header row */
+  .hdrRow{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;
+    margin-top:14px;background:#2c2f55;border:1px solid rgba(255,255,255,.12);color:#e4e7ff;border-radius:14px;padding:10px;font-weight:900}
 
-  /* ===== Mini Game ===== */
-  .mg-tabs{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap}
-  .mg-tabs button{appearance:none;border:1px solid var(--edge);background:#15153a;color:#eaf0ff;border-radius:12px;padding:10px 12px;font-weight:900;cursor:pointer}
-  .mg-tabs button.active{background:linear-gradient(180deg,var(--p2),var(--p1));box-shadow:0 6px 18px var(--glow)}
-  .mg-wrap{border:1px solid var(--edge);border-radius:16px;overflow:hidden;background:linear-gradient(180deg,#0f1030,#0b0c26)}
-  .mg-head{display:flex;align-items:center;justify-content:space-between;padding:10px;border-bottom:1px solid #0a0e28}
-  .mg-head .title{font-weight:900}
-  .mg-head .ctrls{display:flex;gap:8px}
-  .mg-btn{appearance:none;border:0;border-radius:10px;background:#ffd86a;color:#361e00;font-weight:900;padding:8px 12px;cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,.12)}
-  .mg-canvas{display:block;width:100%;height:340px;background:linear-gradient(180deg,#0a0e24,#060814)}
-  .tip{font-size:12px;color:#b7c3ff;margin-top:8px}
+  /* List cards (Top 20) */
+  .list{margin-top:10px;display:grid;gap:10px}
+  .row{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;
+    background:linear-gradient(180deg,rgba(143,106,255,.28),rgba(143,106,255,.16));
+    border:1px solid rgba(166,134,255,.35);border-radius:14px;padding:10px}
+  .rk{display:grid;place-items:center;width:40px;height:40px;border-radius:12px;font-weight:900;
+    background:linear-gradient(180deg,rgba(255,255,255,.15),rgba(255,255,255,.05));border:1px solid rgba(255,255,255,.2)}
+  .face{width:38px;height:38px;border-radius:50%;background:#eee center/cover no-repeat;border:2px solid #fff;margin-right:8px}
+  .uname{font-weight:800}
+  .val{font-weight:900;color:#fff}
+  .left{display:flex;align-items:center;gap:8px}
+
+  /* Search */
+  .search{margin-top:12px;display:grid;grid-template-columns:1fr auto;gap:8px}
+  .input{border-radius:12px;border:1px solid var(--edge);background:#0f1030;color:#eff3ff;padding:10px 12px}
+  .go{appearance:none;border:0;border-radius:12px;padding:10px 12px;background:#ffd86a;color:#3a2400;font-weight:900;cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,.12)}
+  .go:active{transform:translateY(1px);box-shadow:0 2px 0 rgba(0,0,0,.12)}
+  .result{margin-top:8px;background:rgba(255,255,255,.92);border:1px solid rgba(0,0,0,.08);color:#2b2350;border-radius:12px;padding:10px 12px;font-weight:700;display:none}
+
+  /* Community block (kept) */
+  .comm .sharebar{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+  .comm .sharebtn{appearance:none;border:0;border-radius:12px;padding:10px 14px;font-weight:900;cursor:pointer;background:#ffd86a;color:#2a1a00;box-shadow:0 4px 0 rgba(0,0,0,.12)}
+  .comm .list{display:grid;gap:14px;margin-top:12px}
+  .comm .item{background:linear-gradient(180deg,#5a34dd,#4a2bc7);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:16px;color:#fff;display:flex;align-items:center;justify-content:space-between}
+  .comm .left{display:flex;align-items:center;gap:12px}
+  .comm .bubble{width:44px;height:44px;border-radius:12px;background:#fff;display:grid;place-items:center}
+  .comm .sub{appearance:none;border:0;border-radius:12px;padding:10px 14px;background:#fff;color:#2a1a00;font-weight:900;cursor:pointer}
 </style>
 </head>
 <body>
-<div class="app">
-  <header>
-    <div class="hrow">
-      <div class="title" id="hdrTitle">Referral Race</div>
-      <div class="muted" style="font-size:12px">v1 • demo</div>
-    </div>
-  </header>
+  <div class="app">
+    <header>
+      <div class="hrow">
+        <div class="title" id="hdrTitle">Leaderboard</div>
+        <div class="muted" style="font-size:12px">v3</div>
+      </div>
+    </header>
+    <main id="view"></main>
+  </div>
 
-  <main id="view"></main>
-</div>
-
-<!-- Bottom Nav (5 tabs: Home, Ranks, T&C, Community, Mini Game) -->
-<nav class="iconnav" aria-label="Primary">
-  <div class="inkbar" aria-hidden="true"></div>
-  <button type="button" class="itab active" data-tab="home" data-idx="0" aria-label="Home">
-    <svg class="ico" viewBox="0 0 24 24"><path d="M4 10.5l8-6 8 6V20a2 2 0 0 1-2 2h-3.5a1.5 1.5 0 0 1-1.5-1.5V16a2 2 0 0 0-2-2 2 2 0 0 0-2 2v4.5A1.5 1.5 0 0 1 7.5 22H4a2 2 0 0 1-2-2v-9.5z"/></svg>
-    <span>Home</span>
-  </button>
-  <button type="button" class="itab" data-tab="ranks" data-idx="1" aria-label="Ranks">
-    <svg class="ico" viewBox="0 0 24 24"><path d="M7 22V11a2 2 0 0 1 2-2h6v13H7zM3 22v-7a2 2 0 0 1 2-2h1v9H3zM17 22V5a2 2 0 0 1 2-2h2v19h-4zM10 5l2-3 2 3"/></svg>
-    <span>Ranks</span>
-  </button>
-  <button type="button" class="itab" data-tab="terms" data-idx="2" aria-label="T & C">
-    <svg class="ico" viewBox="0 0 24 24"><path d="M6 3h9l4 4v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zM15 3v4h4M8 11h8M8 15h8M8 7h4"/></svg>
-    <span>T&amp;C</span>
-  </button>
-  <button type="button" class="itab" data-tab="community" data-idx="3" aria-label="Community">
-    <svg class="ico" viewBox="0 0 24 24"><path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4zm0 2c-4 0-8 2-8 5v1h16v-1c0-3-4-5-8-5zM18.5 11.5a3 3 0 1 0-2.5-5 5.8 5.8 0 0 1 .7 2.5 5.8 5.8 0 0 1-.6 2.5 3 3 0 0 0 2.4 0z"/></svg>
-    <span>Community</span>
-  </button>
-  <button type="button" class="itab" data-tab="minigame" data-idx="4" aria-label="Mini Game">
-    <svg class="ico" viewBox="0 0 24 24"><path d="M4 8a4 4 0 0 1 4-4h2a2 2 0 0 1 2 2v1h2a2 2 0 0 1 2 2v1h2a2 2 0 0 1 2 2v2h-4l-2 3H8l-2-3H2v-3a3 3 0 0 1 2-3z"/></svg>
-    <span>Mini Game</span>
-  </button>
-</nav>
-
-<!-- Background Music -->
-<audio id="bgm" src="theme.mp3" preload="auto" loop playsinline autoplay></audio>
-<button id="soundBtn" class="soundBtn" aria-label="Toggle sound" title="Sound">
-  <svg viewBox="0 0 24 24" class="ic"><path d="M4 10h4l5-4v12l-5-4H4zM17 8a5 5 0 010 8"/></svg>
-  <span>Sound</span>
-</button>
+  <!-- Bottom Nav (3 tabs only) -->
+  <nav class="iconnav" aria-label="Primary">
+    <div class="inkbar" aria-hidden="true"></div>
+    <button class="itab active" data-tab="ranks" data-idx="0" aria-label="Ranking Board">
+      <svg class="ico" viewBox="0 0 24 24"><path d="M7 22V11a2 2 0 0 1 2-2h6v13H7zM3 22v-7a2 2 0 0 1 2-2h1v9H3zM17 22V5a2 2 0 0 1 2-2h2v19h-4zM10 5l2-3 2 3"/></svg><span>Ranking</span>
+    </button>
+    <button class="itab" data-tab="home" data-idx="1" aria-label="Home">
+      <svg class="ico" viewBox="0 0 24 24"><path d="M4 10.5l8-6 8 6V20a2 2 0 0 1-2 2h-3.5a1.5 1.5 0 0 1-1.5-1.5V16a2 2 0 0 0-2-2 2 2 0 0 0-2 2v4.5A1.5 1.5 0 0 1 7.5 22H4a2 2 0 0 1-2-2v-9.5z"/></svg><span>Home</span>
+    </button>
+    <button class="itab" data-tab="community" data-idx="2" aria-label="Community">
+      <svg class="ico" viewBox="0 0 24 24"><path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4zm0 2c-4 0-8 2-8 5v1h16v-1c0-3-4-5-8-5z"/></svg><span>Community</span>
+    </button>
+  </nav>
 
 <script>
-/* ======= CONFIG (Sheets for Ranks) ======= */
-var SHEET_ID   = "YOUR_SHEET_ID_HERE"; // set later
-var SHEET_NAME = "Referral";           // set later
-var MAP = { rank:["rank","#"], username:["username","user","player","name"], points:["points","score","total","referrals"], avatar:["avatar","image","img","photo","icon","avatarurl"], week:["week","period"] };
+/* ===== CONFIG: set your sheet + both tab GIDs ===== */
+const SHEET_ID    = "1rJg4RYn0AkvsqhVGk5CwhZrYNz0gFC6_7ZPiDXigU"; // your spreadsheet
+const GID_DAILY   = "1";   // <-- set to the gid of your DAILY tab
+const GID_WEEKLY  = "0";   // <-- set to the gid of your WEEKLY tab
 
-/* Helpers */
-function $(s,el){return (el||document).querySelector(s)}
-function $all(s,el){return [].slice.call((el||document).querySelectorAll(s))}
-function fmt(n){n=Number(n||0);if(n>=1000)return (Math.round(n/100)/10).toLocaleString()+"K";return n.toLocaleString()}
-function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
-function faceBg(url){return url?'url("'+url+'")':'url("data:image/svg+xml;utf8,'+encodeURIComponent(svgAvatar())+'")'}
-function svgAvatar(){return "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0%' stop-color='%23a0c4ff'/><stop offset='100%' stop-color='%238f6bff'/></linearGradient></defs><rect width='64' height='64' rx='16' fill='url(%23g)'/><circle cx='32' cy='26' r='12' fill='white' opacity='.9'/><rect x='14' y='40' width='36' height='16' rx='8' fill='white' opacity='.9'/></svg>"}
-function getParam(k){var m=location.search.match(new RegExp("[?&]"+k+"=([^&]+)","i"));return m?decodeURIComponent(m[1]):null}
-function pickIndex(headers, aliases){var L=headers.map(h=>String(h||'').toLowerCase());for(var i=0;i<aliases.length;i++){var a=aliases[i];var j=L.findIndex(h=>h.indexOf(a)>-1);if(j>-1)return j;}return -1}
-function fetchGViz(){var url="https://docs.google.com/spreadsheets/d/"+SHEET_ID+"/gviz/tq?tqx=out:json&sheet="+encodeURIComponent(SHEET_NAME);
-  return fetch(url,{cache:"no-store"}).then(r=>r.text()).then(text=>{var j=(text.match(/google\.visualization\.Query\.setResponse\((.*)\);?/s)||[])[1]; if(!j) throw new Error("GViz parse failed");
-    var data=JSON.parse(j); var headers=data.table.cols.map(c=>c.label||c.id||""); var rows=data.table.rows.filter(r=>r&&r.c).map(r=> r.c.map(c=> c?(c.f!=null?c.f:c.v):"")); return {headers,rows};});}
-function normalize(payload){var h=payload.headers, rows=payload.rows; var ri=pickIndex(h,MAP.rank), ui=pickIndex(h,MAP.username), pi=pickIndex(h,MAP.points), ai=pickIndex(h,MAP.avatar), wi=pickIndex(h,MAP.week);
-  if(ui<0 || pi<0 || wi<0) throw new Error("Missing required columns: Username, Points, Week");
-  return rows.map(r=>({ rank:(ri>-1? Number(String(r[ri]).replace(/[^\d.\-]/g,'')) : null), username:String(r[ui]||"").trim(),
-    points:Number(String(r[pi]).replace(/[^\d.\-]/g,''))||0, avatar:String((ai>-1? r[ai] :"")||"").trim(), week:String(r[wi]||"").trim() })).filter(x=>x.username);}
+/* ===== helpers ===== */
+const $=(s,el)=> (el||document).querySelector(s);
+const $all=(s,el)=> Array.from((el||document).querySelectorAll(s));
+const esc=s=> String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const unique=a=>Array.from(new Set(a));
+const moveInk=ix=>document.querySelector('.iconnav').style.setProperty('--ix',ix);
+const fmt=n=>{n=Number(n||0);return n>=1000?(Math.round(n/100)/10).toLocaleString()+"K":n.toLocaleString()};
+const faceBg=url=>`url("${url}")`;
 
-/* App State */
-let state={tab:'home'}; let ALL=[],WEEKS=[],CUR_WEEK='',TOP100=[];
-function moveInk(ix){ document.querySelector('.iconnav').style.setProperty('--ix', ix); }
+/* Avatars for ranks 1..20 */
+const AVS=[
+  "https://ricomx.ft-crm.com/media-api/serve/30739191-4079-40cd-9154-f15c869c9f35_1.png",
+  "https://ricomx.ft-crm.com/media-api/serve/7e97b3d5-f53f-4211-b7d3-0c012a8e05ff_2.png",
+  "https://ricomx.ft-crm.com/media-api/serve/4120e46c-d810-46bb-924d-fb7769b56c0c_3.png",
+  "https://ricomx.ft-crm.com/media-api/serve/84bc31f3-69d6-47e9-950b-e557dd0cf4f6_4.png",
+  "https://ricomx.ft-crm.com/media-api/serve/d0692e25-3fdf-4004-af72-b572175fd49c_5.png",
+  "https://ricomx.ft-crm.com/media-api/serve/596c02c5-ad1c-42b7-9fb2-da6df154d35b_6.png",
+  "https://ricomx.ft-crm.com/media-api/serve/587f1afe-0e39-4f76-8715-48496452cfdf_7.png",
+  "https://ricomx.ft-crm.com/media-api/serve/6959ee62-92fa-4192-a2d6-f678a4934b4f_8.png",
+  "https://ricomx.ft-crm.com/media-api/serve/a450b16e-9310-4e83-ae66-ea71822a218b_9.png",
+  "https://ricomx.ft-crm.com/media-api/serve/24e07c3f-99fb-4bed-91f1-b91f1e0f7c8d_10.png",
+  "https://ricomx.ft-crm.com/media-api/serve/120d451f-a6dc-4f7b-b3f4-a1b5b8642443_11.png",
+  "https://ricomx.ft-crm.com/media-api/serve/65646abf-45f0-46b4-9c9c-f135f3b429e4_12.png",
+  "https://ricomx.ft-crm.com/media-api/serve/685901d2-f392-4d9f-83bf-b8f5ae4cf3bc_13.png",
+  "https://ricomx.ft-crm.com/media-api/serve/a3e8f9f5-851f-4048-b1ff-e7255de54266_14.png",
+  "https://ricomx.ft-crm.com/media-api/serve/92cde2cb-1afa-4c2e-b0f7-bf77f6b37a4a_15.png",
+  "https://ricomx.ft-crm.com/media-api/serve/1a77dbff-a836-4e7b-831f-77734198c725_16.png",
+  "https://ricomx.ft-crm.com/media-api/serve/ab17bec9-169e-4e99-9e2d-e560fd29403e_17.png",
+  "https://ricomx.ft-crm.com/media-api/serve/a698b757-2f99-49a7-95fb-68318d1637d6_18.png",
+  "https://ricomx.ft-crm.com/media-api/serve/ab8c0632-b1d4-41e5-be64-ba1e96d5ab1b_19.png",
+  "https://ricomx.ft-crm.com/media-api/serve/7c6d505e-174d-4214-9e93-bb7cdcc4098f_20.png",
+];
 
-/* Render Router */
-function render(){
-  $('#hdrTitle').textContent = state.tab==='ranks' ? 'Referral Ranking' :
-                               state.tab==='terms' ? 'Terms & FAQ' :
-                               state.tab==='community' ? 'Community' :
-                               state.tab==='minigame' ? 'Mini Game' : 'Referral Race';
-  $all('.iconnav .itab').forEach(b=>b.classList.toggle('active',b.dataset.tab===state.tab));
-  moveInk(parseInt(document.querySelector('.iconnav .itab.active')?.dataset.idx||'0',10));
-
-  if(state.tab==='ranks') renderRanks();
-  else if(state.tab==='terms') renderTerms();
-  else if(state.tab==='community') renderCommunity();
-  else if(state.tab==='minigame') renderMiniGame();
-  else renderHome();
-}
-
-/* Home */
-function renderHome(){
-  $('#view').innerHTML = `
-    <div class="card">
-      <h2>Referral Race</h2>
-      <p>Invite friends, climb the leaderboard, and win weekly rewards.</p>
-      <ul style="margin:6px 0 0 18px;color:#dfe5ff">
-        <li>Share your referral link with friends.</li>
-        <li>Every verified signup = <b>+1 point</b>.</li>
-        <li><b>Weekly</b> leaderboard resets every Monday.</li>
-      </ul>
-    </div>`;
-}
-
-/* Ranks */
-function renderRanks(){
-  $('#view').innerHTML = `
-  <div class="rr">
-    <div class="card"><div class="controls">
-      <select id="weekSel" class="select"></select>
-      <button id="prevBtn" class="wbtn" type="button">◀</button>
-      <button id="nextBtn" class="wbtn" type="button">▶</button>
-    </div></div>
-
-    <div class="podiumCard">
-      <div class="cap">Weekly Podium</div>
-      <div class="podium">
-        <div class="step s2"><div class="badge b2">2</div><div class="av" id="rr-p2a"></div><div class="name" id="rr-p2n">—</div><div class="scoreMini" id="rr-p2s"></div></div>
-        <div class="step s1"><div class="badge b1">1</div><div class="av" id="rr-p1a"></div><div class="name" id="rr-p1n">—</div><div class="scoreMini" id="rr-p1s"></div></div>
-        <div class="step s3"><div class="badge b3">3</div><div class="av" id="rr-p3a"></div><div class="name" id="rr-p3n">—</div><div class="scoreMini" id="rr-p3s"></div></div>
-      </div>
-    </div>
-
-    <div class="list" id="rr-list"></div>
-
-    <div class="search"><input id="rr-q" class="input" placeholder="Search username (top 100)…"/><button id="rr-find" class="go" type="button">Find</button></div>
-    <div id="rr-mine" class="result"></div>
-  </div>`;
-
-  if(!ALL.length){
-    fetchGViz().then(normalize).then(items=>{ ALL=items; buildWeeks(); fillWeekUI(); })
-    .catch(err=>{
-      console.warn('Sheets failed, demo used:', err.message);
-      let demo=[];
-      function seed(week,arr){ arr.forEach(x=>{ x.week=week; demo.push(x); }); }
-      seed('Week 1',[{username:'evelin0510',points:1000000},{username:'송도르',points:502000},{username:'Gumiya',points:391200},{username:'Deathaura',points:282700},
-        {username:'Player1063389294',points:200000},{username:'薇樂莉Jo',points:140000},{username:'talia bentley',points:130200},
-        {username:'U8',points:120000},{username:'U9',points:118000},{username:'U10',points:110000},{username:'U11',points:108000},{username:'U12',points:104000},
-        {username:'U13',points:101000},{username:'U14',points:98000},{username:'U15',points:96000},{username:'U16',points:92000},{username:'U17',points:90000},{username:'U18',points:88000},{username:'U19',points:86000},{username:'U20',points:84000}
-      ]);
-      seed('Week 2', demo.slice(0,20).map(x=>({username:x.username,points:Math.round(x.points*0.92)})));
-      seed('Week 3', demo.slice(0,20).map(x=>({username:x.username,points:Math.round(x.points*1.05)})));
-      ALL=demo; buildWeeks(); fillWeekUI();
-    });
-  } else { buildWeeks(); fillWeekUI(); }
-
-  function buildWeeks(){
-    let set={}, list=[];
-    ALL.forEach(x=>{ if(x.week) set[x.week]=true; });
-    for(const k in set) list.push(k);
-    list.sort((a,b)=>{ const na=(a.match(/\d+/)||[])[0], nb=(b.match(/\d+/)||[])[0]; if(na&&nb) return na-nb; return a.localeCompare(b); });
-    WEEKS=list; CUR_WEEK = (WEEKS[WEEKS.length-1]||'');
-  }
-
-  function fillWeekUI(){
-    const sel = $('#weekSel'); sel.innerHTML='';
-    WEEKS.forEach(w=>{ const o=document.createElement('option'); o.value=w; o.textContent=w; sel.appendChild(o); });
-    sel.value=CUR_WEEK; renderWeek();
-
-    $('#rr-find').onclick = findUser;
-    $('#rr-q').addEventListener('keydown',e=>{ if(e.key==='Enter') findUser(); });
-    $('#weekSel').onchange = function(){ CUR_WEEK=this.value; renderWeek(); };
-    $('#prevBtn').onclick = function(){ const i=WEEKS.indexOf(CUR_WEEK); if(i>0){ CUR_WEEK=WEEKS[i-1]; sel.value=CUR_WEEK; renderWeek(); } };
-    $('#nextBtn').onclick = function(){ const i=WEEKS.indexOf(CUR_WEEK); if(i<WEEKS.length-1){ CUR_WEEK=WEEKS[i+1]; sel.value=CUR_WEEK; renderWeek(); } };
-  }
-
-  function byWeek(week){
-    const arr = ALL.filter(x=>x.week===week).sort((a,b)=>b.points-a.points);
-    arr.forEach((x,i)=>{ if(x.rank==null) x.rank=i+1; });
-    return arr;
-  }
-
-  function renderWeek(){
-    const items = byWeek(CUR_WEEK);
-    function setPod(id,row){
-      $('#rr-p'+id+'a').style.backgroundImage = faceBg(row?row.avatar:'');
-      $('#rr-p'+id+'n').textContent = row?row.username:'—';
-      $('#rr-p'+id+'s').textContent = row? (fmt(row.points)+' pts') : '';
-    }
-    setPod(1,items[0]||null); setPod(2,items[1]||null); setPod(3,items[2]||null);
-
-    const list = $('#rr-list'); list.innerHTML='';
-    items.slice(3,15).forEach(r=>{
-      const row=document.createElement('div'); row.className='row';
-      row.innerHTML = '<div class="rk">'+r.rank+'</div>'+
-        '<div class="left"><div class="face" style="background-image:'+faceBg(r.avatar)+'"></div><div class="uname">'+esc(r.username)+'</div></div>'+
-        '<div class="val">'+fmt(r.points)+'</div>';
-      list.appendChild(row);
-    });
-
-    TOP100 = items.slice(0,100);
-  }
-
-  function findUser(){
-    const q = ($('#rr-q').value||'').trim().toLowerCase();
-    const res = $('#rr-mine');
-    if(!q){ res.style.display='block'; res.textContent='Enter a username'; return; }
-    const hit = TOP100.find(x=>x.username.toLowerCase()===q);
-    if(!hit){ res.style.display='block'; res.textContent='No match in Top 100.'; return; }
-    res.style.display='block';
-    res.innerHTML = '<b>'+esc(hit.username)+'</b> — Rank <b>'+hit.rank+'</b> • '+fmt(hit.points)+' pts • '+esc(hit.week);
-  }
-}
-
-/* Terms */
-function renderTerms(){
-  $('#view').innerHTML = `
-  <div class="card"><h2>Terms & Conditions</h2><p>By joining the Referral Race, you agree to the rules below.</p></div>
-  <div class="card"><h3>FAQ</h3>
-    <details open><summary>How do I earn points?</summary><p>Each verified signup via your link grants <b>+1 point</b>. Bonus events may add extra points.</p></details>
-    <details><summary>When are winners announced?</summary><p>Weekly winners every Monday.</p></details>
-    <details><summary>How do payouts work?</summary><p>Rewards are credited within 72 hours after announcement.</p></details>
-    <details><summary>Anti-fraud</summary><p>Duplicate or fake signups will be removed; repeated abuse may lead to disqualification.</p></details>
-  </div>`;
-}
-
-/* Community */
-function renderCommunity(){
-  const socials=[
-    {name:'Facebook',  url:'https://facebook.com/yourbrand',  icon:'facebook'},
-    {name:'Instagram', url:'https://instagram.com/yourbrand', icon:'instagram'},
-    {name:'Telegram',  url:'https://t.me/yourchannel',        icon:'telegram'},
-    {name:'X',         url:'https://twitter.com/yourbrand',   icon:'x'},
-    {name:'Youtube',   url:'https://youtube.com/@yourbrand',  icon:'youtube'}
-  ];
-  function iconSVG(key){
-    const s={facebook:'<svg viewBox="0 0 24 24"><path fill="#1877F2" d="M24 12.07C24 5.405 18.627 0 12 0S0 5.405 0 12.07C0 18.1 4.388 23.093 10.125 24v-8.44H7.078v-3.49h3.047V9.413c0-3.017 1.792-4.687 4.533-4.687 1.313 0 2.686.235 2.686.235v2.97h-1.514c-1.492 0-1.956.929-1.956 1.884v2.26h3.328l-.532 3.49h-2.796V24C19.612 23.093 24 18.1 24 12.07z"/></svg>',
-      instagram:'<svg viewBox="0 0 24 24"><defs><linearGradient id="ig" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#feda75"/><stop offset="50%" stop-color="#d62976"/><stop offset="100%" stop-color="#4f5bd5"/></linearGradient></defs><rect x="2" y="2" width="20" height="20" rx="5" fill="url(#ig)"/><circle cx="12" cy="12" r="4.5" fill="#fff"/><circle cx="17.2" cy="6.8" r="1.3" fill="#fff"/></svg>',
-      telegram:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#27A7E7"/><path fill="#fff" d="M9.7 17.3l.3-3.2 7.3-6.6c.3-.3-.1-.4-.5-.2l-9 5.7-3.1-1c-.7-.2-.7-.7.1-1l12.1-4.7c.6-.2 1.1.1.9 1l-2.1 10.6c-.1.7-.5.9-1.1.6l-3-2.2-2 1.9c-.1.2-.5.1-.7 0z"/></svg>',
-      x:'<svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" fill="#000"/><path fill="#fff" d="M6 6l6.3 8.3L10 18h2.1l1.5-2.2L18 18h2l-6.7-8.7L16 6h-2l-1.3 2-1 1.5L9 6H6z"/></svg>',
-      youtube:'<svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="4" fill="#FF0000"/><path fill="#fff" d="M10 9l6 3-6 3z"/></svg>'
-    }; return s[key]||s['x'];
-  }
-  const rows = socials.map(s=>`<div class="socialItem"><div class="sLeft"><div class="sIcon">${iconSVG(s.icon)}</div><div class="sName">${s.name}</div></div><a class="subBtn" href="${s.url}" target="_blank" rel="noopener">Subscribe</a></div>`).join('');
-  $('#view').innerHTML = `<div class="card"><h2>Share & Follow</h2><p>Invite friends and follow us.</p></div><div class="socialCard">${rows}</div>`;
-}
-
-/* ===== Mini Game Tab ===== */
-function renderMiniGame(){
-  $('#view').innerHTML = `
-    <div class="card"><h2>Mini Game</h2>
-      <p class="tip">No points for now (fun mode). For fair rewards later: verify sessions (JWT), server-side score checks, cool-downs, replay caps, bot detection, and signed results.</p>
-    </div>
-    <div class="card">
-      <div class="mg-tabs">
-        <button class="mg-t active" data-game="flappy">Flappy Spin</button>
-        <button class="mg-t" data-game="plinko">Lucky Drop</button>
-        <button class="mg-t" data-game="jump">Jump to Win</button>
-      </div>
-      <div class="mg-wrap">
-        <div class="mg-head">
-          <div class="title" id="mgTitle">Flappy Spin</div>
-          <div class="ctrls">
-            <button class="mg-btn" id="mgStart">Start</button>
-            <button class="mg-btn" id="mgStop">Stop</button>
-          </div>
-        </div>
-        <canvas id="mgCanvas" class="mg-canvas" width="480" height="340"></canvas>
-      </div>
-      <div class="tip" id="mgTip">Tap / Space to flap. Don’t hit the chips!</div>
-    </div>
-  `;
-  const canvas = $('#mgCanvas'), ctx = canvas.getContext('2d');
-  const title = $('#mgTitle'), tip = $('#mgTip');
-  let game='flappy', RAF=null, running=false;
-  function setCanvasSize(){ const w = canvas.clientWidth; canvas.width = Math.round(w); canvas.height = 340; }
-  setCanvasSize(); addEventListener('resize', setCanvasSize);
-
-  // Switcher
-  $all('.mg-t').forEach(b=>b.onclick=()=>{
-    $all('.mg-t').forEach(x=>x.classList.remove('active'));
-    b.classList.add('active'); game=b.dataset.game;
-    stopGame();
-    if(game==='flappy'){ title.textContent='Flappy Spin'; tip.textContent='Tap / Space to flap. Don’t hit the chips!'; }
-    if(game==='plinko'){ title.textContent='Lucky Drop'; tip.textContent='Tap / Click to drop a ball. Watch it bounce!'; }
-    if(game==='jump'){ title.textContent='Jump to Win'; tip.textContent='Tilt/Arrows to move. Auto-jump on platforms.'; }
-  });
-
-  $('#mgStart').onclick=()=> startGame();
-  $('#mgStop').onclick=()=> stopGame();
-
-  // ====== GAME ENGINES (simple, no points) ======
-
-  /* --- 1) Flappy Spin --- */
-  function runFlappy(){
-    const w=canvas.width, h=canvas.height;
-    let bird={x:w*0.28,y:h*0.45,r:12,vy:0};
-    let pipes=[], gap=110, t=0, gravity=0.45, jump=-6.5, alive=true;
-
-    function spawn(){
-      const top=40+Math.random()*(h-gap-80);
-      pipes.push({x:w+20, top:top, bot:top+gap, w:38});
-    }
-    function flap(){ if(!alive) return; bird.vy=jump; }
-    canvas.onclick=flap; window.onkeydown=(e)=>{ if(e.code==='Space') flap(); };
-
-    function drawChip(x,y,r){
-      ctx.save(); ctx.translate(x,y); ctx.rotate(((t+x)*0.01)%Math.PI*2);
-      ctx.fillStyle='#ffd86a'; ctx.beginPath(); ctx.arc(0,0,r,0,Math.PI*2); ctx.fill();
-      ctx.fillStyle='#5a3b00'; ctx.font='bold 12px Inter, sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText('¢',0,0);
-      ctx.restore();
-    }
-    function loop(){
-      RAF=requestAnimationFrame(loop); t++;
-      ctx.clearRect(0,0,w,h);
-      // bg
-      ctx.fillStyle='#081025'; ctx.fillRect(0,0,w,h);
-      // pipes
-      if(t%90===0) spawn();
-      for(let i=pipes.length-1;i>=0;i--){
-        const p=pipes[i]; p.x-=2.2;
-        ctx.fillStyle='#1b2b66';
-        ctx.fillRect(p.x,0,p.w,p.top);
-        ctx.fillRect(p.x,p.bot,p.w,h-p.bot);
-        drawChip(p.x+p.w/2,p.top-18,10);
-        drawChip(p.x+p.w/2,p.bot+18,10);
-        if(p.x+p.w<0) pipes.splice(i,1);
-        // collision
-        if(bird.x>p.x-bird.r && bird.x<p.x+p.w+bird.r){
-          if(bird.y-bird.r<p.top || bird.y+bird.r>p.bot) alive=false;
-        }
-      }
-      // bird physics
-      bird.vy+=gravity; bird.y+=bird.vy;
-      // bird draw
-      ctx.fillStyle='#7fe3ff'; ctx.beginPath(); ctx.arc(bird.x,bird.y,bird.r,0,Math.PI*2); ctx.fill();
-      // crown-ish
-      ctx.fillStyle='#ffd86a'; ctx.fillRect(bird.x-10,bird.y-bird.r-10,20,6);
-      // ground/bounds
-      if(bird.y>h-10 || bird.y<10) alive=false;
-      if(!alive){
-        ctx.fillStyle='rgba(0,0,0,.45)'; ctx.fillRect(0,0,w,h);
-        ctx.fillStyle='#fff'; ctx.font='bold 20px Inter'; ctx.textAlign='center';
-        ctx.fillText('Game Over', w/2,h/2); cancelAnimationFrame(RAF);
-      }
-    }
-    loop();
-    return ()=>{ canvas.onclick=null; window.onkeydown=null; };
-  }
-
-  /* --- 2) Lucky Drop (Plinko) --- */
-  function runPlinko(){
-    const w=canvas.width, h=canvas.height;
-    const pins=[], cols=9, rows=7, spacing=w/(cols+1);
-    const offsetY=70;
-    for(let r=0;r<rows;r++){
-      for(let c=0;c<cols;c++){
-        const x = spacing*(c+1) + (r%2? spacing/2:0);
-        const y = offsetY + r*38;
-        if(x>20 && x<w-20) pins.push({x,y});
-      }
-    }
-    let ball=null;
-    function drop(x){ if(ball) return; ball={x:x||w/2,y:30,vx:0,vy:0,r:8}; }
-    canvas.onclick=(e)=>{ const rect=canvas.getBoundingClientRect(); drop(e.clientX-rect.left); };
-
-    function loop(){
-      RAF=requestAnimationFrame(loop);
-      ctx.clearRect(0,0,w,h);
-      // bg
-      ctx.fillStyle='#060b1a'; ctx.fillRect(0,0,w,h);
-      // slots
-      for(let s=0;s<cols+1;s++){
-        const sx = spacing*s + spacing/2;
-        ctx.fillStyle='#11245a'; ctx.fillRect(sx-2,h-50,4,50);
-      }
-      // pins
-      ctx.fillStyle='#8aa3ff';
-      pins.forEach(p=>{ ctx.beginPath(); ctx.arc(p.x,p.y,4,0,Math.PI*2); ctx.fill(); });
-      // ball
-      if(ball){
-        ball.vy+=0.35; ball.x+=ball.vx; ball.y+=ball.vy;
-        // collisions with walls
-        if(ball.x<ball.r){ ball.x=ball.r; ball.vx*=-0.6; }
-        if(ball.x>w-ball.r){ ball.x=w-ball.r; ball.vx*=-0.6; }
-        // pins collisions
-        pins.forEach(p=>{
-          const dx=ball.x-p.x, dy=ball.y-p.y; const d=Math.hypot(dx,dy);
-          if(d<ball.r+5){
-            const ang=Math.atan2(dy,dx); const speed=Math.hypot(ball.vx,ball.vy)*0.9 + 1;
-            const dir=(Math.random()<0.5?-1:1)*0.9;
-            ball.vx = Math.cos(ang)*speed*dir;
-            ball.vy = Math.sin(ang)*speed;
-            // push out
-            const overlap=ball.r+5-d; ball.x+=Math.cos(ang)*overlap; ball.y+=Math.sin(ang)*overlap;
-          }
-        });
-        // floor/slots
-        if(ball.y>h-10){ ball.vy*=-0.35; ball.y=h-10; ball.vx*=0.95; if(Math.abs(ball.vy)<0.5) ball=null; }
-        // draw ball
-        ctx.fillStyle='#ffd86a'; ctx.beginPath(); ctx.arc(ball.x,ball.y,ball.r,0,Math.PI*2); ctx.fill();
-      } else {
-        // hint arrow
-        const x = (Date.now()/8)%w; ctx.fillStyle='#fff8';
-        ctx.fillRect(x,30,2,20);
-      }
-    }
-    loop();
-    return ()=>{ canvas.onclick=null; };
-  }
-
-  /* --- 3) Jump to Win (Doodle Jump lite) --- */
-  function runJump(){
-    const w=canvas.width, h=canvas.height;
-    let player={x:w/2,y:h-40,vx:0,vy:-8,r:12};
-    let plats=[]; const count=12;
-    for(let i=0;i<count;i++){ plats.push({x:Math.random()*(w-80)+40, y:i*(h/count)}); }
-    let ax=0;
-    function onKey(e,down){ if(e.code==='ArrowLeft') ax=down?-0.4:0; if(e.code==='ArrowRight') ax=down?0.4:0; }
-    window.addEventListener('keydown', e=>onKey(e,true)); window.addEventListener('keyup', e=>onKey(e,false));
-    if(window.DeviceMotionEvent){ window.addEventListener('deviceorientation',e=>{ if(e.gamma!=null) ax = Math.max(-0.5, Math.min(0.5, e.gamma/50)); }); }
-
-    function loop(){
-      RAF=requestAnimationFrame(loop);
-      ctx.clearRect(0,0,w,h);
-      ctx.fillStyle='#050a18'; ctx.fillRect(0,0,w,h);
-      // physics
-      player.vx += ax; player.vx *= 0.98; player.x += player.vx;
-      player.vy += 0.25; player.y += player.vy;
-      if(player.x<player.r) {player.x=player.r; player.vx*=-0.6;}
-      if(player.x>w-player.r){player.x=w-player.r; player.vx*=-0.6;}
-      // camera up: when player climbs above middle
-      if(player.y < h*0.4){
-        const dy = (h*0.4 - player.y);
-        player.y += dy;
-        plats.forEach(p=> p.y += dy);
-      }
-      // platforms recycle
-      plats.forEach(p=>{
-        ctx.fillStyle='#273a8c'; ctx.fillRect(p.x-30,p.y,60,8);
-        // bounce
-        if(player.vy>0 && player.y+player.r<p.y+8 && player.y+player.r>p.y && Math.abs(player.x - p.x) < 34){
-          player.vy = -7.8;
-        }
-        if(p.y>h+20){ p.y = -20; p.x = Math.random()*(w-80)+40; }
-      });
-      // draw player
-      ctx.fillStyle='#7fe3ff'; ctx.beginPath(); ctx.arc(player.x,player.y,player.r,0,Math.PI*2); ctx.fill();
-      ctx.fillStyle='#ffd86a'; ctx.fillRect(player.x-10,player.y-player.r-10,20,6);
-      // fail (fall too far)
-      if(player.y>h+80){
-        ctx.fillStyle='rgba(0,0,0,.45)'; ctx.fillRect(0,0,w,h);
-        ctx.fillStyle='#fff'; ctx.font='bold 20px Inter'; ctx.textAlign='center'; ctx.fillText('You fell!', w/2,h/2);
-        cancelAnimationFrame(RAF);
-      }
-    }
-    loop();
-    return ()=>{ window.onkeydown=null; window.onkeyup=null; };
-  }
-
-  // orchestrator
-  let cleanup=null;
-  function startGame(){
-    stopGame();
-    running=true;
-    if(game==='flappy') cleanup=runFlappy();
-    else if(game==='plinko') cleanup=runPlinko();
-    else cleanup=runJump();
-  }
-  function stopGame(){
-    running=false;
-    if(RAF) cancelAnimationFrame(RAF);
-    if(cleanup) { try{cleanup();}catch(e){} cleanup=null; }
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    ctx.fillStyle='#0a0f22'; ctx.fillRect(0,0,canvas.width,canvas.height);
-    ctx.fillStyle='#fff'; ctx.font='bold 16px Inter'; ctx.textAlign='center'; ctx.fillText('Press Start', canvas.width/2, canvas.height/2);
-  }
-  stopGame();
-}
-
-/* Bottom Nav Events */
+/* Router */
+let TAB='ranks';
 $all('.iconnav .itab').forEach(btn=>{
-  btn.addEventListener('click', ()=>{ state.tab = btn.getAttribute('data-tab'); render(); });
+  btn.addEventListener('click',()=>{
+    TAB=btn.dataset.tab;
+    $all('.iconnav .itab').forEach(b=>b.classList.toggle('active',b===btn));
+    moveInk(parseInt(btn.dataset.idx,10));
+    render();
+  });
 });
 
-/* Boot */
-render(); moveInk(0);
+/* ===== GViz fetch + normalize ===== */
+async function gviz(gid){
+  const url=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${encodeURIComponent(gid)}`;
+  const text=await fetch(url,{cache:"no-store"}).then(r=>r.text());
+  const j=(text.match(/google\.visualization\.Query\.setResponse\((.*)\);?/s)||[])[1]; if(!j) throw new Error('parse');
+  const data=JSON.parse(j);
+  const headers=data.table.cols.map(c=>c.label||c.id||"");
+  const rows=data.table.rows.filter(r=>r&&r.c).map(r=> r.c.map(c=> c?(c.f!=null?c.f:c.v):""));
+  return {headers,rows};
+}
+const pickIndex=(headers,aliases)=>{const L=headers.map(h=>String(h||'').toLowerCase());for(const a of aliases){const j=L.findIndex(h=>h.includes(a));if(j>-1)return j}return -1};
+function normalize({headers:h,rows},mode){
+  const ri=pickIndex(h,["rank","posição","posicion"]);
+  const ui=pickIndex(h,["username","user","player","name"]);
+  const pi=pickIndex(h,["points","score","pontos"]);
+  const wi=pickIndex(h,["week","semana"]);
+  const di=pickIndex(h,["date","day","fecha"]);
+  if(ri<0||ui<0||pi<0) throw new Error('Missing Rank/Username/Points columns');
+  return rows.map(r=>({
+    rank:Number(String(r[ri]).replace(/[^\d.\-]/g,''))||0,
+    username:String(r[ui]||"").trim(),
+    points:Number(String(r[pi]).replace(/[^\d.\-]/g,''))||0,
+    week: wi>-1 ? String(r[wi]||"").trim() : "",
+    date: di>-1 ? String(r[di]||"").trim() : ""
+  })).filter(x=>x.username && x.rank>0).sort((a,b)=>a.rank-b.rank);
+}
 
-/* ===== Background music (autoplay attempt + global unlock) ===== */
-(function(){
-  const audio=document.getElementById('bgm'); const btn=document.getElementById('soundBtn'); if(!audio||!btn) return;
-  const saved=localStorage.getItem('bgm_pref'); if(saved==='off'){ audio.muted=true; } if(saved==='on'){ audio.muted=false; }
-  document.addEventListener('DOMContentLoaded', tryPlay, {once:true});
-  async function tryPlay(){
-    try{
-      if(localStorage.getItem('bgm_pref')==='off'){ btn.classList.add('show'); return; }
-      audio.muted=false; await audio.play(); btn.classList.remove('show'); localStorage.setItem('bgm_pref','on');
-    }catch(e){ btn.classList.add('show'); bindGlobalUnlock(); }
+/* ===== Leaderboard view (exact arrangement) ===== */
+let MODE='daily'; // 'daily' | 'weekly'
+let DAILY=[], WEEKLY=[], DATES=[], WEEKS=[], CUR_DATE='', CUR_WEEK='', CURRENT_FULL=[];
+function rankAvatar(r){const i=Math.min(Math.max(1,r),20)-1;return AVS[i]}
+const maskName=s=>{s=String(s||''); if(s.length<=2) return s.replace(/.(?=.)/g,'*'); return s[0] + s.slice(1,-1).replace(/./g,'*') + s.slice(-1); };
+
+async function renderRanks(){
+  $('#view').innerHTML=`
+    <div class="card">
+      <div class="lbHead">
+        <h2>Leaderboard</h2>
+        <div class="seg">
+          <button id="bDaily"  class="active">Daily</button>
+          <button id="bWeekly">Weekly</button>
+        </div>
+      </div>
+      <div id="scope" class="scope"></div>
+      <div class="filters">
+        <select id="pickDate" class="pick" style="display:none"></select>
+        <select id="pickWeek" class="pick" style="display:none"></select>
+      </div>
+    </div>
+
+    <div class="podiumWrap">
+      <div class="podium">
+        <div class="step s2"><div class="av" id="p2a"></div><div class="name" id="p2n">—</div><div class="mini" id="p2s"></div></div>
+        <div class="step s1"><div class="crown">👑</div><div class="av" id="p1a"></div><div class="name" id="p1n">—</div><div class="mini" id="p1s"></div></div>
+        <div class="step s3"><div class="av" id="p3a"></div><div class="name" id="p3n">—</div><div class="mini" id="p3s"></div></div>
+      </div>
+    </div>
+
+    <div class="hdrRow"><div>Rank</div><div>Player</div><div>Points</div></div>
+    <div class="list" id="lb-list"></div>
+
+    <div class="search">
+      <input id="q" class="input" placeholder="Search username (full list)…"/>
+      <button id="find" class="go">Find</button>
+    </div>
+    <div id="mine" class="result"></div>
+  `;
+
+  // Load data once
+  if(!DAILY.length){
+    try{ DAILY = normalize(await gviz(GID_DAILY),'daily'); }
+    catch(e){ console.warn('Daily sheet load failed',e); }
   }
-  function bindGlobalUnlock(){
-    const unlock=async()=>{ try{ audio.muted=false; await audio.play(); btn.classList.remove('show'); btn.classList.add('active'); localStorage.setItem('bgm_pref','on'); remove(); }catch(e){} };
-    const remove=()=>{ document.removeEventListener('pointerdown',unlock); document.removeEventListener('keydown',unlock); document.removeEventListener('touchstart',unlock,{passive:true}); };
-    document.addEventListener('pointerdown',unlock); document.addEventListener('keydown',unlock); document.addEventListener('touchstart',unlock,{passive:true});
+  if(!WEEKLY.length){
+    try{ WEEKLY = normalize(await gviz(GID_WEEKLY),'weekly'); }
+    catch(e){ console.warn('Weekly sheet load failed',e); }
   }
-  btn.addEventListener('click', async ()=>{
-    try{
-      if(audio.paused){ audio.muted=false; await audio.play(); }
-      else { audio.muted=!audio.muted; if(audio.muted) await audio.pause(); else await audio.play(); }
-      const on=!audio.paused && !audio.muted; btn.classList.toggle('active',on); if(on) btn.classList.remove('show');
-      localStorage.setItem('bgm_pref', on?'on':'off');
-    }catch(e){ bindGlobalUnlock(); btn.classList.add('show'); }
+
+  // Build pickers
+  DATES = unique(DAILY.map(x=>x.date).filter(Boolean)).sort();
+  WEEKS = unique(WEEKLY.map(x=>x.week).filter(Boolean)).sort((a,b)=>{
+    const na=(a.match(/\d+/)||[])[0], nb=(b.match(/\d+/)||[])[0];
+    return (na&&nb)? na-nb : a.localeCompare(b);
   });
-})();
+  CUR_DATE = DATES[DATES.length-1]||"";
+  CUR_WEEK = WEEKS[WEEKS.length-1]||"";
+
+  const pDate=$('#pickDate'), pWeek=$('#pickWeek');
+  pDate.innerHTML = DATES.map(d=>`<option>${d}</option>`).join('');
+  pWeek.innerHTML = WEEKS.map(w=>`<option>${w}</option>`).join('');
+  pDate.value=CUR_DATE; pWeek.value=CUR_WEEK;
+
+  const bDaily=$('#bDaily'), bWeekly=$('#bWeekly');
+  const setMode=m=>{
+    MODE=m;
+    bDaily.classList.toggle('active',m==='daily');
+    bWeekly.classList.toggle('active',m==='weekly');
+    pDate.style.display = m==='daily' ? '' : 'none';
+    pWeek.style.display = m==='weekly' ? '' : 'none';
+    draw();
+  };
+  bDaily.onclick=()=>setMode('daily');
+  bWeekly.onclick=()=>setMode('weekly');
+  pDate.onchange=()=>{CUR_DATE=pDate.value; draw();};
+  pWeek.onchange=()=>{CUR_WEEK=pWeek.value; draw();};
+
+  $('#find').onclick=doSearch;
+  $('#q').addEventListener('keydown',e=>{if(e.key==='Enter')doSearch();});
+
+  setMode(MODE);
+
+  function currentRows(){
+    if(MODE==='daily'){
+      const arr = DAILY.filter(x=> (x.date||'')===CUR_DATE);
+      return arr.sort((a,b)=>a.rank-b.rank);
+    }else{
+      const arr = WEEKLY.filter(x=> (x.week||'')===CUR_WEEK);
+      return arr.sort((a,b)=>a.rank-b.rank);
+    }
+  }
+  function scopeText(){
+    return MODE==='daily' ? `Showing: <b>${esc(CUR_DATE||'—')}</b>` : `Showing: <b>${esc(CUR_WEEK||'—')}</b>`;
+  }
+  function setPod(n,row){
+    const av=$(`#p${n}a`), nm=$(`#p${n}n`), sc=$(`#p${n}s`);
+    if(row){
+      av.style.backgroundImage=faceBg(rankAvatar(row.rank));
+      nm.textContent=maskName(row.username);
+      sc.textContent=fmt(row.points)+' points';
+    }else{ av.style.backgroundImage='none'; nm.textContent='—'; sc.textContent=''; }
+  }
+  function draw(){
+    $('#scope').innerHTML = scopeText();
+    const rows = currentRows();
+    CURRENT_FULL = rows.slice(); // for search
+
+    setPod(1, rows.find(r=>r.rank===1));
+    setPod(2, rows.find(r=>r.rank===2));
+    setPod(3, rows.find(r=>r.rank===3));
+
+    const list=$('#lb-list'); list.innerHTML='';
+    rows.filter(r=>r.rank>=4 && r.rank<=20).forEach(r=>{
+      list.insertAdjacentHTML('beforeend',`
+        <div class="row">
+          <div class="rk">${r.rank}</div>
+          <div class="left">
+            <div class="face" style="background-image:${faceBg(rankAvatar(r.rank))}"></div>
+            <div class="uname">${esc(maskName(r.username))}</div>
+          </div>
+          <div class="val">${fmt(r.points)}</div>
+        </div>`);
+    });
+  }
+  function doSearch(){
+    const q=($('#q').value||'').trim().toLowerCase();
+    const box=$('#mine'); box.style.display='block';
+    if(!q){ box.textContent='Enter a username'; return; }
+    const hit=CURRENT_FULL.find(x=>x.username.toLowerCase()===q);
+    if(!hit){ box.textContent='No match for the selected period.'; return; }
+    const scope = MODE==='daily' ? CUR_DATE : CUR_WEEK;
+    box.innerHTML = `<b>${esc(hit.username)}</b> — Rank <b>${hit.rank}</b> • ${fmt(hit.points)} pts • ${esc(scope)}`;
+  }
+}
+
+/* ===== Home view ===== */
+function renderHome(){
+  $('#view').innerHTML=`
+    <div class="card">
+      <h2>Referral Race</h2>
+      <p>Invite friends, climb the leaderboard, and win rewards.</p>
+      <ul style="margin:6px 0 0 18px;color:#dfe5ff">
+        <li>Each verified signup = <b>+1 point</b>.</li>
+        <li><b>Weekly</b> winners announced every Monday.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <details open>
+        <summary><b>FAQ</b></summary>
+        <details open><summary>How do I earn points?</summary><p>Share your referral link. Verified signups give points.</p></details>
+        <details><summary>When are rewards credited?</summary><p>Within 72 hours after winners are announced.</p></details>
+        <details><summary>Anti-fraud</summary><p>Duplicate/fake signups are removed and may lead to disqualification.</p></details>
+      </details>
+    </div>
+  `;
+}
+
+/* ===== Community view (kept style) ===== */
+function renderCommunity(){
+  const referUrl=location.href;
+  $('#view').innerHTML=`
+    <div class="card comm">
+      <h2>Share & Follow</h2>
+      <p>Invite friends and follow us.</p>
+      <div class="sharebar">
+        <a class="sharebtn" target="_blank" rel="noopener"
+           href="https://t.me/share/url?url=${encodeURIComponent(referUrl)}">Share on Telegram</a>
+        <a class="sharebtn" target="_blank" rel="noopener"
+           href="https://api.whatsapp.com/send?text=${encodeURIComponent('Join me: '+referUrl)}">Share on WhatsApp</a>
+      </div>
+    </div>
+    <div class="comm">
+      <div class="list">
+        ${[
+          ['Facebook','https://facebook.com/','https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/facebook.svg'],
+          ['Instagram','https://instagram.com/','https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/instagram.svg'],
+          ['Telegram','https://t.me/','https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/telegram.svg'],
+          ['X','https://x.com/','https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/x.svg'],
+          ['YouTube','https://youtube.com/','https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/youtube.svg'],
+        ].map(([label,href,icon])=>`
+          <div class="item">
+            <div class="left">
+              <div class="bubble"><img alt="" width="26" height="26" src="${icon}"/></div>
+              <div style="font-weight:900">${label}</div>
+            </div>
+            <a class="sub" href="${href}" target="_blank" rel="noopener">Subscribe</a>
+          </div>`).join('')}
+      </div>
+    </div>
+  `;
+}
+
+/* ===== App boot ===== */
+function render(){ if(TAB==='ranks') renderRanks(); else if(TAB==='home') renderHome(); else renderCommunity(); }
+render(); moveInk(0);
 </script>
 </body>
 </html>
