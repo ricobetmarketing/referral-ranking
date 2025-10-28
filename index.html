@@ -62,7 +62,7 @@
       background:#ddd center/cover no-repeat; /* no white border */
       box-shadow:0 12px 26px rgba(0,0,0,.35);position:relative;z-index:2}
   .badge{
-    position:absolute;top:68px; /* sits on the ring, not over the text */
+    position:absolute;top:80px; /* sits on the ring, not over the text */
     left:50%;transform:translateX(-50%);
     background:linear-gradient(180deg,#6f4bff,#9f7bff);color:#fff;border-radius:999px;border:2px solid #fff;
     font-weight:1000;font-size:12px;padding:2px 8px;box-shadow:0 6px 14px rgba(0,0,0,.35);z-index:5
@@ -87,13 +87,19 @@
 
   /* List rows */
   .list{margin-top:10px;display:grid;gap:10px}
-  .row{
-    display:grid;grid-template-columns:60px 1fr 110px;gap:10px;align-items:center;
-    background:linear-gradient(180deg,rgba(25,26,55,.9),rgba(22,21,42,.92));
-    border:1px solid rgba(255,255,255,.08);
-    border-radius:14px;padding:10px 12px;
-    box-shadow:0 8px 18px rgba(0,0,0,.35); position:relative;overflow:hidden
-  }
+.row{
+  display:grid;
+  grid-template-columns:60px 1fr 110px;
+  gap:10px;
+  align-items:center;
+  background:linear-gradient(180deg,#a975ff,#7a5cff);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:14px;
+  padding:10px 12px;
+  box-shadow:0 0 25px rgba(169,117,255,0.45);
+  position:relative;
+  overflow:hidden;
+}
   .row::after{
     content:""; position:absolute; inset:0; background:linear-gradient(120deg, transparent 30%, rgba(255,255,255,.06) 50%, transparent 70%);
     transform:translateX(-120%); animation:shimmer 4.5s ease-in-out infinite
