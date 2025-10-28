@@ -5,92 +5,131 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
 <meta name="color-scheme" content="dark"/>
 <title>Leaderboard — Referral Race</title>
+
 <style>
   :root{
-    --bg:#0b0c18;--ink:#eef2ff;--muted:#a0a7c9;--edge:rgba(255,255,255,.08);
-    --p1:#8b5dff;--p2:#aa74ff;--glow:rgba(153,120,255,.3);--acc:#ffd86a;
-    --card:#151533;--card2:#10112a;
+    --bg:#0a0b17;--ink:#eaf0ff;--dim:#b9c4ff;--edge:#ffffff14;
+    --vio1:#8b5dff;--vio2:#aa74ff;--vio3:#c9a8ff;--acc:#ffd86a;
+    --card:#121333;--card2:#0e1029;--glass:#ffffff10;--glass2:#00000050;
+    --pill:#2d2f58;
   }
   *{box-sizing:border-box}
-  html,body{margin:0;height:100%;overflow-x:hidden;
-    background:radial-gradient(1000px 700px at 50% -10%,#1b1c3f 0%,transparent 60%),
-               linear-gradient(180deg,#0b0c1a,#070813);
-    color:var(--ink);font:15px/1.5 Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif}
+  html,body{margin:0;height:100%;overflow-x:hidden;color:var(--ink);
+    font:15px/1.5 Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif;
+    background:
+      radial-gradient(1100px 800px at 50% -10%, #1b1d42 0%, transparent 60%),
+      linear-gradient(180deg,#0b0c1a,#070813);
+  }
   .app{max-width:520px;margin:0 auto;min-height:100dvh;display:grid;grid-template-rows:auto 1fr}
 
   /* Header */
-  header{position:sticky;top:0;background:linear-gradient(180deg,#10112a,#0d0e23);
-    border-bottom:1px solid var(--edge);padding:12px 16px;z-index:10}
+  header{position:sticky;top:0;z-index:20;padding:12px 16px;
+    background:linear-gradient(180deg,#10112a,#0d0e23);border-bottom:1px solid var(--edge)}
   .hrow{display:flex;align-items:center;justify-content:space-between}
-  .title{font-weight:900;font-size:18px}
+  .title{font-weight:1000;letter-spacing:.2px;font-size:22px}
 
   main{padding:14px 14px 116px}
-  .card{background:linear-gradient(180deg,var(--card),var(--card2));border:1px solid var(--edge);
-    border-radius:16px;padding:14px;margin-bottom:12px}
+  .card{background:
+        linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.00)),
+        linear-gradient(180deg,var(--card),var(--card2));
+        border:1px solid var(--edge);border-radius:18px;padding:14px;margin-bottom:12px;
+        box-shadow:0 18px 50px #00000050, inset 0 0 0 1px #ffffff05}
   h2,h3{margin:0 0 8px}
   p{margin:0 0 8px;color:#dfe5ff}
 
-  /* Bottom nav */
+  /* Segmented control */
+  .lbHead{display:flex;align-items:center;justify-content:space-between}
+  .seg{display:flex;gap:8px;background:#0f1030;border:1px solid var(--edge);padding:6px;border-radius:14px}
+  .seg button{appearance:none;border:0;background:transparent;color:#cfd4ff;font-weight:900;padding:9px 14px;border-radius:10px;cursor:pointer}
+  .seg button.active{background:linear-gradient(180deg,var(--vio2),var(--vio1));
+    color:#fff;box-shadow:0 10px 26px rgba(153,120,255,.45), inset 0 -2px 10px rgba(0,0,0,.25)}
+
+  .filters{display:flex;gap:8px;margin-top:10px}
+  .pick{appearance:none;background:#0f1030;color:#eaf0ff;border:1px solid var(--edge);
+    border-radius:12px;padding:10px 12px;font-weight:800}
+  .scope{font-size:12px;color:var(--dim);margin-top:6px}
+
+  /* Podium (6D style) */
+  .podiumWrap{margin-top:14px;border-radius:24px;padding:18px 10px 12px;
+    background:
+      radial-gradient(240px 80px at 50% 0%, rgba(170,116,255,.35), transparent 70%),
+      linear-gradient(180deg,#1a1643,#151236);
+    border:1px solid #ffffff22; box-shadow:
+      0 20px 60px rgba(36,18,66,.55),
+      inset 0 10px 30px rgba(255,255,255,.05),
+      inset 0 -20px 30px rgba(0,0,0,.25)}
+  .podium{display:grid;grid-template-columns:1fr 1.2fr 1fr;gap:10px;align-items:end}
+  .step{position:relative;border-radius:18px 18px 12px 12px;
+    background:linear-gradient(180deg,#221a54,#16113b);
+    padding:12px 8px;border:1px solid #ffffff1c;
+    box-shadow:inset 0 -14px 22px rgba(120,90,210,.25), 0 10px 24px rgba(0,0,0,.35);
+    display:grid;place-items:center;min-height:92px}
+  .s1{min-height:130px}.s2{min-height:108px}.s3{min-height:102px}
+  .av{position:absolute;top:-66px;left:50%;transform:translateX(-50%);width:78px;height:78px;border-radius:50%;
+    border:5px solid #ffffff;box-shadow:
+      0 12px 26px rgba(0,0,0,.35), 0 0 0 8px rgba(138,104,255,.15);
+    background:#fff center/cover no-repeat;z-index:2}
+  .crown{position:absolute;top:-92px;left:50%;transform:translateX(-50%);
+    width:46px;height:46px;border-radius:50%;display:grid;place-items:center;
+    background:radial-gradient(circle at 35% 30%,#fff,var(--acc) 65%);
+    color:#5a4300;border:2px solid rgba(0,0,0,.08);box-shadow:
+      0 12px 30px rgba(0,0,0,.35), 0 0 0 10px rgba(255,216,106,.12);z-index:3}
+  /* small "crowd" arc in front of avatars (not covering fully) */
+  .crowd{position:absolute;left:50%;transform:translateX(-50%);bottom:-2px;width:86px;height:24px;border-radius:12px 12px 12px 12px/14px 14px 8px 8px;
+    background:radial-gradient(50% 120% at 50% 0%, rgba(255,255,255,.28), rgba(255,255,255,.08) 60%, transparent 100%), linear-gradient(180deg,#ffffff18,#00000022);
+    border:1px solid #ffffff24;box-shadow:0 6px 12px rgba(0,0,0,.35);z-index:4}
+  .name{margin-top:16px;font-weight:1000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .mini{color:#e8deff;font-size:12px;margin-top:2px;display:flex;align-items:center;gap:6px}
+  .badge{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);z-index:5;
+    background:linear-gradient(180deg,#6f4bff,#9f7bff);color:#fff;border-radius:999px;font-weight:1000;
+    border:2px solid #ffffff;box-shadow:0 6px 16px rgba(0,0,0,.35);padding:2px 8px;font-size:12px}
+
+  /* Header row */
+  .hdrRow{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;
+    margin-top:14px;background:linear-gradient(180deg,#2f325f,#26294e);color:#e9ecff;
+    border:1px solid #ffffff22;border-radius:16px;padding:10px 12px;font-weight:900}
+
+  /* List cards (Top 20) */
+  .list{margin-top:10px;display:grid;gap:10px}
+  .row{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;
+    background:linear-gradient(180deg,rgba(143,106,255,.33),rgba(143,106,255,.18));
+    border:1px solid rgba(166,134,255,.45);border-radius:16px;padding:10px 12px;
+    box-shadow:0 12px 28px rgba(0,0,0,.35), inset 0 -10px 20px rgba(0,0,0,.18)}
+  .rk{display:grid;place-items:center;width:42px;height:42px;border-radius:12px;font-weight:1000;
+    background:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,.06));border:1px solid rgba(255,255,255,.28)}
+  .face{width:38px;height:38px;border-radius:50%;background:#eee center/cover no-repeat;border:2px solid #fff;margin-right:8px;box-shadow:0 6px 14px rgba(0,0,0,.25)}
+  .uname{font-weight:900}
+  .val{font-weight:1000;color:#fff}
+  .left{display:flex;align-items:center;gap:8px}
+
+  /* Search */
+  .search{margin-top:12px;display:grid;grid-template-columns:1fr auto;gap:8px}
+  .input{border-radius:12px;border:1px solid var(--edge);background:#0f1030;color:#eff3ff;padding:10px 12px}
+  .go{appearance:none;border:0;border-radius:12px;padding:10px 12px;background:#ffd86a;color:#3a2400;font-weight:1000;cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,.12)}
+  .go:active{transform:translateY(1px);box-shadow:0 2px 0 rgba(0,0,0,.12)}
+  .result{margin-top:8px;background:rgba(255,255,255,.92);border:1px solid rgba(0,0,0,.08);color:#2b2350;border-radius:12px;padding:10px 12px;font-weight:800;display:none}
+
+  /* Bottom nav (3 tabs) */
   .iconnav{position:fixed;left:50%;transform:translateX(-50%);bottom:max(8px,env(safe-area-inset-bottom,0));
     width:min(520px,100% - 12px);display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:10px 12px;
     background:rgba(16,17,42,.98);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.08);
     border-radius:16px;z-index:1000;--hot:#ff4fd8;--hot2:#ff9ae8;--ix:0}
   .iconnav .itab{appearance:none;border:0;background:transparent;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 6px;color:#cdd7ff;font-weight:800;border-radius:14px}
   .iconnav .itab span{font-size:11px}
-  .iconnav .ico{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transition:transform .25s,color .25s}
-  .iconnav .itab.active .ico{transform:translateY(-2px) scale(1.06)} .iconnav .itab.active{color:#fff}
+  .iconnav .ico{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.8}
+  .iconnav .itab.active{color:#fff}.iconnav .itab.active .ico{transform:translateY(-2px) scale(1.06)}
   .iconnav .inkbar{position:absolute;bottom:10px;height:44px;left:12px;right:12px;width:calc((100% - 24px - 8px*2)/3);
     border-radius:16px;background:radial-gradient(90% 140% at 10% 0%,var(--hot) 0%,var(--hot2) 60%,#ffcabf 100%);
     box-shadow:0 12px 26px rgba(255,79,216,.35), inset 0 -2px 6px rgba(0,0,0,.18);
     transform:translateX(calc(var(--ix) * (100% + 8px)));transition:transform .28s cubic-bezier(.22,.9,.24,1)}
 
-  /* Leaderboard controls */
-  .lbHead{display:flex;align-items:center;justify-content:space-between}
-  .seg{display:flex;gap:8px;background:#0f1030;border:1px solid var(--edge);padding:6px;border-radius:12px}
-  .seg button{appearance:none;border:0;background:transparent;color:#cfd4ff;font-weight:900;padding:8px 12px;border-radius:8px;cursor:pointer}
-  .seg button.active{background:linear-gradient(180deg,var(--p2),var(--p1));color:#fff;box-shadow:0 8px 18px var(--glow)}
-  .scope{font-size:12px;color:#b8c5ff;margin-top:6px}
-  .filters{display:flex;gap:8px;margin-top:8px}
-  .pick{appearance:none;background:#0f1030;color:#eaf0ff;border:1px solid var(--edge);border-radius:10px;padding:8px 10px;font-weight:800}
+  /* Sound toggle */
+  .soundBtn{position:fixed;right:12px;bottom:calc(72px + env(safe-area-inset-bottom,0));background:#fff;color:#111;border:1px solid rgba(0,0,0,.08);
+    border-radius:14px;padding:10px 12px;display:none;gap:8px;align-items:center;font-weight:1000;z-index:1100;box-shadow:0 10px 24px rgba(0,0,0,.25)}
+  .soundBtn.show{display:inline-flex} .soundBtn.active{background:linear-gradient(90deg,#ffd86a,#ffc24d)}
+  .soundBtn .ic{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8}
 
-  /* Podium */
-  .podiumWrap{margin-top:14px;background:linear-gradient(180deg,#20154a,#17143a);border:1px solid rgba(255,255,255,.12);
-    border-radius:22px;padding:18px 12px 12px;box-shadow:0 24px 60px rgba(36,18,66,.35)}
-  .podium{display:grid;grid-template-columns:1fr 1.2fr 1fr;gap:10px;align-items:end}
-  .step{position:relative;border-radius:16px 16px 10px 10px;background:linear-gradient(180deg,#211a4d,#151038);
-    padding:10px 8px 12px;border:1px solid rgba(255,255,255,.1);box-shadow:inset 0 -12px 18px rgba(100,70,180,.18),0 8px 18px rgba(0,0,0,.20);display:grid;place-items:center;min-height:88px}
-  .s1{min-height:124px}.s2{min-height:104px}.s3{min-height:98px}
-  .av{position:absolute;top:-64px;left:50%;transform:translateX(-50%);width:76px;height:76px;border-radius:50%;border:4px solid #fff;box-shadow:0 10px 22px rgba(0,0,0,.25);background:#fff center/cover no-repeat}
-  .crown{position:absolute;top:-86px;left:50%;transform:translateX(-50%);width:40px;height:40px;border-radius:50%;
-    display:grid;place-items:center;background:radial-gradient(circle at 35% 30%,#fff,var(--acc) 65%);color:#5a4300;border:2px solid rgba(0,0,0,.06);box-shadow:0 6px 14px rgba(0,0,0,.18)}
-  .name{margin-top:14px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .s2 .name,.s3 .name{color:#e6e3ff}.s1 .name{color:#fff}
-  .mini{color:#c7beff;font-size:12px;margin-top:2px}
-
-  /* Table header row */
-  .hdrRow{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;
-    margin-top:14px;background:#2c2f55;border:1px solid rgba(255,255,255,.12);color:#e4e7ff;border-radius:14px;padding:10px;font-weight:900}
-
-  /* List cards (Top 20) */
-  .list{margin-top:10px;display:grid;gap:10px}
-  .row{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;
-    background:linear-gradient(180deg,rgba(143,106,255,.28),rgba(143,106,255,.16));
-    border:1px solid rgba(166,134,255,.35);border-radius:14px;padding:10px}
-  .rk{display:grid;place-items:center;width:40px;height:40px;border-radius:12px;font-weight:900;
-    background:linear-gradient(180deg,rgba(255,255,255,.15),rgba(255,255,255,.05));border:1px solid rgba(255,255,255,.2)}
-  .face{width:38px;height:38px;border-radius:50%;background:#eee center/cover no-repeat;border:2px solid #fff;margin-right:8px}
-  .uname{font-weight:800}
-  .val{font-weight:900;color:#fff}
-  .left{display:flex;align-items:center;gap:8px}
-
-  /* Search */
-  .search{margin-top:12px;display:grid;grid-template-columns:1fr auto;gap:8px}
-  .input{border-radius:12px;border:1px solid var(--edge);background:#0f1030;color:#eff3ff;padding:10px 12px}
-  .go{appearance:none;border:0;border-radius:12px;padding:10px 12px;background:#ffd86a;color:#3a2400;font-weight:900;cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,.12)}
-  .go:active{transform:translateY(1px);box-shadow:0 2px 0 rgba(0,0,0,.12)}
-  .result{margin-top:8px;background:rgba(255,255,255,.92);border:1px solid rgba(0,0,0,.08);color:#2b2350;border-radius:12px;padding:10px 12px;font-weight:700;display:none}
-
-  /* Community block (kept) */
+  /* Community (kept) */
   .comm .sharebar{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
   .comm .sharebtn{appearance:none;border:0;border-radius:12px;padding:10px 14px;font-weight:900;cursor:pointer;background:#ffd86a;color:#2a1a00;box-shadow:0 4px 0 rgba(0,0,0,.12)}
   .comm .list{display:grid;gap:14px;margin-top:12px}
@@ -103,42 +142,52 @@
 <body>
   <div class="app">
     <header>
-      <div class="hrow">
-        <div class="title" id="hdrTitle">Leaderboard</div>
-        <div class="muted" style="font-size:12px">v3</div>
-      </div>
+      <div class="hrow"><div class="title" id="hdrTitle">Leaderboard</div><div style="font-size:12px;color:#c8d0ff">v4</div></div>
     </header>
     <main id="view"></main>
   </div>
 
-  <!-- Bottom Nav (3 tabs only) -->
+  <!-- Bottom Nav -->
   <nav class="iconnav" aria-label="Primary">
     <div class="inkbar" aria-hidden="true"></div>
-    <button class="itab active" data-tab="ranks" data-idx="0" aria-label="Ranking Board">
+    <button class="itab active" data-tab="ranks" data-idx="0">
       <svg class="ico" viewBox="0 0 24 24"><path d="M7 22V11a2 2 0 0 1 2-2h6v13H7zM3 22v-7a2 2 0 0 1 2-2h1v9H3zM17 22V5a2 2 0 0 1 2-2h2v19h-4zM10 5l2-3 2 3"/></svg><span>Ranking</span>
     </button>
-    <button class="itab" data-tab="home" data-idx="1" aria-label="Home">
+    <button class="itab" data-tab="home" data-idx="1">
       <svg class="ico" viewBox="0 0 24 24"><path d="M4 10.5l8-6 8 6V20a2 2 0 0 1-2 2h-3.5a1.5 1.5 0 0 1-1.5-1.5V16a2 2 0 0 0-2-2 2 2 0 0 0-2 2v4.5A1.5 1.5 0 0 1 7.5 22H4a2 2 0 0 1-2-2v-9.5z"/></svg><span>Home</span>
     </button>
-    <button class="itab" data-tab="community" data-idx="2" aria-label="Community">
+    <button class="itab" data-tab="community" data-idx="2">
       <svg class="ico" viewBox="0 0 24 24"><path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4zm0 2c-4 0-8 2-8 5v1h16v-1c0-3-4-5-8-5z"/></svg><span>Community</span>
     </button>
   </nav>
 
-<script>
-/* ===== CONFIG: set your sheet + both tab GIDs ===== */
-const SHEET_ID    = "1rJg4RYn0AkvsqhVGk5CwhZrYNz0gFC6_7ZPiDXigU-o"; // your spreadsheet
-const GID_DAILY   = "1891032775";   // <-- set to the gid of your DAILY tab
-const GID_WEEKLY  = "0";   // <-- set to the gid of your WEEKLY tab
+  <!-- Theme music -->
+  <audio id="bgm" src="theme.mp3" preload="auto" loop playsinline></audio>
+  <button id="soundBtn" class="soundBtn" aria-label="Toggle sound" title="Sound">
+    <svg viewBox="0 0 24 24" class="ic"><path d="M4 10h4l5-4v12l-5-4H4zM17 8a5 5 0 010 8"/></svg><span>Sound</span>
+  </button>
 
-/* ===== helpers ===== */
+<script>
+/* ===== CONFIG: Your sheet + tab GIDs ===== */
+const SHEET_ID   = "1rJg4RYn0AkvsqhVGk5CwhZrYNz0gFC6_7ZPiDXigU-o";
+const GID_DAILY  = "1891032775";   // Daily tab gid
+const GID_WEEKLY = "0";            // Weekly tab gid
+
+/* ===== small helpers ===== */
 const $=(s,el)=> (el||document).querySelector(s);
 const $all=(s,el)=> Array.from((el||document).querySelectorAll(s));
-const esc=s=> String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 const unique=a=>Array.from(new Set(a));
 const moveInk=ix=>document.querySelector('.iconnav').style.setProperty('--ix',ix);
-const fmt=n=>{n=Number(n||0);return n>=1000?(Math.round(n/100)/10).toLocaleString()+"K":n.toLocaleString()};
+const fmtFull=n=>Number(n||0).toLocaleString(); // FULL points, no K format
 const faceBg=url=>`url("${url}")`;
+const TROPHY="🏆";
+
+/* mask only the middle 3 characters with *** */
+function maskMiddle3(name){
+  const s=String(name||''); if(s.length<3) return s.replace(/.(?=.)/g,'*');
+  const mid=Math.floor(s.length/2); const start=Math.max(0,mid-1), end=Math.min(s.length,mid+2);
+  return s.slice(0,start) + '***' + s.slice(end);
+}
 
 /* Avatars for ranks 1..20 */
 const AVS=[
@@ -175,6 +224,26 @@ $all('.iconnav .itab').forEach(btn=>{
   });
 });
 
+/* Music: autoplay + gesture fallback */
+(function(){
+  const audio=$('#bgm'), btn=$('#soundBtn'); if(!audio||!btn) return;
+  const saved=localStorage.getItem('bgm_pref'); if(saved==='off'){audio.muted=true} if(saved==='on'){audio.muted=false}
+  document.addEventListener('DOMContentLoaded',tryPlay,{once:true});
+  async function tryPlay(){try{
+    if(localStorage.getItem('bgm_pref')==='off'){btn.classList.add('show');return}
+    audio.muted=false; await audio.play(); btn.classList.remove('show'); localStorage.setItem('bgm_pref','on')
+  }catch(e){
+    btn.classList.add('show');
+    ['pointerdown','keydown','touchstart'].forEach(evt=>document.addEventListener(evt,unlock,{once:true}))
+  }}
+  async function unlock(){try{audio.muted=false;await audio.play();btn.classList.remove('show');btn.classList.add('active');localStorage.setItem('bgm_pref','on')}catch{}}
+  btn.addEventListener('click',async()=>{try{
+    if(audio.paused){audio.muted=false;await audio.play()}
+    else {audio.muted=!audio.muted;if(audio.muted)await audio.pause();else await audio.play()}
+    const on=!audio.paused && !audio.muted; btn.classList.toggle('active',on); if(on) btn.classList.remove('show'); localStorage.setItem('bgm_pref',on?'on':'off')
+  }catch{}})
+})();
+
 /* ===== GViz fetch + normalize ===== */
 async function gviz(gid){
   const url=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${encodeURIComponent(gid)}`;
@@ -186,7 +255,7 @@ async function gviz(gid){
   return {headers,rows};
 }
 const pickIndex=(headers,aliases)=>{const L=headers.map(h=>String(h||'').toLowerCase());for(const a of aliases){const j=L.findIndex(h=>h.includes(a));if(j>-1)return j}return -1};
-function normalize({headers:h,rows},mode){
+function normalize({headers:h,rows}){
   const ri=pickIndex(h,["rank","posição","posicion"]);
   const ui=pickIndex(h,["username","user","player","name"]);
   const pi=pickIndex(h,["points","score","pontos"]);
@@ -199,37 +268,56 @@ function normalize({headers:h,rows},mode){
     points:Number(String(r[pi]).replace(/[^\d.\-]/g,''))||0,
     week: wi>-1 ? String(r[wi]||"").trim() : "",
     date: di>-1 ? String(r[di]||"").trim() : ""
-  })).filter(x=>x.username && x.rank>0).sort((a,b)=>a.rank-b.rank);
+  })).filter(x=>x.username && x.rank>0);
 }
 
-/* ===== Leaderboard view (exact arrangement) ===== */
+/* ===== Leaderboard (exact arrangement) ===== */
 let MODE='daily'; // 'daily' | 'weekly'
 let DAILY=[], WEEKLY=[], DATES=[], WEEKS=[], CUR_DATE='', CUR_WEEK='', CURRENT_FULL=[];
+
 function rankAvatar(r){const i=Math.min(Math.max(1,r),20)-1;return AVS[i]}
-const maskName=s=>{s=String(s||''); if(s.length<=2) return s.replace(/.(?=.)/g,'*'); return s[0] + s.slice(1,-1).replace(/./g,'*') + s.slice(-1); };
 
 async function renderRanks(){
   $('#view').innerHTML=`
     <div class="card">
       <div class="lbHead">
-        <h2>Leaderboard</h2>
+        <h2 style="margin:0;font-size:22px">Leaderboard</h2>
         <div class="seg">
           <button id="bDaily"  class="active">Daily</button>
           <button id="bWeekly">Weekly</button>
         </div>
       </div>
-      <div id="scope" class="scope"></div>
+      <div class="scope" id="scope"></div>
       <div class="filters">
-        <select id="pickDate" class="pick" style="display:none"></select>
+        <input id="pickDate" class="pick" type="date" style="display:none"/>
         <select id="pickWeek" class="pick" style="display:none"></select>
       </div>
     </div>
 
     <div class="podiumWrap">
       <div class="podium">
-        <div class="step s2"><div class="av" id="p2a"></div><div class="name" id="p2n">—</div><div class="mini" id="p2s"></div></div>
-        <div class="step s1"><div class="crown">👑</div><div class="av" id="p1a"></div><div class="name" id="p1n">—</div><div class="mini" id="p1s"></div></div>
-        <div class="step s3"><div class="av" id="p3a"></div><div class="name" id="p3n">—</div><div class="mini" id="p3s"></div></div>
+        <div class="step s2">
+          <div class="av" id="p2a"></div>
+          <div class="crowd"></div>
+          <div class="badge">2</div>
+          <div class="name" id="p2n">—</div>
+          <div class="mini" id="p2s"></div>
+        </div>
+        <div class="step s1">
+          <div class="crown">👑</div>
+          <div class="av" id="p1a"></div>
+          <div class="crowd"></div>
+          <div class="badge">1</div>
+          <div class="name" id="p1n">—</div>
+          <div class="mini" id="p1s"></div>
+        </div>
+        <div class="step s3">
+          <div class="av" id="p3a"></div>
+          <div class="crowd"></div>
+          <div class="badge">3</div>
+          <div class="name" id="p3n">—</div>
+          <div class="mini" id="p3s"></div>
+        </div>
       </div>
     </div>
 
@@ -243,17 +331,11 @@ async function renderRanks(){
     <div id="mine" class="result"></div>
   `;
 
-  // Load data once
-  if(!DAILY.length){
-    try{ DAILY = normalize(await gviz(GID_DAILY),'daily'); }
-    catch(e){ console.warn('Daily sheet load failed',e); }
-  }
-  if(!WEEKLY.length){
-    try{ WEEKLY = normalize(await gviz(GID_WEEKLY),'weekly'); }
-    catch(e){ console.warn('Weekly sheet load failed',e); }
-  }
+  // Load remote
+  if(!DAILY.length){ try{ DAILY = normalize(await gviz(GID_DAILY)); }catch(e){ console.warn('Daily sheet load failed',e); } }
+  if(!WEEKLY.length){ try{ WEEKLY = normalize(await gviz(GID_WEEKLY)); }catch(e){ console.warn('Weekly sheet load failed',e); } }
 
-  // Build pickers
+  // Build options
   DATES = unique(DAILY.map(x=>x.date).filter(Boolean)).sort();
   WEEKS = unique(WEEKLY.map(x=>x.week).filter(Boolean)).sort((a,b)=>{
     const na=(a.match(/\d+/)||[])[0], nb=(b.match(/\d+/)||[])[0];
@@ -263,9 +345,8 @@ async function renderRanks(){
   CUR_WEEK = WEEKS[WEEKS.length-1]||"";
 
   const pDate=$('#pickDate'), pWeek=$('#pickWeek');
-  pDate.innerHTML = DATES.map(d=>`<option>${d}</option>`).join('');
-  pWeek.innerHTML = WEEKS.map(w=>`<option>${w}</option>`).join('');
-  pDate.value=CUR_DATE; pWeek.value=CUR_WEEK;
+  if(CUR_DATE){ pDate.value=CUR_DATE; pDate.min=DATES[0]||""; pDate.max=DATES[DATES.length-1]||""; }
+  pWeek.innerHTML=WEEKS.map(w=>`<option>${w}</option>`).join(''); pWeek.value=CUR_WEEK;
 
   const bDaily=$('#bDaily'), bWeekly=$('#bWeekly');
   const setMode=m=>{
@@ -278,34 +359,29 @@ async function renderRanks(){
   };
   bDaily.onclick=()=>setMode('daily');
   bWeekly.onclick=()=>setMode('weekly');
-  pDate.onchange=()=>{CUR_DATE=pDate.value; draw();};
-  pWeek.onchange=()=>{CUR_WEEK=pWeek.value; draw();};
+  pDate.onchange=()=>{CUR_DATE=pDate.value; draw()};
+  pWeek.onchange=()=>{CUR_WEEK=pWeek.value; draw()};
 
   $('#find').onclick=doSearch;
-  $('#q').addEventListener('keydown',e=>{if(e.key==='Enter')doSearch();});
+  $('#q').addEventListener('keydown',e=>{ if(e.key==='Enter') doSearch(); });
 
   setMode(MODE);
 
   function currentRows(){
-    if(MODE==='daily'){
-      const arr = DAILY.filter(x=> (x.date||'')===CUR_DATE);
-      return arr.sort((a,b)=>a.rank-b.rank);
-    }else{
-      const arr = WEEKLY.filter(x=> (x.week||'')===CUR_WEEK);
-      return arr.sort((a,b)=>a.rank-b.rank);
-    }
+    if(MODE==='daily'){ return DAILY.filter(x=> (x.date||'')===CUR_DATE).sort((a,b)=>a.rank-b.rank); }
+    return WEEKLY.filter(x=> (x.week||'')===CUR_WEEK).sort((a,b)=>a.rank-b.rank);
   }
-  function scopeText(){
-    return MODE==='daily' ? `Showing: <b>${esc(CUR_DATE||'—')}</b>` : `Showing: <b>${esc(CUR_WEEK||'—')}</b>`;
-  }
+  function scopeText(){ return MODE==='daily' ? `Showing: <b>${CUR_DATE||'—'}</b>` : `Showing: <b>${CUR_WEEK||'—'}</b>`; }
+
   function setPod(n,row){
     const av=$(`#p${n}a`), nm=$(`#p${n}n`), sc=$(`#p${n}s`);
     if(row){
       av.style.backgroundImage=faceBg(rankAvatar(row.rank));
-      nm.textContent=maskName(row.username);
-      sc.textContent=fmt(row.points)+' points';
+      nm.textContent=maskMiddle3(row.username);
+      sc.innerHTML = `<span>${TROPHY}</span> ${fmtFull(row.points)} points`;
     }else{ av.style.backgroundImage='none'; nm.textContent='—'; sc.textContent=''; }
   }
+
   function draw(){
     $('#scope').innerHTML = scopeText();
     const rows = currentRows();
@@ -322,28 +398,28 @@ async function renderRanks(){
           <div class="rk">${r.rank}</div>
           <div class="left">
             <div class="face" style="background-image:${faceBg(rankAvatar(r.rank))}"></div>
-            <div class="uname">${esc(maskName(r.username))}</div>
+            <div class="uname">${maskMiddle3(r.username)}</div>
           </div>
-          <div class="val">${fmt(r.points)}</div>
+          <div class="val">${fmtFull(r.points)}</div>
         </div>`);
     });
   }
+
   function doSearch(){
-    const q=($('#q').value||'').trim().toLowerCase();
-    const box=$('#mine'); box.style.display='block';
+    const q = ($('#q').value||'').trim().toLowerCase();
+    const box = $('#mine'); box.style.display='block';
     if(!q){ box.textContent='Enter a username'; return; }
-    const hit=CURRENT_FULL.find(x=>x.username.toLowerCase()===q);
+    const hit = CURRENT_FULL.find(x=>x.username.toLowerCase()===q);
     if(!hit){ box.textContent='No match for the selected period.'; return; }
     const scope = MODE==='daily' ? CUR_DATE : CUR_WEEK;
-    box.innerHTML = `<b>${esc(hit.username)}</b> — Rank <b>${hit.rank}</b> • ${fmt(hit.points)} pts • ${esc(scope)}`;
+    box.innerHTML = `<b>${hit.username}</b> — Rank <b>${hit.rank}</b> • ${fmtFull(hit.points)} pts • ${scope}`;
   }
 }
 
-/* ===== Home view ===== */
+/* ===== Other tabs ===== */
 function renderHome(){
   $('#view').innerHTML=`
-    <div class="card">
-      <h2>Referral Race</h2>
+    <div class="card"><h2>Referral Race</h2>
       <p>Invite friends, climb the leaderboard, and win rewards.</p>
       <ul style="margin:6px 0 0 18px;color:#dfe5ff">
         <li>Each verified signup = <b>+1 point</b>.</li>
@@ -351,17 +427,14 @@ function renderHome(){
       </ul>
     </div>
     <div class="card">
-      <details open>
-        <summary><b>FAQ</b></summary>
+      <details open><summary><b>FAQ</b></summary>
         <details open><summary>How do I earn points?</summary><p>Share your referral link. Verified signups give points.</p></details>
         <details><summary>When are rewards credited?</summary><p>Within 72 hours after winners are announced.</p></details>
         <details><summary>Anti-fraud</summary><p>Duplicate/fake signups are removed and may lead to disqualification.</p></details>
       </details>
-    </div>
-  `;
+    </div>`;
 }
 
-/* ===== Community view (kept style) ===== */
 function renderCommunity(){
   const referUrl=location.href;
   $('#view').innerHTML=`
@@ -392,11 +465,10 @@ function renderCommunity(){
             <a class="sub" href="${href}" target="_blank" rel="noopener">Subscribe</a>
           </div>`).join('')}
       </div>
-    </div>
-  `;
+    </div>`;
 }
 
-/* ===== App boot ===== */
+/* boot */
 function render(){ if(TAB==='ranks') renderRanks(); else if(TAB==='home') renderHome(); else renderCommunity(); }
 render(); moveInk(0);
 </script>
