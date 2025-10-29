@@ -34,10 +34,7 @@
   @keyframes titleGlow{0%,100%{text-shadow:0 0 12px rgba(120,115,245,.30),0 0 28px rgba(255,110,196,.18)}
                        50%{text-shadow:0 0 20px rgba(120,115,245,.55),0 0 44px rgba(255,110,196,.30)}}
 
-  main{
-    padding:14px 12px 200px;
-    box-sizing:border-box; min-height:100vh; overflow-y:auto; scroll-behavior:smooth;
-  }
+  main{padding:14px 12px 200px;min-height:100vh;overflow-y:auto;scroll-behavior:smooth}
 
   .card{
     background:
@@ -60,14 +57,23 @@
     border-radius:12px;padding:10px 12px;font-weight:800;width:100%}
   .scope{font-size:12px;color:var(--dim);margin-top:6px}
 
+  /* Status card (only shows on error) */
+  .status{display:none;margin-bottom:10px}
+  .status.show{display:block}
+  .status .msg{font-weight:800;color:#ffd2d2}
+  .status .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+  .btn{appearance:none;border:0;border-radius:12px;padding:10px 12px;font-weight:900;cursor:pointer}
+  .btn.primary{background:#ffd86a;color:#2a1a00;box-shadow:0 4px 0 rgba(0,0,0,.12)}
+  .btn.ghost{background:#0f1030;border:1px solid var(--edge);color:#eaf2ff}
+
   /* --- TOP 3 --- */
   .hero{position:relative;margin-top:6px;padding:22px 6px 12px;border-radius:18px}
   .p3{display:grid;grid-template-columns:1fr 1.15fr 1fr;gap:8px;align-items:end;place-items:center}
   .pod{position:relative;display:grid;place-items:center;padding-bottom:4px;isolation:isolate;overflow:visible}
   .ring{width:92px;height:92px;border-radius:50%;background:radial-gradient(86px 86px at 50% 50%, rgba(169,117,255,.65), rgba(122,92,255,.35) 60%, rgba(122,92,255,0) 61%);display:grid;place-items:center;position:relative;z-index:1;animation:float 3.5s ease-in-out infinite}
   .av{width:82px;height:82px;border-radius:50%;background:#ddd center/cover no-repeat;box-shadow:0 12px 26px rgba(0,0,0,.35);position:relative;z-index:2}
-  .badge{position:absolute;top:86px;left:50%;transform:translateX(-50%);background:linear-gradient(180deg,#6f4bff,#9f7bff);color:#fff;border-radius:999px;border:2px solid #fff;font-weight:1000;font-size:12px;padding:2px 8px;box-shadow:0 6px 14px rgba(0,0,0,.35);z-index:5}
-  .pod.s2 .badge{top:74px} .pod.s3 .badge{top:74px} /* raised so they don't cover names */
+  .badge{position:absolute;top:74px;left:50%;transform:translateX(-50%);background:linear-gradient(180deg,#6f4bff,#9f7bff);color:#fff;border-radius:999px;border:2px solid #fff;font-weight:1000;font-size:12px;padding:2px 8px;box-shadow:0 6px 14px rgba(0,0,0,.35);z-index:5}
+  .pod.s1 .badge{top:86px}
   .crown{position:absolute;top:-22px;left:50%;transform:translateX(-50%);font-size:32px;filter:drop-shadow(0 6px 8px rgba(0,0,0,.35));z-index:9;animation:crownPulse 2.2s ease-in-out infinite}
   .pod.s1 .ring{width:112px;height:112px}.pod.s1 .av{width:100px;height:100px}
   .pod.s2{transform:translateY(6px)} .pod.s3{transform:translateY(10px)}
@@ -81,23 +87,28 @@
   /* Rows */
   .hdrRow{display:grid;grid-template-columns:60px 1fr 110px;gap:8px;align-items:center;margin-top:10px;background:linear-gradient(180deg,#2f325f,#26294e);color:#e9ecff;border:1px solid #ffffff22;border-radius:14px;padding:10px 12px;font-weight:900}
   .hdrRow div:last-child{text-align:right}
-  #pin{margin-top:8px}
+  .list{margin-top:8px;display:grid;gap:8px;max-height:488px;overflow:auto;scrollbar-width:thin}
   .row{display:grid;grid-template-columns:60px 1fr 110px;gap:8px;align-items:center;background:linear-gradient(180deg,#a975ff,#7a5cff);border:1px solid rgba(255,255,255,.10);border-radius:14px;padding:10px 12px;box-shadow:0 0 22px rgba(169,117,255,0.45);position:relative;overflow:hidden}
-  .row.pinned{background:linear-gradient(180deg,#ffd86a,#ffb84a);color:#2a1a00;box-shadow:0 0 26px rgba(255,216,106,.6)}
   .row::after{content:""; position:absolute; inset:0; background:linear-gradient(120deg, transparent 30%, rgba(255,255,255,.06) 50%, transparent 70%);transform:translateX(-120%); animation:shimmer 4.5s ease-in-out infinite}
   @keyframes shimmer{0%{transform:translateX(-120%)}60%{transform:translateX(120%)}100%{transform:translateX(120%)}}
-  .list{margin-top:8px;display:grid;gap:8px;max-height:488px;overflow:auto;scrollbar-width:thin}
   .rk{display:grid;place-items:center;width:42px;height:42px;border-radius:12px;font-weight:1000;background:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,.06));border:1px solid rgba(255,255,255,.28)}
   .left{display:flex;align-items:center;gap:10px}
   .face{width:38px;height:38px;border-radius:50%;background:#eee center/cover no-repeat;box-shadow:0 6px 14px rgba(0,0,0,.25)}
-  .uname{font-weight:1000}
-  .val{font-weight:900;color:#fff;text-align:right}
-  .row.pinned .val{color:#2a1a00}
+  .uname{font-weight:1000}.val{font-weight:900;color:#fff;text-align:right}
   .flash{animation:flashRow 1600ms ease-in-out 1}
   @keyframes flashRow{0%{transform:scale(1); box-shadow:0 0 0 rgba(255,216,106,0)}
     25%{transform:scale(1.02); box-shadow:0 0 28px rgba(255,216,106,.9)}100%{transform:scale(1); box-shadow:0 0 0 rgba(255,216,106,0)}}
 
-  /* Search */
+  /* synthetic "my row" (rank > 20) */
+  .row.mine{
+    background:linear-gradient(180deg,#ffd86a,#ffb84d);
+    color:#2a1a00;
+    box-shadow:0 0 26px rgba(255,216,106,.55);
+  }
+  .row.mine .rk{background:linear-gradient(180deg,rgba(0,0,0,.08),rgba(0,0,0,.02));border-color:rgba(0,0,0,.15)}
+  .row.mine .val{color:#2a1a00}
+
+  /* Search & result */
   .search{margin-top:10px;display:grid;grid-template-columns:1fr auto;gap:8px}
   .input{border-radius:12px;border:1px solid var(--edge);background:#0f1030;color:#eff3ff;padding:10px 12px}
   .go{appearance:none;border:0;border-radius:12px;padding:10px 12px;background:#ffd86a;color:#3a2400;font-weight:1000;cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,.12)}
@@ -137,7 +148,7 @@
   .modal .frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
   .modal .close{appearance:none;border:0;border-radius:10px;padding:8px 10px;background:#ffd86a;color:#2a1a00;font-weight:1000;cursor:pointer}
 
-  /* T&C */
+  /* T&C + Community */
   .tnc h2{margin:0 0 10px 0}
   details.titem{background:linear-gradient(180deg,#15163a,#101233);border:1px solid var(--edge);border-radius:16px;padding:8px 10px;margin:10px 0}
   details.titem[open]{box-shadow:0 10px 24px rgba(0,0,0,.25)}
@@ -146,8 +157,6 @@
   details.titem summary::-webkit-details-marker{display:none}
   .ans{color:#dfe6ff;margin:10px 6px 4px 6px}
   .ans ul{margin:6px 0 0 18px}
-
-  /* Community */
   .comm .sharebar{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
   .comm .sharebtn{appearance:none;border:0;border-radius:12px;padding:10px 14px;font-weight:900;cursor:pointer;background:#ffd86a;color:#2a1a00;box-shadow:0 4px 0 rgba(0,0,0,.12);text-decoration:none}
   .comm .list{display:grid;gap:14px;margin-top:12px}
@@ -198,6 +207,8 @@
 const SHEET_ID   = "1rJg4RYn0AkvsqhVGk5CwhZrYNz0gFC6_7ZPiDXigU-o";
 const GID_DAILY  = "1891032775";
 const GID_WEEKLY = "0";
+const FETCH_TIMEOUT_MS = 12000;
+const RETRIES = 2;
 
 /* helpers */
 const $=(s,el)=> (el||document).querySelector(s);
@@ -206,7 +217,7 @@ const unique=a=>Array.from(new Set(a));
 const fmtFull=n=>Number(n||0).toLocaleString();
 const faceBg=url=>`url("${url}")`;
 
-/* Date helpers */
+/* Dates */
 const toISO = (s) => {
   if(!s) return "";
   if(/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
@@ -216,13 +227,12 @@ const toISO = (s) => {
 };
 const toLabel = (iso) => {
   const m = iso.match(/^(\d{4})-(\d{2})-(\d{2})$/);
-  if(!m) return iso||"";
-  const [_,y,mo,d]=m; return `${d}/${mo}/${y}`;
+  if(!m) return iso||""; const [_,y,mo,d]=m; return `${d}/${mo}/${y}`;
 };
 
 /* mask middle 4 chars */
-function maskMid4(name){
-  const s=String(name||'');
+function maskMid4(s){
+  s=String(s||'');
   if(s.length<=4){
     if(s.length<=2) return s.replace(/.(?=.)/g,'*');
     return s[0] + '*'.repeat(Math.max(0,s.length-2)) + s.slice(-1);
@@ -233,14 +243,14 @@ function maskMid4(name){
   return s.slice(0,start) + '****' + s.slice(end);
 }
 
-/* Avatars (YOUR Top 20 URLs here) */
+/* Avatars 1..20 (21+ repeats #20) */
 const AVS=[
   "https://ricobr.ft-crm.com/media-api/serve/8f954107-4d24-4d5c-b2fe-934b14e56215_1010.png",
   "https://ricobr.ft-crm.com/media-api/serve/5368d6f5-3904-42d6-9ef9-314cd544ad95_11.png",
   "https://ricobr.ft-crm.com/media-api/serve/738cf89e-f4df-49e2-b359-fd5f9a7095a7_1111-1.png",
-  "https://ricobr.ft-crm.com/media-api/serve/8f954107-4d24-4d5c-b2fe-934b14e56215_1010.png",
-  "https://ricobr.ft-crm.com/media-api/serve/5368d6f5-3904-42d6-9ef9-314cd544ad95_11.png",
-  "https://ricobr.ft-crm.com/media-api/serve/738cf89e-f4df-49e2-b359-fd5f9a7095a7_1111-1.png",
+  "https://ricobr.ft-crm.com/media-api/serve/dad111b1-5443-4e26-97b4-b5bf84cb953e_1212.png",
+  "https://ricobr.ft-crm.com/media-api/serve/5aa2965f-6173-4aa4-a2c8-fabd93415637_1313.jpg",
+  "https://ricobr.ft-crm.com/media-api/serve/50079348-7f59-4b35-b2db-0dd9d9cf71b2_1414.png",
   "https://ricobr.ft-crm.com/media-api/serve/48624ef5-7940-4cac-a364-92e6a3ded6cd_1515.jpg",
   "https://ricobr.ft-crm.com/media-api/serve/23fe46f7-7713-42fb-b918-11d0173a8b2f_22.png",
   "https://ricobr.ft-crm.com/media-api/serve/454a5792-2006-449b-b5e4-d549df35cc5c_33.png",
@@ -256,13 +266,7 @@ const AVS=[
   "https://ricobr.ft-crm.com/media-api/serve/5aa2965f-6173-4aa4-a2c8-fabd93415637_1313.jpg",
   "https://ricobr.ft-crm.com/media-api/serve/50079348-7f59-4b35-b2db-0dd9d9cf71b2_1414.png",
 ];
-
-/* IMPORTANT: follow your Top-20, then loop for rank 21+ */
-const DEFAULT_AV="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 24 24' fill='none' stroke='%23bbb' stroke-width='1.5'%3E%3Ccircle cx='12' cy='8' r='4'/%3E%3Cpath d='M4 20c0-4 4-6 8-6s8 2 8 6'/%3E%3C/svg%3E";
-const rankAvatar = (r) => {
-  const i = (Math.max(1, Number(r)) - 1) % AVS.length; // loop 1..20
-  return AVS[i] || DEFAULT_AV;
-};
+const rankAvatar = (r) => AVS[Math.min(Math.max(1,r),20)-1];
 
 /* Tabs */
 let TAB='ranks';
@@ -270,7 +274,7 @@ $all('.iconnav .itab').forEach(btn=>{
   btn.addEventListener('click',()=>{ TAB=btn.dataset.tab; $all('.itab').forEach(b=>b.classList.toggle('active',b===btn)); render();});
 });
 
-/* Music autoplay guard */
+/* Music */
 (function(){
   const audio=$('#bgm'), btn=$('#soundBtn'); if(!audio||!btn) return;
   async function tryPlay(){ try{ audio.muted=false; await audio.play(); btn.classList.remove('show'); }catch{ btn.classList.add('show'); } }
@@ -285,20 +289,30 @@ $all('.iconnav .itab').forEach(btn=>{
   }catch{}});
 })();
 
-/* GViz fetch + normalize */
+/* GViz with timeout & retries – status shows only on error */
 async function gviz(gid){
   const url=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${encodeURIComponent(gid)}`;
-  const text=await fetch(url,{cache:"no-store"}).then(r=>r.text());
-  const j=(text.match(/google\.visualization\.Query\.setResponse\((.*)\);?/s)||[])[1]; if(!j) throw new Error('parse');
-  const data=JSON.parse(j);
-  const headers=data.table.cols.map(c=>c.label||c.id||"");
-  const rows=data.table.rows.filter(r=>r&&r.c).map(r=> r.c.map(c=> c?(c.f!=null?c.f:c.v):""));
-  return {headers,rows};
+  let lastErr=null;
+  for(let i=0;i<=RETRIES;i++){
+    const ctrl=new AbortController();
+    const t=setTimeout(()=>ctrl.abort(), FETCH_TIMEOUT_MS);
+    try{
+      const res=await fetch(url,{cache:"no-store",signal:ctrl.signal});
+      clearTimeout(t);
+      const text=await res.text();
+      const m=text.match(/google\.visualization\.Query\.setResponse\((.*)\);?/s);
+      if(!m) throw new Error('parse-failed');
+      return JSON.parse(m[1]);
+    }catch(e){ lastErr=e; await new Promise(r=>setTimeout(r, 400*(i+1))); }
+  }
+  throw lastErr||new Error('unknown');
 }
-const pickIndex=(headers,aliases)=>{const L=headers.map(h=>String(h||'').toLowerCase());for(const a of aliases){const j=L.findIndex(h=>h.includes(a));if(j>-1)return j}return -1};
-function normalize({headers:h,rows}){
-  const ri=pickIndex(h,["rank"]); const ui=pickIndex(h,["username","user","player","name"]);
-  const pi=pickIndex(h,["points","score"]); const wi=pickIndex(h,["week"]); const di=pickIndex(h,["date","day"]);
+function normalize(gvizData){
+  const headers=gvizData.table.cols.map(c=>c.label||c.id||"");
+  const rows   =gvizData.table.rows.filter(r=>r&&r.c).map(r=> r.c.map(c=> c?(c.f!=null?c.f:c.v):""));
+  const L=headers.map(h=>String(h||'').toLowerCase());
+  const find=(names)=>{for(const n of names){const j=L.findIndex(h=>h.includes(n));if(j>-1)return j}return -1};
+  const ri=find(["rank"]), ui=find(["username","user","player","name"]), pi=find(["points","score"]), wi=find(["week"]), di=find(["date","day"]);
   if(ri<0||ui<0||pi<0) throw new Error('Missing Rank/Username/Points columns');
   return rows.map(r=>({
     rank:Number(String(r[ri]).replace(/[^\d.\-]/g,''))||0,
@@ -314,6 +328,17 @@ let MODE='daily', DAILY=[], WEEKLY=[], DATES=[], WEEKS=[], CUR_DATE_ISO='', CUR_
 
 async function renderRanks(){
   $('#view').innerHTML=`
+    <div class="card status" id="statusCard">
+      <div class="msg" id="statusMsg">Failed to load Google Sheet.</div>
+      <div class="row">
+        <button class="btn primary" id="btnRetry">Retry</button>
+        <a class="btn ghost" id="btnTest" target="_blank" rel="noopener">Test Sheet Link</a>
+      </div>
+      <div style="margin-top:6px;font-size:12px;color:#cdd7ff">
+        Checklist: Sheet is <b>Anyone with the link — Viewer</b>; correct <b>Sheet ID</b> & <b>GID</b>; columns include <b>Rank</b>, <b>Username</b>, <b>Points</b>.
+      </div>
+    </div>
+
     <div class="card">
       <div class="lbHead">
         <h2>Leaderboard</h2>
@@ -354,7 +379,6 @@ async function renderRanks(){
     </section>
 
     <div class="hdrRow"><div>Rank</div><div>Player</div><div>Points</div></div>
-    <div id="pin"></div>
     <div class="list" id="lb-list"></div>
 
     <div class="search">
@@ -369,32 +393,51 @@ async function renderRanks(){
     </div>
   `;
 
-  if(!DAILY.length){ try{ DAILY = normalize(await gviz(GID_DAILY)); }catch(e){ console.warn('Daily load failed',e); } }
-  if(!WEEKLY.length){ try{ WEEKLY = normalize(await gviz(GID_WEEKLY)); }catch(e){ console.warn('Weekly load failed',e); } }
+  const statusCard = $('#statusCard'); // hidden by default
+  statusCard.classList.remove('show'); // keep hidden unless error
 
-  DATES = unique(DAILY.map(x=>x.dateIso).filter(Boolean)).sort();
-  WEEKS = unique(WEEKLY.map(x=>x.week).filter(Boolean)).sort((a,b)=>{
-    const na=(a.match(/\d+/)||[])[0], nb=(b.match(/\d+/)||[])[0]; return (na&&nb)? na-nb : a.localeCompare(b);
-  });
-  CUR_DATE_ISO = DATES[DATES.length-1]||""; CUR_WEEK = WEEKS[WEEKS.length-1]||"";
+  const statusMsg  = $('#statusMsg');
+  const btnRetry   = $('#btnRetry');
+  const btnTest    = $('#btnTest');
+  const testURL    = (gid)=>`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${encodeURIComponent(gid)}`;
+  btnTest.href = testURL(GID_DAILY);
+  btnRetry.onclick = ()=> draw(true);
 
   const pDate=$('#pickDate'), pWeek=$('#pickWeek');
-  if(CUR_DATE_ISO){ pDate.value=CUR_DATE_ISO; pDate.min=DATES[0]||""; pDate.max=CUR_DATE_ISO; }
-  pWeek.innerHTML=WEEKS.map(w=>`<option>${w}</option>`).join(''); pWeek.value=CUR_WEEK;
-
   const bDaily=$('#bDaily'), bWeekly=$('#bWeekly');
   const setMode=m=>{ MODE=m;
     bDaily.classList.toggle('active',m==='daily'); bWeekly.classList.toggle('active',m==='weekly');
     pDate.style.display = m==='daily' ? '' : 'none'; pWeek.style.display = m==='weekly' ? '' : 'none';
-    draw();
+    draw(true);
   };
   bDaily.onclick=()=>setMode('daily'); bWeekly.onclick=()=>setMode('weekly');
-  pDate.onchange=()=>{CUR_DATE_ISO=pDate.value; draw()};
-  pWeek.onchange=()=>{CUR_WEEK=pWeek.value; draw()};
+  pDate.onchange=()=>{CUR_DATE_ISO=pDate.value; draw(true)};
+  pWeek.onchange=()=>{CUR_WEEK=pWeek.value; draw(true)};
 
-  $('#find').onclick=doSearch; $('#q').addEventListener('keydown',e=>{ if(e.key==='Enter') doSearch(); });
-
-  setMode(MODE);
+  async function loadData(){
+    try{
+      if(!DAILY.length){
+        const dj = await gviz(GID_DAILY); DAILY = normalize(dj);
+      }
+      if(!WEEKLY.length){
+        const wj = await gviz(GID_WEEKLY); WEEKLY = normalize(wj);
+      }
+      DATES = unique(DAILY.map(x=>x.dateIso).filter(Boolean)).sort();
+      WEEKS = unique(WEEKLY.map(x=>x.week).filter(Boolean)).sort((a,b)=>{
+        const na=(a.match(/\d+/)||[])[0], nb=(b.match(/\d+/)||[])[0];
+        return (na&&nb)? na-nb : a.localeCompare(b);
+      });
+      CUR_DATE_ISO = DATES[DATES.length-1]||"";
+      CUR_WEEK = WEEKS[WEEKS.length-1]||"";
+      if(CUR_DATE_ISO){ pDate.value=CUR_DATE_ISO; pDate.min=DATES[0]||""; pDate.max=CUR_DATE_ISO; }
+      pWeek.innerHTML=WEEKS.map(w=>`<option>${w}</option>`).join(''); pWeek.value=CUR_WEEK;
+    }catch(e){
+      console.warn(e);
+      statusMsg.textContent = `Failed to load Google Sheet: ${String(e.message||e)}`;
+      statusCard.classList.add('show'); // show only on error
+      throw e;
+    }
+  }
 
   function currentRows(){
     if(MODE==='daily'){ return DAILY.filter(x=> (x.dateIso||'')===CUR_DATE_ISO).sort((a,b)=>a.rank-b.rank); }
@@ -408,63 +451,82 @@ async function renderRanks(){
     else { av.style.backgroundImage='none'; nm.textContent='—'; sc.textContent=''; }
   }
 
-  function draw(){
+  async function draw(forceLoad){
+    if(forceLoad && (!DAILY.length || !WEEKLY.length)) await loadData();
+
     $('#scope').innerHTML = scopeText();
     const rows = currentRows(); CURRENT_FULL = rows.slice();
 
     setPod(1, rows.find(r=>r.rank===1)); setPod(2, rows.find(r=>r.rank===2)); setPod(3, rows.find(r=>r.rank===3));
 
-    $('#pin').innerHTML='';
-
     const list=$('#lb-list'); list.innerHTML='';
     rows.filter(r=>r.rank>=4 && r.rank<=20).forEach(r=>{
-      const url = rankAvatar(r.rank); /* uses your top-20 and loops after */
       list.insertAdjacentHTML('beforeend',`
         <div class="row" id="row-${r.rank}">
           <div class="rk">${r.rank}</div>
           <div class="left">
-            <div class="face" style="background-image:${faceBg(url)}"></div>
+            <div class="face" id="face-${r.rank}"></div>
             <div class="uname">${maskMid4(r.username)}</div>
           </div>
           <div class="val">${fmtFull(r.points)} points</div>
         </div>`);
     });
-  }
+    rows.filter(r=>r.rank>=4 && r.rank<=20).forEach(r=>{
+      const f = document.getElementById(`face-${r.rank}`);
+      if(f) f.style.backgroundImage = faceBg(rankAvatar(r.rank));
+    });
 
-  function renderPinned(hit){
-    const pin = $('#pin');
-    const url = rankAvatar(hit.rank);
-    pin.innerHTML = `
-      <div class="row pinned" id="pin-row">
-        <div class="rk">${hit.rank}</div>
-        <div class="left">
-          <div class="face" style="background-image:${faceBg(url)}"></div>
-          <div class="uname">${maskMid4(hit.username)}</div>
-        </div>
-        <div class="val">${fmtFull(hit.points)} points</div>
-      </div>`;
-    pin.scrollIntoView({behavior:'smooth', block:'start'});
-    const el = $('#pin-row'); el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash');
+    // Search
+    $('#find').onclick=doSearch;
+    $('#q').addEventListener('keydown',e=>{ if(e.key==='Enter') doSearch(); });
   }
 
   function doSearch(){
     const q = ($('#q').value||'').trim().toLowerCase();
-    const box = $('#mine'); box.style.display='block';
-    if(!q){ box.textContent='Enter a username'; $('#pin').innerHTML=''; return; }
+    const box = $('#mine'); box.style.display='none'; // we'll only use this for errors now
+
+    // remove previous synthetic row if exists
+    const oldMineRow = $('#row-mine'); if(oldMineRow) oldMineRow.remove();
+
+    if(!q){ box.style.display='block'; box.textContent='Enter a username'; return; }
 
     const hit = CURRENT_FULL.find(x=>x.username.toLowerCase()===q);
-    if(!hit){ box.textContent='Not in Top 20 / wrong username?'; $('#pin').innerHTML=''; return; }
+    if(!hit){ box.style.display='block'; box.textContent='No match for the selected period.'; return; }
 
-    const scope = MODE==='daily' ? toLabel(CUR_DATE_ISO) : CUR_WEEK;
-    box.innerHTML = `<b>${hit.username}</b> — Rank <b>${hit.rank}</b> • ${fmtFull(hit.points)} pts • ${scope}`;
-    renderPinned(hit);
-
+    // In Top 3 → highlight pod
     if(hit.rank<=3){
-      const pod = $(`#pod${hit.rank}`); if(pod){ pod.classList.remove('pulseHighlight'); void pod.offsetWidth; pod.classList.add('pulseHighlight'); }
-    }else if(hit.rank<=20){
-      const rowEl = $(`#row-${hit.rank}`); if(rowEl){ rowEl.classList.remove('flash'); void rowEl.offsetWidth; rowEl.classList.add('flash'); }
+      const pod = $(`#pod${hit.rank}`); if(pod){
+        pod.classList.remove('pulseHighlight'); void pod.offsetWidth; pod.classList.add('pulseHighlight');
+        pod.scrollIntoView({behavior:'smooth', block:'center'});
+      }
+      return;
     }
+
+    // In Top 20 → highlight row
+    if(hit.rank<=20){
+      const rowEl = $(`#row-${hit.rank}`); if(rowEl){
+        rowEl.classList.remove('flash'); void rowEl.offsetWidth; rowEl.classList.add('flash');
+        rowEl.scrollIntoView({behavior:'smooth', block:'center'});
+      }
+      return;
+    }
+
+    // Rank 21+ → append a synthetic row at the bottom
+    const list=$('#lb-list');
+    list.insertAdjacentHTML('beforeend',`
+      <div class="row mine flash" id="row-mine">
+        <div class="rk">${hit.rank}</div>
+        <div class="left">
+          <div class="face" id="face-mine"></div>
+          <div class="uname">${maskMid4(hit.username)}</div>
+        </div>
+        <div class="val">${fmtFull(hit.points)} points</div>
+      </div>`);
+    $('#face-mine').style.backgroundImage = faceBg(rankAvatar(hit.rank));
+    $('#row-mine').scrollIntoView({behavior:'smooth', block:'nearest'});
   }
+
+  await draw(true);
 
   // CTA modal
   $('#ctaHow').addEventListener('click', ()=>{
@@ -484,6 +546,7 @@ function renderHome(){
   $('#view').innerHTML=`
     <div class="card tnc">
       <h2>Terms & Conditions</h2>
+
       <details class="titem" open>
         <summary>1. What is Referral Rush?</summary>
         <div class="ans">
@@ -493,6 +556,7 @@ function renderHome(){
           <b>Extra Bonus:</b> On top of the leaderboard rewards, you’ll still receive the <b>100% Referral Bonus</b> from your friends’ first deposit, doubling your earning rewards!
         </div>
       </details>
+
       <details class="titem">
         <summary>2. How do I participate?</summary>
         <div class="ans">
@@ -504,6 +568,7 @@ function renderHome(){
           </ul>
         </div>
       </details>
+
       <details class="titem">
         <summary>3. How are points calculated?</summary>
         <div class="ans">
@@ -517,10 +582,12 @@ function renderHome(){
           Points are cumulative across all your active referrals during the event week.
         </div>
       </details>
+
       <details class="titem">
         <summary>4. How is the leaderboard updated?</summary>
         <div class="ans">The Referral Rush Leaderboard is updated every <b>12 hours daily</b>, showing your latest position and points based on your active referrals’ turnover.</div>
       </details>
+
       <details class="titem">
         <summary>5. What prizes can I win?</summary>
         <div class="ans">
@@ -534,26 +601,32 @@ function renderHome(){
           </ul>
         </div>
       </details>
+
       <details class="titem">
         <summary>6. When will I receive my prize?</summary>
         <div class="ans">Prizes are credited every <b>Monday at 12:00 PM (GMT-3)</b> to your Rico.bet game wallet, after the weekly reset (Mon–Sun).</div>
       </details>
+
       <details class="titem">
         <summary>7. Are there any wagering requirements?</summary>
         <div class="ans">Yes, all prize credits come with a <b>5× wagering requirement</b> before any withdrawal can be made, and you can use the prize credit to play any games on Rico.bet.</div>
       </details>
+
       <details class="titem">
         <summary>8. Can I win every week?</summary>
         <div class="ans">Absolutely! Each week is an independent competition. You can appear on the leaderboard and win prizes every week during the event.</div>
       </details>
+
       <details class="titem">
         <summary>9. What happens if my referral stops playing?</summary>
         <div class="ans">Only active referrals generating turnover within the week will count toward your points for that week.</div>
       </details>
+
       <details class="titem">
         <summary>10. How do I check my ranking?</summary>
         <div class="ans">You can view your live leaderboard position and weekly points on the Referral Rush event section of your Referral Page.</div>
       </details>
+
       <details class="titem">
         <summary>11. What can lead to disqualification?</summary>
         <div class="ans">
@@ -591,45 +664,20 @@ function renderCommunity(){
       </div>
 
       <div class="list">
-        <div class="item">
-          <div class="c-left">
-            <div class="bubble"><img alt="" width="26" height="26" src="${icons.facebook}"/></div>
-            <div style="font-weight:900">Facebook</div>
-          </div>
-          <a class="open" href="https://facebook.com/" target="_blank" rel="noopener">Subscribe</a>
-        </div>
-
-        <div class="item">
-          <div class="c-left">
-            <div class="bubble"><img alt="" width="26" height="26" src="${icons.instagram}"/></div>
-            <div style="font-weight:900">Instagram</div>
-          </div>
-          <a class="open" href="https://instagram.com/" target="_blank" rel="noopener">Subscribe</a>
-        </div>
-
-        <div class="item">
-          <div class="c-left">
-            <div class="bubble"><img alt="" width="26" height="26" src="${icons.telegram}"/></div>
-            <div style="font-weight:900">Telegram</div>
-          </div>
-          <a class="open" href="https://t.me/" target="_blank" rel="noopener">Subscribe</a>
-        </div>
-
-        <div class="item">
-          <div class="c-left">
-            <div class="bubble"><img alt="" width="26" height="26" src="${icons.x}"/></div>
-            <div style="font-weight:900">X (Twitter)</div>
-          </div>
-          <a class="open" href="https://x.com/" target="_blank" rel="noopener">Subscribe</a>
-        </div>
-
-        <div class="item">
-          <div class="c-left">
-            <div class="bubble"><img alt="" width="26" height="26" src="${icons.youtube}"/></div>
-            <div style="font-weight:900">YouTube</div>
-          </div>
-          <a class="open" href="https://youtube.com/" target="_blank" rel="noopener">Subscribe</a>
-        </div>
+        ${[
+          ['Facebook','https://facebook.com/',icons.facebook],
+          ['Instagram','https://instagram.com/',icons.instagram],
+          ['Telegram','https://t.me/',icons.telegram],
+          ['X (Twitter)','https://x.com/',icons.x],
+          ['YouTube','https://youtube.com/',icons.youtube],
+        ].map(([label,href,icon])=>`
+          <div class="item">
+            <div class="c-left">
+              <div class="bubble"><img alt="" width="26" height="26" src="${icon}"/></div>
+              <div style="font-weight:900">${label}</div>
+            </div>
+            <a class="open" href="${href}" target="_blank" rel="noopener">Subscribe</a>
+          </div>`).join('')}
       </div>
     </div>`;
 }
