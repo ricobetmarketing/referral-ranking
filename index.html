@@ -35,7 +35,7 @@
                        50%{text-shadow:0 0 20px rgba(120,115,245,.55),0 0 44px rgba(255,110,196,.30)}}
 
   main{
-    padding:14px 12px 200px; /* room for bottom nav */
+    padding:14px 12px 200px;
     box-sizing:border-box; min-height:100vh; overflow-y:auto; scroll-behavior:smooth;
   }
 
@@ -67,9 +67,7 @@
   .ring{width:92px;height:92px;border-radius:50%;background:radial-gradient(86px 86px at 50% 50%, rgba(169,117,255,.65), rgba(122,92,255,.35) 60%, rgba(122,92,255,0) 61%);display:grid;place-items:center;position:relative;z-index:1;animation:float 3.5s ease-in-out infinite}
   .av{width:82px;height:82px;border-radius:50%;background:#ddd center/cover no-repeat;box-shadow:0 12px 26px rgba(0,0,0,.35);position:relative;z-index:2}
   .badge{position:absolute;top:86px;left:50%;transform:translateX(-50%);background:linear-gradient(180deg,#6f4bff,#9f7bff);color:#fff;border-radius:999px;border:2px solid #fff;font-weight:1000;font-size:12px;padding:2px 8px;box-shadow:0 6px 14px rgba(0,0,0,.35);z-index:5}
-  /* move #2 and #3 a bit up so they don't cover names */
-  .pod.s2 .badge{top:74px}
-  .pod.s3 .badge{top:74px}
+  .pod.s2 .badge{top:74px} .pod.s3 .badge{top:74px} /* raised so they don't cover names */
   .crown{position:absolute;top:-22px;left:50%;transform:translateX(-50%);font-size:32px;filter:drop-shadow(0 6px 8px rgba(0,0,0,.35));z-index:9;animation:crownPulse 2.2s ease-in-out infinite}
   .pod.s1 .ring{width:112px;height:112px}.pod.s1 .av{width:100px;height:100px}
   .pod.s2{transform:translateY(6px)} .pod.s3{transform:translateY(10px)}
@@ -83,8 +81,6 @@
   /* Rows */
   .hdrRow{display:grid;grid-template-columns:60px 1fr 110px;gap:8px;align-items:center;margin-top:10px;background:linear-gradient(180deg,#2f325f,#26294e);color:#e9ecff;border:1px solid #ffffff22;border-radius:14px;padding:10px 12px;font-weight:900}
   .hdrRow div:last-child{text-align:right}
-
-  /* pinned searched row (sits above the list when there is a match) */
   #pin{margin-top:8px}
   .row{display:grid;grid-template-columns:60px 1fr 110px;gap:8px;align-items:center;background:linear-gradient(180deg,#a975ff,#7a5cff);border:1px solid rgba(255,255,255,.10);border-radius:14px;padding:10px 12px;box-shadow:0 0 22px rgba(169,117,255,0.45);position:relative;overflow:hidden}
   .row.pinned{background:linear-gradient(180deg,#ffd86a,#ffb84a);color:#2a1a00;box-shadow:0 0 26px rgba(255,216,106,.6)}
@@ -108,7 +104,7 @@
   .go:active{transform:translateY(1px);box-shadow:0 2px 0 rgba(0,0,0,.12)}
   .result{margin-top:8px;background:rgba(255,255,255,.95);border:1px solid rgba(0,0,0,.08);color:#2b2350;border-radius:12px;padding:10px 12px;font-weight:800;display:none}
 
-  /* CTAs (inside content) */
+  /* CTAs */
   .ctaRow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
   .cta{appearance:none;border:0;border-radius:14px;padding:14px 12px;font-weight:1000;cursor:pointer;text-align:center}
   .cta.primary{background:linear-gradient(180deg,#6f4bff,#9f7bff);color:#fff;box-shadow:0 10px 24px rgba(120,115,245,.45)}
@@ -141,7 +137,7 @@
   .modal .frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
   .modal .close{appearance:none;border:0;border-radius:10px;padding:8px 10px;background:#ffd86a;color:#2a1a00;font-weight:1000;cursor:pointer}
 
-  /* T&C – pill accordion style */
+  /* T&C */
   .tnc h2{margin:0 0 10px 0}
   details.titem{background:linear-gradient(180deg,#15163a,#101233);border:1px solid var(--edge);border-radius:16px;padding:8px 10px;margin:10px 0}
   details.titem[open]{box-shadow:0 10px 24px rgba(0,0,0,.25)}
@@ -151,7 +147,7 @@
   .ans{color:#dfe6ff;margin:10px 6px 4px 6px}
   .ans ul{margin:6px 0 0 18px}
 
-  /* Community styles */
+  /* Community */
   .comm .sharebar{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
   .comm .sharebtn{appearance:none;border:0;border-radius:12px;padding:10px 14px;font-weight:900;cursor:pointer;background:#ffd86a;color:#2a1a00;box-shadow:0 4px 0 rgba(0,0,0,.12);text-decoration:none}
   .comm .list{display:grid;gap:14px;margin-top:12px}
@@ -237,14 +233,14 @@ function maskMid4(name){
   return s.slice(0,start) + '****' + s.slice(end);
 }
 
-/* Avatars (20) */
+/* Avatars (YOUR Top 20 URLs here) */
 const AVS=[
   "https://ricobr.ft-crm.com/media-api/serve/8f954107-4d24-4d5c-b2fe-934b14e56215_1010.png",
   "https://ricobr.ft-crm.com/media-api/serve/5368d6f5-3904-42d6-9ef9-314cd544ad95_11.png",
   "https://ricobr.ft-crm.com/media-api/serve/738cf89e-f4df-49e2-b359-fd5f9a7095a7_1111-1.png",
-  "https://ricobr.ft-crm.com/media-api/serve/dad111b1-5443-4e26-97b4-b5bf84cb953e_1212.png",
-  "https://ricobr.ft-crm.com/media-api/serve/5aa2965f-6173-4aa4-a2c8-fabd93415637_1313.jpg",
-  "https://ricobr.ft-crm.com/media-api/serve/50079348-7f59-4b35-b2db-0dd9d9cf71b2_1414.png",
+  "https://ricobr.ft-crm.com/media-api/serve/8f954107-4d24-4d5c-b2fe-934b14e56215_1010.png",
+  "https://ricobr.ft-crm.com/media-api/serve/5368d6f5-3904-42d6-9ef9-314cd544ad95_11.png",
+  "https://ricobr.ft-crm.com/media-api/serve/738cf89e-f4df-49e2-b359-fd5f9a7095a7_1111-1.png",
   "https://ricobr.ft-crm.com/media-api/serve/48624ef5-7940-4cac-a364-92e6a3ded6cd_1515.jpg",
   "https://ricobr.ft-crm.com/media-api/serve/23fe46f7-7713-42fb-b918-11d0173a8b2f_22.png",
   "https://ricobr.ft-crm.com/media-api/serve/454a5792-2006-449b-b5e4-d549df35cc5c_33.png",
@@ -260,7 +256,13 @@ const AVS=[
   "https://ricobr.ft-crm.com/media-api/serve/5aa2965f-6173-4aa4-a2c8-fabd93415637_1313.jpg",
   "https://ricobr.ft-crm.com/media-api/serve/50079348-7f59-4b35-b2db-0dd9d9cf71b2_1414.png",
 ];
-const rankAvatar=r=>AVS[Math.min(Math.max(1,r),20)-1];
+
+/* IMPORTANT: follow your Top-20, then loop for rank 21+ */
+const DEFAULT_AV="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 24 24' fill='none' stroke='%23bbb' stroke-width='1.5'%3E%3Ccircle cx='12' cy='8' r='4'/%3E%3Cpath d='M4 20c0-4 4-6 8-6s8 2 8 6'/%3E%3C/svg%3E";
+const rankAvatar = (r) => {
+  const i = (Math.max(1, Number(r)) - 1) % AVS.length; // loop 1..20
+  return AVS[i] || DEFAULT_AV;
+};
 
 /* Tabs */
 let TAB='ranks';
@@ -352,10 +354,7 @@ async function renderRanks(){
     </section>
 
     <div class="hdrRow"><div>Rank</div><div>Player</div><div>Points</div></div>
-
-    <!-- pinned search hit appears here -->
     <div id="pin"></div>
-
     <div class="list" id="lb-list"></div>
 
     <div class="search">
@@ -415,15 +414,16 @@ async function renderRanks(){
 
     setPod(1, rows.find(r=>r.rank===1)); setPod(2, rows.find(r=>r.rank===2)); setPod(3, rows.find(r=>r.rank===3));
 
-    $('#pin').innerHTML = ''; // clear any previous pinned result
+    $('#pin').innerHTML='';
 
     const list=$('#lb-list'); list.innerHTML='';
     rows.filter(r=>r.rank>=4 && r.rank<=20).forEach(r=>{
+      const url = rankAvatar(r.rank); /* uses your top-20 and loops after */
       list.insertAdjacentHTML('beforeend',`
         <div class="row" id="row-${r.rank}">
           <div class="rk">${r.rank}</div>
           <div class="left">
-            <div class="face" style="background-image:${faceBg(rankAvatar(r.rank))}"></div>
+            <div class="face" style="background-image:${faceBg(url)}"></div>
             <div class="uname">${maskMid4(r.username)}</div>
           </div>
           <div class="val">${fmtFull(r.points)} points</div>
@@ -433,11 +433,12 @@ async function renderRanks(){
 
   function renderPinned(hit){
     const pin = $('#pin');
+    const url = rankAvatar(hit.rank);
     pin.innerHTML = `
       <div class="row pinned" id="pin-row">
         <div class="rk">${hit.rank}</div>
         <div class="left">
-          <div class="face" style="background-image:${faceBg(rankAvatar(hit.rank))}"></div>
+          <div class="face" style="background-image:${faceBg(url)}"></div>
           <div class="uname">${maskMid4(hit.username)}</div>
         </div>
         <div class="val">${fmtFull(hit.points)} points</div>
@@ -456,11 +457,8 @@ async function renderRanks(){
 
     const scope = MODE==='daily' ? toLabel(CUR_DATE_ISO) : CUR_WEEK;
     box.innerHTML = `<b>${hit.username}</b> — Rank <b>${hit.rank}</b> • ${fmtFull(hit.points)} pts • ${scope}`;
-
-    // Always bring the searched user to the top (pinned)
     renderPinned(hit);
 
-    // Also highlight their existing row if it's in the visible top 20 list
     if(hit.rank<=3){
       const pod = $(`#pod${hit.rank}`); if(pod){ pod.classList.remove('pulseHighlight'); void pod.offsetWidth; pod.classList.add('pulseHighlight'); }
     }else if(hit.rank<=20){
@@ -481,12 +479,11 @@ async function renderRanks(){
   $('#modal').addEventListener('click', (e)=>{ if(e.target===e.currentTarget){ $('#closeModal').click(); } });
 }
 
-/* T&C tab */
+/* T&C */
 function renderHome(){
   $('#view').innerHTML=`
     <div class="card tnc">
       <h2>Terms & Conditions</h2>
-
       <details class="titem" open>
         <summary>1. What is Referral Rush?</summary>
         <div class="ans">
@@ -496,7 +493,6 @@ function renderHome(){
           <b>Extra Bonus:</b> On top of the leaderboard rewards, you’ll still receive the <b>100% Referral Bonus</b> from your friends’ first deposit, doubling your earning rewards!
         </div>
       </details>
-
       <details class="titem">
         <summary>2. How do I participate?</summary>
         <div class="ans">
@@ -508,7 +504,6 @@ function renderHome(){
           </ul>
         </div>
       </details>
-
       <details class="titem">
         <summary>3. How are points calculated?</summary>
         <div class="ans">
@@ -522,12 +517,10 @@ function renderHome(){
           Points are cumulative across all your active referrals during the event week.
         </div>
       </details>
-
       <details class="titem">
         <summary>4. How is the leaderboard updated?</summary>
         <div class="ans">The Referral Rush Leaderboard is updated every <b>12 hours daily</b>, showing your latest position and points based on your active referrals’ turnover.</div>
       </details>
-
       <details class="titem">
         <summary>5. What prizes can I win?</summary>
         <div class="ans">
@@ -541,32 +534,26 @@ function renderHome(){
           </ul>
         </div>
       </details>
-
       <details class="titem">
         <summary>6. When will I receive my prize?</summary>
         <div class="ans">Prizes are credited every <b>Monday at 12:00 PM (GMT-3)</b> to your Rico.bet game wallet, after the weekly reset (Mon–Sun).</div>
       </details>
-
       <details class="titem">
         <summary>7. Are there any wagering requirements?</summary>
         <div class="ans">Yes, all prize credits come with a <b>5× wagering requirement</b> before any withdrawal can be made, and you can use the prize credit to play any games on Rico.bet.</div>
       </details>
-
       <details class="titem">
         <summary>8. Can I win every week?</summary>
         <div class="ans">Absolutely! Each week is an independent competition. You can appear on the leaderboard and win prizes every week during the event.</div>
       </details>
-
       <details class="titem">
         <summary>9. What happens if my referral stops playing?</summary>
         <div class="ans">Only active referrals generating turnover within the week will count toward your points for that week.</div>
       </details>
-
       <details class="titem">
         <summary>10. How do I check my ranking?</summary>
         <div class="ans">You can view your live leaderboard position and weekly points on the Referral Rush event section of your Referral Page.</div>
       </details>
-
       <details class="titem">
         <summary>11. What can lead to disqualification?</summary>
         <div class="ans">
