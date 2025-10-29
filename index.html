@@ -16,8 +16,10 @@
     margin:0;height:100%;color:var(--ink);
     font:15px/1.5 Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif;
     background:
-      radial-gradient(1100px 680px at 50% -10%, #2b1f55 0%, transparent 60%),
-      linear-gradient(180deg,#0b0c1a,#070813);
+  radial-gradient(1100px 680px at 50% -10%, rgba(43,31,85,.35) 0%, rgba(43,31,85,0) 60%),
+  linear-gradient(180deg, rgba(11,12,26,.45), rgba(7,8,19,.55)),
+      url("https://ricobr.ft-crm.com/media-api/serve/5b90c59f-1271-4f35-b640-80c04a414aec_bg.png") center/cover no-repeat;
+    background-attachment: fixed;
   }
   .app{max-width:520px;margin:0 auto;min-height:100dvh;display:grid;grid-template-rows:auto 1fr}
 
@@ -166,7 +168,7 @@
   .comm .open{background:#fff;color:#2a1a00;border-radius:12px;padding:10px 14px;font-weight:900;text-decoration:none}
 </style>
 </head>
-<body>
+<>
   <div class="app">
     <header>
       <div class="title">Referral Rush</div>
@@ -686,5 +688,5 @@ function renderCommunity(){
 function render(){ if(TAB==='ranks') renderRanks(); else if(TAB==='home') renderHome(); else renderCommunity(); }
 render();
 </script>
-</body>
+</>
 </html>
