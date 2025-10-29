@@ -4,48 +4,38 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
 <meta name="color-scheme" content="dark"/>
-<title>Leaderboard — Referral Race</title>
+<title>Referral Rush Leaderboard</title>
 <style>
   :root{
-    --bg0:#0b0c1a; --edge:#ffffff18; --ink:#eaf2ff; --dim:#b8c6ff;
-    --vio1:#a975ff; --vio2:#7a5cff; --teal:#37e0d7; --acc:#ffd86a;
-    --card1:#14163b; --card2:#0e1030;
+    --bg:#0b0c1a; --ink:#eaf2ff; --dim:#b8c6ff;
+    --vio1:#a975ff; --vio2:#7a5cff; --acc:#ffd86a; --teal:#37e0d7;
+    --card1:#161730; --card2:#0e1030; --edge:#ffffff18;
   }
   *{box-sizing:border-box}
   html,body{
-    margin:0;height:100%;overflow-x:hidden;color:var(--ink);
+    margin:0;height:100%;color:var(--ink);
     font:15px/1.5 Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif;
     background:
-      radial-gradient(1200px 780px at 50% -10%, #2b1f55 0%, transparent 60%),
+      radial-gradient(1100px 680px at 50% -10%, #2b1f55 0%, transparent 60%),
       linear-gradient(180deg,#0b0c1a,#070813);
   }
   .app{max-width:520px;margin:0 auto;min-height:100dvh;display:grid;grid-template-rows:auto 1fr}
 
   /* Header */
-  header{position:sticky;top:0;z-index:20;padding:16px 16px 14px;
-    background:linear-gradient(180deg,#10112a,#0d0e23);border-bottom:1px solid var(--edge)}
-  .hrow{display:flex;align-items:center;justify-content:space-between}
-  .titleWrap{display:flex;flex-direction:column;gap:6px}
-  .title{
-    font-weight:1000;letter-spacing:.5px;font-size:30px;line-height:1.05;
+  header{position:sticky;top:0;z-index:20;padding:16px 14px 14px;
+    background:linear-gradient(180deg,#15163a,#0d0e23);border-bottom:1px solid var(--edge)}
+  .title{font-weight:1000;font-size:28px;letter-spacing:.4px;line-height:1.05;
     background:linear-gradient(90deg,#ffc86a,#ff6ec4,#7873f5,#71e1ff,#ffc86a);
-    background-size:300% 100%; -webkit-background-clip:text; background-clip:text; color:transparent;
-    text-shadow:0 0 24px rgba(120,115,245,.35);
-    animation:titleFlow 6.5s linear infinite, titleGlow 3.2s ease-in-out infinite;
-    display:inline-block;
-  }
-  .title:hover{animation-play-state:paused}
-  .slogan{
-    font-size:12px;color:#dfe6ff;opacity:.95;font-weight:800;
-    letter-spacing:.25px;transform:translateY(-1px)
-  }
+    background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;
+    text-shadow:0 0 22px rgba(120,115,245,.35);animation:titleFlow 6.5s linear infinite,titleGlow 3.2s ease-in-out infinite}
+  .prize{margin-top:6px;font-size:15px;font-weight:900;color:#ffe190}
+  .slogan{margin-top:2px;font-size:12px;color:#dfe6ff;font-weight:800}
   @keyframes titleFlow{0%{background-position:0% 50%}100%{background-position:100% 50%}}
-  @keyframes titleGlow{
-    0%,100%{text-shadow:0 0 12px rgba(120,115,245,.30), 0 0 28px rgba(255,110,196,.18)}
-    50%     {text-shadow:0 0 20px rgba(120,115,245,.55), 0 0 44px rgba(255,110,196,.30)}
-  }
+  @keyframes titleGlow{0%,100%{text-shadow:0 0 12px rgba(120,115,245,.30),0 0 28px rgba(255,110,196,.18)}
+                       50%{text-shadow:0 0 20px rgba(120,115,245,.55),0 0 44px rgba(255,110,196,.30)}}
 
-  main{padding:14px 14px 116px}
+  main{padding:14px 12px 140px}
+
   .card{
     background:
       radial-gradient(600px 140px at 10% -30%, rgba(55,224,215,.18), transparent 60%),
@@ -53,89 +43,66 @@
       linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.00)),
       linear-gradient(180deg,var(--card1),var(--card2));
     border:1px solid var(--edge);border-radius:18px;padding:14px;margin-bottom:12px;
-    box-shadow:0 18px 50px #00000050, inset 0 0 0 1px #ffffff05
+    box-shadow:0 18px 50px #00000040, inset 0 0 0 1px #ffffff05
   }
 
-  /* Segmented control */
-  .lbHead{display:flex;align-items:center;justify-content:space-between}
-  .seg{display:flex;gap:8px;background:#0f1030;border:1px solid var(--edge);padding:6px;border-radius:14px}
-  .seg button{appearance:none;border:0;background:transparent;color:#cfd4ff;font-weight:900;padding:9px 14px;border-radius:10px;cursor:pointer}
+  /* Segmented control + filters */
+  .lbHead{display:flex;align-items:center;justify-content:space-between;gap:8px}
+  .lbHead h2{font-size:20px;margin:0}
+  .seg{display:flex;gap:6px;background:#0f1030;border:1px solid var(--edge);padding:5px;border-radius:12px}
+  .seg button{appearance:none;border:0;background:transparent;color:#cfd4ff;font-weight:900;padding:8px 12px;border-radius:10px;cursor:pointer}
   .seg button.active{color:#fff;background:linear-gradient(180deg,var(--vio1),var(--vio2));box-shadow:0 10px 26px rgba(153,120,255,.45), inset 0 -2px 10px rgba(0,0,0,.25)}
-  .filters{display:flex;gap:8px;margin-top:10px}
+  .filters{display:flex;gap:8px;margin-top:8px}
   .pick{appearance:none;background:#0f1030;color:#eaf0ff;border:1px solid var(--edge);
-    border-radius:12px;padding:10px 12px;font-weight:800}
+    border-radius:12px;padding:10px 12px;font-weight:800;width:100%}
   .scope{font-size:12px;color:var(--dim);margin-top:6px}
 
   /* --- TOP 3 --- */
-  .hero{position:relative;margin-top:6px;padding:26px 8px 14px;border-radius:22px}
-  .p3{display:grid;grid-template-columns:1fr 1.15fr 1fr;gap:10px;align-items:end;place-items:center}
+  .hero{position:relative;margin-top:6px;padding:22px 6px 12px;border-radius:18px}
+  .p3{display:grid;grid-template-columns:1fr 1.15fr 1fr;gap:8px;align-items:end;place-items:center}
   .pod{position:relative;display:grid;place-items:center;padding-bottom:4px;isolation:isolate;overflow:visible}
-  .ring{
-    width:96px;height:96px;border-radius:50%;
-    background:
-      radial-gradient(86px 86px at 50% 50%, rgba(169,117,255,.65), rgba(122,92,255,.35) 60%, rgba(122,92,255,0) 61%);
-    display:grid;place-items:center;position:relative;z-index:1;animation:float 3.5s ease-in-out infinite
-  }
-  .av{width:84px;height:84px;border-radius:50%;
-      background:#ddd center/cover no-repeat; /* no white border */
-      box-shadow:0 12px 26px rgba(0,0,0,.35);position:relative;z-index:2}
-  .badge{
-    position:absolute;top:86px; /* drop the rank number slightly lower */
-    left:50%;transform:translateX(-50%);
-    background:linear-gradient(180deg,#6f4bff,#9f7bff);color:#fff;border-radius:999px;border:2px solid #fff;
-    font-weight:1000;font-size:12px;padding:2px 8px;box-shadow:0 6px 14px rgba(0,0,0,.35);z-index:5
-  }
-  .crown{position:absolute;top:-24px;left:50%;transform:translateX(-50%);font-size:36px;filter:drop-shadow(0 6px 8px rgba(0,0,0,.35));z-index:9;animation:crownPulse 2.2s ease-in-out infinite}
-  .name{margin-top:10px;font-weight:1000;white-space:nowrap}
-  .score{margin-top:6px;color:#e8deff;font-size:12px;display:flex;align-items:center;gap:6px;z-index:1}
-  .pod.s1 .ring{width:118px;height:118px}
-  .pod.s1 .av{width:104px;height:104px}
-  .pod.s2{transform:translateY(8px)}
-  .pod.s3{transform:translateY(12px)}
+  .ring{width:92px;height:92px;border-radius:50%;background:radial-gradient(86px 86px at 50% 50%, rgba(169,117,255,.65), rgba(122,92,255,.35) 60%, rgba(122,92,255,0) 61%);display:grid;place-items:center;position:relative;z-index:1;animation:float 3.5s ease-in-out infinite}
+  .av{width:82px;height:82px;border-radius:50%;background:#ddd center/cover no-repeat;box-shadow:0 12px 26px rgba(0,0,0,.35);position:relative;z-index:2}
+  .badge{position:absolute;top:86px;left:50%;transform:translateX(-50%);background:linear-gradient(180deg,#6f4bff,#9f7bff);color:#fff;border-radius:999px;border:2px solid #fff;font-weight:1000;font-size:12px;padding:2px 8px;box-shadow:0 6px 14px rgba(0,0,0,.35);z-index:5}
+  .crown{position:absolute;top:-22px;left:50%;transform:translateX(-50%);font-size:32px;filter:drop-shadow(0 6px 8px rgba(0,0,0,.35));z-index:9;animation:crownPulse 2.2s ease-in-out infinite}
+  .pod.s1 .ring{width:112px;height:112px}.pod.s1 .av{width:100px;height:100px}
+  .pod.s2{transform:translateY(6px)} .pod.s3{transform:translateY(10px)}
+  .name{margin-top:8px;font-weight:1000;white-space:nowrap}
+  .score{margin-top:4px;color:#e8deff;font-size:12px;display:flex;align-items:center;gap:6px;z-index:1}
   @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
   @keyframes crownPulse{0%,100%{transform:translateX(-50%) scale(1)}50%{transform:translateX(-50%) scale(1.08)}}
+  .pulseHighlight{animation:pulseHL 1.8s ease-in-out 1}
+  @keyframes pulseHL{0%{filter:drop-shadow(0 0 0 rgba(255,216,106,.0))}50%{filter:drop-shadow(0 0 22px rgba(255,216,106,.9))}100%{filter:drop-shadow(0 0 0 rgba(255,216,106,.0))}}
 
   /* Header row — Rank | Player | Points */
-  .hdrRow{
-    display:grid;grid-template-columns:60px 1fr 110px;gap:10px;align-items:center;
-    margin-top:12px;background:linear-gradient(180deg,#2f325f,#26294e);color:#e9ecff;
-    border:1px solid #ffffff22;border-radius:16px;padding:10px 12px;font-weight:900
-  }
+  .hdrRow{display:grid;grid-template-columns:60px 1fr 110px;gap:8px;align-items:center;margin-top:10px;background:linear-gradient(180deg,#2f325f,#26294e);color:#e9ecff;border:1px solid #ffffff22;border-radius:14px;padding:10px 12px;font-weight:900}
   .hdrRow div:last-child{text-align:right}
 
   /* List rows */
-  .list{margin-top:10px;display:grid;gap:10px}
-  .row{
-    display:grid;
-    grid-template-columns:60px 1fr 110px;
-    gap:10px;
-    align-items:center;
-    background:linear-gradient(180deg,#a975ff,#7a5cff);
-    border:1px solid rgba(255,255,255,.08);
-    border-radius:14px;
-    padding:10px 12px;
-    box-shadow:0 0 25px rgba(169,117,255,0.45);
-    position:relative;
-    overflow:hidden;
-  }
-  .row::after{
-    content:""; position:absolute; inset:0; background:linear-gradient(120deg, transparent 30%, rgba(255,255,255,.06) 50%, transparent 70%);
-    transform:translateX(-120%); animation:shimmer 4.5s ease-in-out infinite
-  }
+  .list{margin-top:8px;display:grid;gap:8px;max-height:488px;overflow:auto;scrollbar-width:thin}
+  .row{display:grid;grid-template-columns:60px 1fr 110px;gap:8px;align-items:center;background:linear-gradient(180deg,#a975ff,#7a5cff);border:1px solid rgba(255,255,255,.10);border-radius:14px;padding:10px 12px;box-shadow:0 0 22px rgba(169,117,255,0.45);position:relative;overflow:hidden}
+  .row::after{content:""; position:absolute; inset:0; background:linear-gradient(120deg, transparent 30%, rgba(255,255,255,.06) 50%, transparent 70%);transform:translateX(-120%); animation:shimmer 4.5s ease-in-out infinite}
   @keyframes shimmer{0%{transform:translateX(-120%)}60%{transform:translateX(120%)}100%{transform:translateX(120%)}}
-  .rk{display:grid;place-items:center;width:42px;height:42px;border-radius:12px;font-weight:1000;
-    background:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,.06));border:1px solid rgba(255,255,255,.28)}
+  .rk{display:grid;place-items:center;width:42px;height:42px;border-radius:12px;font-weight:1000;background:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,.06));border:1px solid rgba(255,255,255,.28)}
   .left{display:flex;align-items:center;gap:10px}
   .face{width:38px;height:38px;border-radius:50%;background:#eee center/cover no-repeat;box-shadow:0 6px 14px rgba(0,0,0,.25)}
-  .uname{font-weight:1000}
-  .val{font-weight:900;color:#fff;text-align:right}
+  .uname{font-weight:1000}.val{font-weight:900;color:#fff;text-align:right}
+  .flash{animation:flashRow 1600ms ease-in-out 1}
+  @keyframes flashRow{0%{transform:scale(1); box-shadow:0 0 0 rgba(255,216,106,0)}
+    25%{transform:scale(1.02); box-shadow:0 0 28px rgba(255,216,106,.9)}100%{transform:scale(1); box-shadow:0 0 0 rgba(255,216,106,0)}}
 
   /* Search */
-  .search{margin-top:12px;display:grid;grid-template-columns:1fr auto;gap:8px}
+  .search{margin-top:10px;display:grid;grid-template-columns:1fr auto;gap:8px}
   .input{border-radius:12px;border:1px solid var(--edge);background:#0f1030;color:#eff3ff;padding:10px 12px}
   .go{appearance:none;border:0;border-radius:12px;padding:10px 12px;background:#ffd86a;color:#3a2400;font-weight:1000;cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,.12)}
   .go:active{transform:translateY(1px);box-shadow:0 2px 0 rgba(0,0,0,.12)}
-  .result{margin-top:8px;background:rgba(255,255,255,.92);border:1px solid rgba(0,0,0,.08);color:#2b2350;border-radius:12px;padding:10px 12px;font-weight:800;display:none}
+  .result{margin-top:8px;background:rgba(255,255,255,.95);border:1px solid rgba(0,0,0,.08);color:#2b2350;border-radius:12px;padding:10px 12px;font-weight:800;display:none}
+
+  /* CTAs (inside content so they’re fully scrollable/visible) */
+  .ctaRow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+  .cta{appearance:none;border:0;border-radius:14px;padding:14px 12px;font-weight:1000;cursor:pointer;text-align:center}
+  .cta.primary{background:linear-gradient(180deg,#6f4bff,#9f7bff);color:#fff;box-shadow:0 10px 24px rgba(120,115,245,.45)}
+  .cta.secondary{background:#ffd86a;color:#2a1a00;box-shadow:0 6px 16px rgba(0,0,0,.25)}
 
   /* Bottom nav */
   .iconnav{position:fixed;left:50%;transform:translateX(-50%);bottom:max(8px,env(safe-area-inset-bottom,0));
@@ -147,37 +114,37 @@
   .ico{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.8}
 
   /* Sound toggle */
-  .soundBtn{position:fixed;right:12px;bottom:calc(72px + env(safe-area-inset-bottom,0));background:#fff;color:#111;border:1px solid rgba(0,0,0,.08);
+  .soundBtn{position:fixed;right:12px;bottom:calc(120px + env(safe-area-inset-bottom,0));background:#fff;color:#111;border:1px solid rgba(0,0,0,.08);
     border-radius:14px;padding:10px 12px;display:none;gap:8px;align-items:center;font-weight:1000;z-index:1100;box-shadow:0 10px 24px rgba(0,0,0,.25)}
   .soundBtn.show{display:inline-flex} .soundBtn.active{background:linear-gradient(90deg,#ffd86a,#ffc24d)}
   .soundBtn .ic{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8}
 
-  /* Community small bits */
-  .comm .sharebar{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
-  .comm .sharebtn{appearance:none;border:0;border-radius:12px;padding:10px 14px;font-weight:900;cursor:pointer;background:#ffd86a;color:#2a1a00;box-shadow:0 4px 0 rgba(0,0,0,.12)}
-  .comm .list{display:grid;gap:14px;margin-top:12px}
-  .comm .item{background:linear-gradient(180deg,#5a34dd,#4a2bc7);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:16px;color:#fff;display:flex;align-items:center;justify-content:space-between}
-  .comm .bubble{width:44px;height:44px;border-radius:12px;background:#fff;display:grid;place-items:center}
+  /* Modal */
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:2000;padding:18px}
+  .modal.show{display:flex}
+  .modal .sheet{width:100%;max-width:720px;background:#0f1030;border:1px solid var(--edge);border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.6);overflow:hidden}
+  .modal header{position:unset;border:0;background:#12143a;padding:10px 12px;display:flex;justify-content:space-between;align-items:center}
+  .modal .frame{position:relative;padding-top:56.25%;background:#000}
+  .modal .frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+  .modal .close{appearance:none;border:0;border-radius:10px;padding:8px 10px;background:#ffd86a;color:#2a1a00;font-weight:1000;cursor:pointer}
 
-  /* Details (T&C) */
-  details{background:linear-gradient(180deg,#15163a,#101233);border:1px solid var(--edge);border-radius:14px;padding:12px 12px;margin:10px 0}
-  summary{cursor:pointer;font-weight:1000;list-style:none}
-  summary::-webkit-details-marker{display:none}
-  details[open]{box-shadow:0 10px 24px rgba(0,0,0,.25)}
-  .ans{color:#dfe6ff;margin-top:8px}
+  /* T&C – “previous” pill accordion style */
+  .tnc h2{margin:0 0 10px 0}
+  details.titem{background:linear-gradient(180deg,#15163a,#101233);border:1px solid var(--edge);border-radius:16px;padding:8px 10px;margin:10px 0}
+  details.titem[open]{box-shadow:0 10px 24px rgba(0,0,0,.25)}
+  details.titem summary{list-style:none;cursor:pointer;font-weight:900;color:#eaf2ff;
+    padding:10px 12px;border:1px solid #ffffff18;border-radius:12px;background:#0f1030}
+  details.titem summary::-webkit-details-marker{display:none}
+  .ans{color:#dfe6ff;margin:10px 6px 4px 6px}
   .ans ul{margin:6px 0 0 18px}
 </style>
 </head>
 <body>
   <div class="app">
     <header>
-      <div class="hrow">
-        <div class="titleWrap">
-          <div class="title">Referral Rush</div>
-          <div class="slogan">It’s not just a race, it’s a rush to rewards!</div>
-        </div>
-        <!-- Removed the version label -->
-      </div>
+      <div class="title">Referral Rush</div>
+      <div class="prize">USD 15,000 Weekly Prize</div>
+      <div class="slogan">It’s not just a race, it’s a rush to rewards!</div>
     </header>
     <main id="view"></main>
   </div>
@@ -195,11 +162,24 @@
     <svg viewBox="0 0 24 24" class="ic"><path d="M4 10h4l5-4v12l-5-4H4zM17 8a5 5 0 010 8"/></svg><span>Sound</span>
   </button>
 
+  <!-- Modal -->
+  <div id="modal" class="modal" role="dialog" aria-modal="true" aria-label="How to refer">
+    <div class="sheet">
+      <header>
+        <strong>How to refer</strong>
+        <button class="close" id="closeModal">Close</button>
+      </header>
+      <div class="frame">
+        <iframe id="yt" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+      </div>
+    </div>
+  </div>
+
 <script>
 /* ===== CONFIG ===== */
 const SHEET_ID   = "1rJg4RYn0AkvsqhVGk5CwhZrYNz0gFC6_7ZPiDXigU-o";
-const GID_DAILY  = "1891032775";   // Daily tab gid
-const GID_WEEKLY = "0";            // Weekly tab gid
+const GID_DAILY  = "1891032775";
+const GID_WEEKLY = "0";
 
 /* helpers */
 const $=(s,el)=> (el||document).querySelector(s);
@@ -207,13 +187,29 @@ const $all=(s,el)=> Array.from((el||document).querySelectorAll(s));
 const unique=a=>Array.from(new Set(a));
 const fmtFull=n=>Number(n||0).toLocaleString();
 const faceBg=url=>`url("${url}")`;
+const clamp=(n,min,max)=>Math.min(Math.max(n,min),max);
+
+/* Date helpers */
+const toISO = (s) => {
+  if(!s) return "";
+  if(/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
+  const m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if(m){ const [_,d,mo,y]=m; return `${y}-${String(mo).padStart(2,'0')}-${String(d).padStart(2,'0')}`; }
+  return s;
+};
+const toLabel = (iso) => {
+  const m = iso.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if(!m) return iso||"";
+  const [_,y,mo,d]=m; return `${d}/${mo}/${y}`;
+};
+
 function maskMid3(name){
   const s=String(name||''); if(s.length<3) return s.replace(/.(?=.)/g,'*');
   const mid=Math.floor(s.length/2), start=Math.max(0,mid-1), end=Math.min(s.length,mid+2);
   return s.slice(0,start)+'***'+s.slice(end);
 }
 
-/* Avatar URLs (20). Replace with yours at will */
+/* Avatars */
 const AVS=[
   "https://ricobr.ft-crm.com/media-api/serve/8f954107-4d24-4d5c-b2fe-934b14e56215_1010.png",
   "https://ricobr.ft-crm.com/media-api/serve/5368d6f5-3904-42d6-9ef9-314cd544ad95_11.png",
@@ -238,13 +234,13 @@ const AVS=[
 ];
 const rankAvatar=r=>AVS[Math.min(Math.max(1,r),20)-1];
 
-/* Bottom nav */
+/* Tabs */
 let TAB='ranks';
 $all('.iconnav .itab').forEach(btn=>{
   btn.addEventListener('click',()=>{ TAB=btn.dataset.tab; $all('.itab').forEach(b=>b.classList.toggle('active',b===btn)); render();});
 });
 
-/* Music autoplay with fallbacks */
+/* Music autoplay guard */
 (function(){
   const audio=$('#bgm'), btn=$('#soundBtn'); if(!audio||!btn) return;
   async function tryPlay(){ try{ audio.muted=false; await audio.play(); btn.classList.remove('show'); }catch{ btn.classList.add('show'); } }
@@ -279,18 +275,18 @@ function normalize({headers:h,rows}){
     username:String(r[ui]||"").trim(),
     points:Number(String(r[pi]).replace(/[^\d.\-]/g,''))||0,
     week: wi>-1 ? String(r[wi]||"").trim() : "",
-    date: di>-1 ? String(r[di]||"").trim() : ""
+    dateIso: di>-1 ? toISO(String(r[di]||"").trim()) : ""
   })).filter(x=>x.username && x.rank>0);
 }
 
 /* Data & UI */
-let MODE='daily', DAILY=[], WEEKLY=[], DATES=[], WEEKS=[], CUR_DATE='', CUR_WEEK='', CURRENT_FULL=[];
+let MODE='daily', DAILY=[], WEEKLY=[], DATES=[], WEEKS=[], CUR_DATE_ISO='', CUR_WEEK='', CURRENT_FULL=[];
 
 async function renderRanks(){
   $('#view').innerHTML=`
     <div class="card">
       <div class="lbHead">
-        <h2 style="margin:0;font-size:22px">Leaderboard</h2>
+        <h2>Leaderboard</h2>
         <div class="seg">
           <button id="bDaily" class="active">Daily</button>
           <button id="bWeekly">Weekly</button>
@@ -305,20 +301,20 @@ async function renderRanks(){
 
     <section class="hero">
       <div class="p3">
-        <div class="pod s2">
+        <div class="pod s2" id="pod2">
           <div class="ring"><div class="av" id="p2a"></div></div>
           <div class="badge">2</div>
           <div class="name" id="p2n">—</div>
           <div class="score"><span>🏆</span><span id="p2s"></span><span>points</span></div>
         </div>
-        <div class="pod s1">
+        <div class="pod s1" id="pod1">
           <div class="crown">👑</div>
           <div class="ring"><div class="av" id="p1a"></div></div>
           <div class="badge">1</div>
           <div class="name" id="p1n">—</div>
           <div class="score"><span>🏆</span><span id="p1s"></span><span>points</span></div>
         </div>
-        <div class="pod s3">
+        <div class="pod s3" id="pod3">
           <div class="ring"><div class="av" id="p3a"></div></div>
           <div class="badge">3</div>
           <div class="name" id="p3n">—</div>
@@ -331,23 +327,29 @@ async function renderRanks(){
     <div class="list" id="lb-list"></div>
 
     <div class="search">
-      <input id="q" class="input" placeholder="Search username (full list)…"/>
+      <input id="q" class="input" placeholder="Search username…"/>
       <button id="find" class="go">Find</button>
     </div>
     <div id="mine" class="result"></div>
+
+    <!-- CTAs inside the main content (scrollable) -->
+    <div class="ctaRow">
+      <button id="ctaHow" class="cta primary" type="button">Watch how to refer</button>
+      <a class="cta secondary" href="https://www.rico.bet/myreferral" target="_blank" rel="noopener">Refer Friends</a>
+    </div>
   `;
 
   if(!DAILY.length){ try{ DAILY = normalize(await gviz(GID_DAILY)); }catch(e){ console.warn('Daily load failed',e); } }
   if(!WEEKLY.length){ try{ WEEKLY = normalize(await gviz(GID_WEEKLY)); }catch(e){ console.warn('Weekly load failed',e); } }
 
-  DATES = unique(DAILY.map(x=>x.date).filter(Boolean)).sort();
+  DATES = unique(DAILY.map(x=>x.dateIso).filter(Boolean)).sort();
   WEEKS = unique(WEEKLY.map(x=>x.week).filter(Boolean)).sort((a,b)=>{
     const na=(a.match(/\d+/)||[])[0], nb=(b.match(/\d+/)||[])[0]; return (na&&nb)? na-nb : a.localeCompare(b);
   });
-  CUR_DATE = DATES[DATES.length-1]||""; CUR_WEEK = WEEKS[WEEKS.length-1]||"";
+  CUR_DATE_ISO = DATES[DATES.length-1]||""; CUR_WEEK = WEEKS[WEEKS.length-1]||"";
 
   const pDate=$('#pickDate'), pWeek=$('#pickWeek');
-  if(CUR_DATE){ pDate.value=CUR_DATE; pDate.min=DATES[0]||""; pDate.max=DATES[DATES.length-1]||""; }
+  if(CUR_DATE_ISO){ pDate.value=CUR_DATE_ISO; pDate.min=DATES[0]||""; pDate.max=CUR_DATE_ISO; }
   pWeek.innerHTML=WEEKS.map(w=>`<option>${w}</option>`).join(''); pWeek.value=CUR_WEEK;
 
   const bDaily=$('#bDaily'), bWeekly=$('#bWeekly');
@@ -357,17 +359,18 @@ async function renderRanks(){
     draw();
   };
   bDaily.onclick=()=>setMode('daily'); bWeekly.onclick=()=>setMode('weekly');
-  pDate.onchange=()=>{CUR_DATE=pDate.value; draw()}; pWeek.onchange=()=>{CUR_WEEK=pWeek.value; draw()};
+  pDate.onchange=()=>{CUR_DATE_ISO=pDate.value; draw()};
+  pWeek.onchange=()=>{CUR_WEEK=pWeek.value; draw()};
 
   $('#find').onclick=doSearch; $('#q').addEventListener('keydown',e=>{ if(e.key==='Enter') doSearch(); });
 
   setMode(MODE);
 
   function currentRows(){
-    if(MODE==='daily'){ return DAILY.filter(x=> (x.date||'')===CUR_DATE).sort((a,b)=>a.rank-b.rank); }
+    if(MODE==='daily'){ return DAILY.filter(x=> (x.dateIso||'')===CUR_DATE_ISO).sort((a,b)=>a.rank-b.rank); }
     return WEEKLY.filter(x=> (x.week||'')===CUR_WEEK).sort((a,b)=>a.rank-b.rank);
   }
-  function scopeText(){ return MODE==='daily' ? `Showing: <b>${(CUR_DATE||'—').split('-').reverse().join('/')}</b>` : `Showing: <b>${CUR_WEEK||'—'}</b>`; }
+  function scopeText(){ return MODE==='daily' ? `Showing: <b>${toLabel(CUR_DATE_ISO)||'—'}</b>` : `Showing: <b>${CUR_WEEK||'—'}</b>`; }
 
   function setPod(n,row){
     const av=$(`#p${n}a`), nm=$(`#p${n}n`), sc=$(`#p${n}s`);
@@ -384,7 +387,7 @@ async function renderRanks(){
     const list=$('#lb-list'); list.innerHTML='';
     rows.filter(r=>r.rank>=4 && r.rank<=20).forEach(r=>{
       list.insertAdjacentHTML('beforeend',`
-        <div class="row">
+        <div class="row" id="row-${r.rank}">
           <div class="rk">${r.rank}</div>
           <div class="left">
             <div class="face" style="background-image:${faceBg(rankAvatar(r.rank))}"></div>
@@ -399,20 +402,48 @@ async function renderRanks(){
     const q = ($('#q').value||'').trim().toLowerCase();
     const box = $('#mine'); box.style.display='block';
     if(!q){ box.textContent='Enter a username'; return; }
+
     const hit = CURRENT_FULL.find(x=>x.username.toLowerCase()===q);
-    if(!hit){ box.textContent='No match for the selected period.'; return; }
-    const scope = MODE==='daily' ? CUR_DATE : CUR_WEEK;
+    if(!hit){ box.textContent='Not in Top 20 / wrong username?'; return; }
+
+    const scope = MODE==='daily' ? toLabel(CUR_DATE_ISO) : CUR_WEEK;
     box.innerHTML = `<b>${hit.username}</b> — Rank <b>${hit.rank}</b> • ${fmtFull(hit.points)} pts • ${scope}`;
+
+    if(hit.rank<=3){
+      const pod = $(`#pod${hit.rank}`); if(!pod) return;
+      pod.classList.remove('pulseHighlight'); void pod.offsetWidth;
+      pod.classList.add('pulseHighlight');
+      pod.scrollIntoView({behavior:'smooth', block:'center'});
+    }else if(hit.rank<=20){
+      const rowEl = $(`#row-${hit.rank}`); if(!rowEl) return;
+      rowEl.classList.remove('flash'); void rowEl.offsetWidth;
+      rowEl.classList.add('flash');
+      rowEl.scrollIntoView({behavior:'smooth', block:'center'});
+    }else{
+      box.textContent='Not in Top 20 / wrong username?';
+    }
   }
+
+  // CTA modal
+  $('#ctaHow').addEventListener('click', ()=>{
+    const yt=$('#yt'), modal=$('#modal');
+    yt.src = "https://www.youtube.com/embed/A6DljwDp12A?autoplay=1&rel=0";
+    modal.classList.add('show');
+  });
+  $('#closeModal').addEventListener('click', ()=>{
+    const yt=$('#yt'), modal=$('#modal');
+    yt.src="about:blank"; modal.classList.remove('show');
+  });
+  $('#modal').addEventListener('click', (e)=>{ if(e.target===e.currentTarget){ $('#closeModal').click(); } });
 }
 
-/* T&C tab (dropdowns) */
+/* T&C tab – previous look */
 function renderHome(){
   $('#view').innerHTML=`
-    <div class="card">
-      <h2 style="margin:0 0 8px 0">Terms & Conditions</h2>
+    <div class="card tnc">
+      <h2>Terms & Conditions</h2>
 
-      <details open>
+      <details class="titem" open>
         <summary>1. What is Referral Rush?</summary>
         <div class="ans">
           Referral Rush is a competitive referral event running from <b>1st November to 30th November 2025</b>.
@@ -422,7 +453,7 @@ function renderHome(){
         </div>
       </details>
 
-      <details>
+      <details class="titem">
         <summary>2. How do I participate?</summary>
         <div class="ans">
           <ul>
@@ -434,7 +465,7 @@ function renderHome(){
         </div>
       </details>
 
-      <details>
+      <details class="titem">
         <summary>3. How are points calculated?</summary>
         <div class="ans">
           You’ll earn points based on the <b>total weekly turnover</b> of your referred players:
@@ -448,14 +479,12 @@ function renderHome(){
         </div>
       </details>
 
-      <details>
+      <details class="titem">
         <summary>4. How is the leaderboard updated?</summary>
-        <div class="ans">
-          The Referral Rush Leaderboard is updated every <b>12 hours daily</b>, showing your latest position and points based on your active referrals’ turnover.
-        </div>
+        <div class="ans">The Referral Rush Leaderboard is updated every <b>12 hours daily</b>, showing your latest position and points based on your active referrals’ turnover.</div>
       </details>
 
-      <details>
+      <details class="titem">
         <summary>5. What prizes can I win?</summary>
         <div class="ans">
           Weekly prizes are awarded to the top 100 players based on leaderboard ranking:
@@ -469,42 +498,32 @@ function renderHome(){
         </div>
       </details>
 
-      <details>
+      <details class="titem">
         <summary>6. When will I receive my prize?</summary>
-        <div class="ans">
-          Prizes are credited every <b>Monday at 12:00 PM (GMT-3)</b> directly to your Rico.bet game wallet, following the weekly reset (Monday–Sunday).
-        </div>
+        <div class="ans">Prizes are credited every <b>Monday at 12:00 PM (GMT-3)</b> to your Rico.bet game wallet, after the weekly reset (Mon–Sun).</div>
       </details>
 
-      <details>
+      <details class="titem">
         <summary>7. Are there any wagering requirements?</summary>
-        <div class="ans">
-          Yes, all prize credits come with a <b>5× wagering requirement</b> before any withdrawal can be made, and you can use the prize credit to play any games on Rico.bet.
-        </div>
+        <div class="ans">Yes, all prize credits come with a <b>5× wagering requirement</b> before any withdrawal can be made, and you can use the prize credit to play any games on Rico.bet.</div>
       </details>
 
-      <details>
+      <details class="titem">
         <summary>8. Can I win every week?</summary>
-        <div class="ans">
-          Absolutely! Each week is an independent competition. You can appear on the leaderboard and win prizes every week during the event.
-        </div>
+        <div class="ans">Absolutely! Each week is an independent competition. You can appear on the leaderboard and win prizes every week during the event.</div>
       </details>
 
-      <details>
+      <details class="titem">
         <summary>9. What happens if my referral stops playing?</summary>
-        <div class="ans">
-          Only active referrals generating turnover within the week will count toward your points for that week.
-        </div>
+        <div class="ans">Only active referrals generating turnover within the week will count toward your points for that week.</div>
       </details>
 
-      <details>
+      <details class="titem">
         <summary>10. How do I check my ranking?</summary>
-        <div class="ans">
-          You can view your live leaderboard position and weekly points on the Referral Rush event section of your Referral Page.
-        </div>
+        <div class="ans">You can view your live leaderboard position and weekly points on the Referral Rush event section of your Referral Page.</div>
       </details>
 
-      <details>
+      <details class="titem">
         <summary>11. What can lead to disqualification?</summary>
         <div class="ans">
           Rico.bet strictly enforces fair play. You may be disqualified or have your rewards forfeited if you:
@@ -525,30 +544,12 @@ function renderHome(){
 function renderCommunity(){
   const referUrl=location.href;
   $('#view').innerHTML=`
-    <div class="card comm">
+    <div class="card">
       <h2>Share & Follow</h2>
       <p>Invite friends and follow us.</p>
-      <div class="sharebar">
-        <a class="sharebtn" target="_blank" rel="noopener" href="https://t.me/share/url?url=${encodeURIComponent(referUrl)}">Share on Telegram</a>
-        <a class="sharebtn" target="_blank" rel="noopener" href="https://api.whatsapp.com/send?text=${encodeURIComponent('Join me: '+referUrl)}">Share on WhatsApp</a>
-      </div>
-    </div>
-    <div class="comm">
-      <div class="list">
-        ${[
-          ['Facebook','https://facebook.com/','https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/facebook.svg'],
-          ['Instagram','https://instagram.com/','https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/instagram.svg'],
-          ['Telegram','https://t.me/','https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/telegram.svg'],
-          ['X','https://x.com/','https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/x.svg'],
-          ['YouTube','https://youtube.com/','https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/youtube.svg'],
-        ].map(([label,href,icon])=>`
-          <div class="item">
-            <div class="left">
-              <div class="bubble"><img alt="" width="26" height="26" src="${icon}"/></div>
-              <div style="font-weight:900">${label}</div>
-            </div>
-            <a class="sharebtn" style="background:#fff;color:#2a1a00" href="${href}" target="_blank" rel="noopener">Open</a>
-          </div>`).join('')}
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px">
+        <a class="cta secondary" target="_blank" rel="noopener" href="https://t.me/share/url?url=${encodeURIComponent(referUrl)}">Share on Telegram</a>
+        <a class="cta secondary" target="_blank" rel="noopener" href="https://api.whatsapp.com/send?text=${encodeURIComponent('Join me: '+referUrl)}">Share on WhatsApp</a>
       </div>
     </div>`;
 }
