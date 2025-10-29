@@ -74,11 +74,9 @@
   .pulseHighlight{animation:pulseHL 1.8s ease-in-out 1}
   @keyframes pulseHL{0%{filter:drop-shadow(0 0 0 rgba(255,216,106,.0))}50%{filter:drop-shadow(0 0 22px rgba(255,216,106,.9))}100%{filter:drop-shadow(0 0 0 rgba(255,216,106,.0))}}
 
-  /* Header row — Rank | Player | Points */
+  /* Rows */
   .hdrRow{display:grid;grid-template-columns:60px 1fr 110px;gap:8px;align-items:center;margin-top:10px;background:linear-gradient(180deg,#2f325f,#26294e);color:#e9ecff;border:1px solid #ffffff22;border-radius:14px;padding:10px 12px;font-weight:900}
   .hdrRow div:last-child{text-align:right}
-
-  /* List rows */
   .list{margin-top:8px;display:grid;gap:8px;max-height:488px;overflow:auto;scrollbar-width:thin}
   .row{display:grid;grid-template-columns:60px 1fr 110px;gap:8px;align-items:center;background:linear-gradient(180deg,#a975ff,#7a5cff);border:1px solid rgba(255,255,255,.10);border-radius:14px;padding:10px 12px;box-shadow:0 0 22px rgba(169,117,255,0.45);position:relative;overflow:hidden}
   .row::after{content:""; position:absolute; inset:0; background:linear-gradient(120deg, transparent 30%, rgba(255,255,255,.06) 50%, transparent 70%);transform:translateX(-120%); animation:shimmer 4.5s ease-in-out infinite}
@@ -98,7 +96,7 @@
   .go:active{transform:translateY(1px);box-shadow:0 2px 0 rgba(0,0,0,.12)}
   .result{margin-top:8px;background:rgba(255,255,255,.95);border:1px solid rgba(0,0,0,.08);color:#2b2350;border-radius:12px;padding:10px 12px;font-weight:800;display:none}
 
-  /* CTAs (inside content so they’re fully scrollable/visible) */
+  /* CTAs (inside content) */
   .ctaRow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
   .cta{appearance:none;border:0;border-radius:14px;padding:14px 12px;font-weight:1000;cursor:pointer;text-align:center}
   .cta.primary{background:linear-gradient(180deg,#6f4bff,#9f7bff);color:#fff;box-shadow:0 10px 24px rgba(120,115,245,.45)}
@@ -128,7 +126,7 @@
   .modal .frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
   .modal .close{appearance:none;border:0;border-radius:10px;padding:8px 10px;background:#ffd86a;color:#2a1a00;font-weight:1000;cursor:pointer}
 
-  /* T&C – “previous” pill accordion style */
+  /* T&C – pill accordion style */
   .tnc h2{margin:0 0 10px 0}
   details.titem{background:linear-gradient(180deg,#15163a,#101233);border:1px solid var(--edge);border-radius:16px;padding:8px 10px;margin:10px 0}
   details.titem[open]{box-shadow:0 10px 24px rgba(0,0,0,.25)}
@@ -137,6 +135,15 @@
   details.titem summary::-webkit-details-marker{display:none}
   .ans{color:#dfe6ff;margin:10px 6px 4px 6px}
   .ans ul{margin:6px 0 0 18px}
+
+  /* Community styles */
+  .comm .sharebar{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+  .comm .sharebtn{appearance:none;border:0;border-radius:12px;padding:10px 14px;font-weight:900;cursor:pointer;background:#ffd86a;color:#2a1a00;box-shadow:0 4px 0 rgba(0,0,0,.12);text-decoration:none}
+  .comm .list{display:grid;gap:14px;margin-top:12px}
+  .comm .item{background:linear-gradient(180deg,#5a34dd,#4a2bc7);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:16px;color:#fff;display:flex;align-items:center;justify-content:space-between}
+  .comm .c-left{display:flex;gap:12px;align-items:center}
+  .comm .bubble{width:44px;height:44px;border-radius:12px;background:#fff;display:grid;place-items:center}
+  .comm .open{background:#fff;color:#2a1a00;border-radius:12px;padding:10px 14px;font-weight:900;text-decoration:none}
 </style>
 </head>
 <body>
@@ -209,7 +216,7 @@ function maskMid3(name){
   return s.slice(0,start)+'***'+s.slice(end);
 }
 
-/* Avatars */
+/* Avatars (20) */
 const AVS=[
   "https://ricobr.ft-crm.com/media-api/serve/8f954107-4d24-4d5c-b2fe-934b14e56215_1010.png",
   "https://ricobr.ft-crm.com/media-api/serve/5368d6f5-3904-42d6-9ef9-314cd544ad95_11.png",
@@ -332,7 +339,6 @@ async function renderRanks(){
     </div>
     <div id="mine" class="result"></div>
 
-    <!-- CTAs inside the main content (scrollable) -->
     <div class="ctaRow">
       <button id="ctaHow" class="cta primary" type="button">Watch how to refer</button>
       <a class="cta secondary" href="https://www.rico.bet/myreferral" target="_blank" rel="noopener">Refer Friends</a>
@@ -437,7 +443,7 @@ async function renderRanks(){
   $('#modal').addEventListener('click', (e)=>{ if(e.target===e.currentTarget){ $('#closeModal').click(); } });
 }
 
-/* T&C tab – previous look */
+/* T&C tab */
 function renderHome(){
   $('#view').innerHTML=`
     <div class="card tnc">
@@ -543,13 +549,62 @@ function renderHome(){
 /* Community */
 function renderCommunity(){
   const referUrl=location.href;
+  const icons = {
+    facebook:"https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/facebook.svg",
+    instagram:"https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/instagram.svg",
+    telegram:"https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/telegram.svg",
+    x:"https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/x.svg",
+    youtube:"https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/youtube.svg"
+  };
   $('#view').innerHTML=`
-    <div class="card">
+    <div class="card comm">
       <h2>Share & Follow</h2>
       <p>Invite friends and follow us.</p>
-      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px">
-        <a class="cta secondary" target="_blank" rel="noopener" href="https://t.me/share/url?url=${encodeURIComponent(referUrl)}">Share on Telegram</a>
-        <a class="cta secondary" target="_blank" rel="noopener" href="https://api.whatsapp.com/send?text=${encodeURIComponent('Join me: '+referUrl)}">Share on WhatsApp</a>
+      <div class="sharebar">
+        <a class="sharebtn" target="_blank" rel="noopener" href="https://t.me/share/url?url=${encodeURIComponent(referUrl)}">Share on Telegram</a>
+        <a class="sharebtn" target="_blank" rel="noopener" href="https://api.whatsapp.com/send?text=${encodeURIComponent('Join me: '+referUrl)}">Share on WhatsApp</a>
+      </div>
+
+      <div class="list">
+        <div class="item">
+          <div class="c-left">
+            <div class="bubble"><img alt="" width="26" height="26" src="${icons.facebook}"/></div>
+            <div style="font-weight:900">Facebook</div>
+          </div>
+          <a class="open" href="https://facebook.com/" target="_blank" rel="noopener">Subscribe</a>
+        </div>
+
+        <div class="item">
+          <div class="c-left">
+            <div class="bubble"><img alt="" width="26" height="26" src="${icons.instagram}"/></div>
+            <div style="font-weight:900">Instagram</div>
+          </div>
+          <a class="open" href="https://instagram.com/" target="_blank" rel="noopener">Subscribe</a>
+        </div>
+
+        <div class="item">
+          <div class="c-left">
+            <div class="bubble"><img alt="" width="26" height="26" src="${icons.telegram}"/></div>
+            <div style="font-weight:900">Telegram</div>
+          </div>
+          <a class="open" href="https://t.me/" target="_blank" rel="noopener">Subscribe</a>
+        </div>
+
+        <div class="item">
+          <div class="c-left">
+            <div class="bubble"><img alt="" width="26" height="26" src="${icons.x}"/></div>
+            <div style="font-weight:900">X (Twitter)</div>
+          </div>
+          <a class="open" href="https://x.com/" target="_blank" rel="noopener">Subscribe</a>
+        </div>
+
+        <div class="item">
+          <div class="c-left">
+            <div class="bubble"><img alt="" width="26" height="26" src="${icons.youtube}"/></div>
+            <div style="font-weight:900">YouTube</div>
+          </div>
+          <a class="open" href="https://youtube.com/" target="_blank" rel="noopener">Subscribe</a>
+        </div>
       </div>
     </div>`;
 }
