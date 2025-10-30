@@ -132,18 +132,20 @@
   .itab.active{color:#fff}
   .ico{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.8}
 
-  /* Sound toggle */
-  .soundBtn{position:fixed;right:12px;bottom:calc(120px + env(safe-area-inset-bottom,0));background:#fff;color:#111;border:1px solid rgba(0,0,0,.08);
-    border-radius:14px;padding:10px 12px;display:none;gap:8px;align-items:center;font-weight:1000;z-index:1100;box-shadow:0 10px 24px rgba(0,0,0,.25)}
-  .soundBtn.show{display:inline-flex} .soundBtn.active{background:linear-gradient(90deg,#ffd86a,#ffc24d)}
-  .soundBtn .ic{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8}
-
-  /* Modal */
+  /* Modal – vertical, medium size */
   .modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:2000;padding:18px}
   .modal.show{display:flex}
-  .modal .sheet{width:100%;max-width:720px;background:#0f1030;border:1px solid var(--edge);border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.6);overflow:hidden}
+  .modal .sheet{
+    width:100%;
+    max-width:480px;              /* medium width */
+    background:#0f1030;
+    border:1px solid var(--edge);
+    border-radius:16px;
+    box-shadow:0 20px 60px rgba(0,0,0,.6);
+    overflow:hidden
+  }
   .modal header{position:unset;border:0;background:#12143a;padding:10px 12px;display:flex;justify-content:space-between;align-items:center}
-  .modal .frame{position:relative;padding-top:56.25%;background:#000}
+  .modal .frame{position:relative;padding-top:125%;background:#000} /* ~4:5 vertical */
   .modal .frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
   .modal .close{appearance:none;border:0;border-radius:10px;padding:8px 10px;background:#ffd86a;color:#2a1a00;font-weight:1000;cursor:pointer}
 
@@ -159,13 +161,14 @@
   .comm .sharebar{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
   .comm .sharebtn{appearance:none;border:0;border-radius:12px;padding:10px 14px;font-weight:900;cursor:pointer;background:#ffd86a;color:#2a1a00;box-shadow:0 4px 0 rgba(0,0,0,.12);text-decoration:none}
   .comm .list{display:grid;gap:14px;margin-top:12px}
-  .comm .item{background: linear-gradient(180deg, #ff6ec4, #7873f5) ； border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:16px;color:#fff;display:flex;align-items:center;justify-content:space-between}
+  .comm .item{background: linear-gradient(180deg, #ff6ec4, #7873f5); border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:16px;color:#fff;display:flex;align-items:center;justify-content:space-between}
   .comm .c-left{display:flex;gap:12px;align-items:center}
   .comm .bubble{width:44px;height:44px;border-radius:12px;background:#fff;display:grid;place-items:center}
   .comm .open{background:#fff;color:#2a1a00;border-radius:12px;padding:10px 14px;font-weight:900;text-decoration:none}
 </style>
 </head>
 
+<body>
   <div class="app">
     <header>
       <div class="title">Referral Rush</div>
@@ -181,12 +184,6 @@
     <button class="itab" data-tab="home"><svg class="ico" viewBox="0 0 24 24"><path d="M7 3h7l4 4v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zM14 3v5h5"/></svg><span>T&C</span></button>
     <button class="itab" data-tab="community"><svg class="ico" viewBox="0 0 24 24"><path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4zm0 2c-4 0-8 2-8 5v1h16v-1c0-3-4-5-8-5z"/></svg><span>Community</span></button>
   </nav>
-
-  <!-- Theme music -->
-  <audio id="bgm" src="theme.mp3" preload="auto" loop playsinline autoplay></audio>
-  <button id="soundBtn" class="soundBtn" aria-label="Toggle sound" title="Sound">
-    <svg viewBox="0 0 24 24" class="ic"><path d="M4 10h4l5-4v12l-5-4H4zM17 8a5 5 0 010 8"/></svg><span>Sound</span>
-  </button>
 
   <!-- Modal -->
   <div id="modal" class="modal" role="dialog" aria-modal="true" aria-label="How to refer">
@@ -207,6 +204,8 @@ const SHEET_ID   = "1rJg4RYn0AkvsqhVGk5CwhZrYNz0gFC6_7ZPiDXigU-o";
 const GID_WEEKLY = "0";
 const FETCH_TIMEOUT_MS = 12000;
 const RETRIES = 2;
+  const REFER_URL = "https://www.rico.bet/myreferral";
+
 
 /* helpers */
 const $=(s,el)=> (el||document).querySelector(s);
@@ -258,21 +257,6 @@ let TAB='ranks';
 $all('.iconnav .itab').forEach(btn=>{
   btn.addEventListener('click',()=>{ TAB=btn.dataset.tab; $all('.itab').forEach(b=>b.classList.toggle('active',b===btn)); render();});
 });
-
-/* Music */
-(function(){
-  const audio=$('#bgm'), btn=$('#soundBtn'); if(!audio||!btn) return;
-  async function tryPlay(){ try{ audio.muted=false; await audio.play(); btn.classList.remove('show'); }catch{ btn.classList.add('show'); } }
-  function unlock(){ tryPlay(); }
-  document.addEventListener('DOMContentLoaded',tryPlay,{once:true});
-  setTimeout(tryPlay, 1200);
-  ['click','touchstart','keydown','scroll'].forEach(evt=>document.addEventListener(evt,unlock,{once:true,passive:true}));
-  document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible' && audio.paused) tryPlay(); });
-  btn.addEventListener('click',async()=>{ try{
-    if(audio.paused){audio.muted=false;await audio.play()} else {audio.muted=!audio.muted;if(audio.muted)await audio.pause();else await audio.play()}
-    btn.classList.toggle('active', !audio.paused && !audio.muted);
-  }catch{}});
-})();
 
 /* GViz with timeout & retries – status shows only on error */
 async function gviz(gid){
@@ -367,8 +351,8 @@ async function renderRanks(){
     <div id="mine" class="result"></div>
 
     <div class="ctaRow">
-      <button id="ctaHow" class="cta primary" type="button">Watch how to refer</button>
-      <a class="cta secondary" href="https://www.rico.bet/myreferral" target="_blank" rel="noopener">Refer Friends</a>
+      <button id="ctaHow" class="cta primary" type="button">HOW TO REFER</button>
+      <button id="ctaRefer" class="cta secondary" type="button">REFER LINK</button>
     </div>
   `;
 
@@ -489,7 +473,7 @@ async function renderRanks(){
 
   await draw(true);
 
-  // CTA modal
+  // CTA modal open/close
   $('#ctaHow').addEventListener('click', ()=>{
     const yt=$('#yt'), modal=$('#modal');
     yt.src = "https://www.youtube.com/embed/A6DljwDp12A?autoplay=1&rel=0";
@@ -500,6 +484,11 @@ async function renderRanks(){
     yt.src="about:blank"; modal.classList.remove('show');
   });
   $('#modal').addEventListener('click', (e)=>{ if(e.target===e.currentTarget){ $('#closeModal').click(); } });
+
+  // CTA #2 (no hyperlink) – keep as a plain button
+  $('#ctaRefer').addEventListener('click', ()=> {
+  window.open(REFER_URL, '_blank', 'noopener');
+  });
 }
 
 /* T&C */
@@ -507,7 +496,6 @@ function renderHome(){
   $('#view').innerHTML=`
     <div class="card tnc">
       <h2>Terms & Conditions</h2>
-      <!-- (content unchanged) -->
       <details class="titem" open>
         <summary>1. What is Referral Rush?</summary>
         <div class="ans">
