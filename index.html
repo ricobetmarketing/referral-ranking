@@ -204,8 +204,7 @@ const SHEET_ID   = "1rJg4RYn0AkvsqhVGk5CwhZrYNz0gFC6_7ZPiDXigU-o";
 const GID_WEEKLY = "0";
 const FETCH_TIMEOUT_MS = 12000;
 const RETRIES = 2;
-  const REFER_URL = "https://www.rico.bet/myreferral";
-
+const REFER_URL = "https://www.rico.bet/myreferral";
 
 /* helpers */
 const $=(s,el)=> (el||document).querySelector(s);
@@ -236,7 +235,7 @@ const AVS=[
   "https://ricobr.ft-crm.com/media-api/serve/40e0a068-21b6-4225-b934-fb5433cba762_5.jpg",
   "https://ricobr.ft-crm.com/media-api/serve/3cfd0b1c-f878-474e-9dfa-0ce3e5c3ebf8_6.png",
   "https://ricobr.ft-crm.com/media-api/serve/cd272274-5bf0-4e2d-b992-3fe2bd927e8d_7.jpg",
-  "https://ricobr.ft-crm.com/media-api/serve/cda3b212-ac57-4a69-9f5b-eeebbd0dde4c_8.jpg,
+  "https://ricobr.ft-crm.com/media-api/serve/cda3b212-ac57-4a69-9f5b-eeebbd0dde4c_8.jpg",
   "https://ricobr.ft-crm.com/media-api/serve/af48fdd4-d20e-4505-83f0-a3e2653ed2a3_9.png",
   "https://ricobr.ft-crm.com/media-api/serve/70e809ba-ff85-48ab-99fb-f11c5ff3cfa2_10.jpg",
   "https://ricobr.ft-crm.com/media-api/serve/c3e2c493-e797-4bdc-bd15-ee4e80de4a2a_11.png",
@@ -485,9 +484,9 @@ async function renderRanks(){
   });
   $('#modal').addEventListener('click', (e)=>{ if(e.target===e.currentTarget){ $('#closeModal').click(); } });
 
-  // CTA #2 (no hyperlink) – keep as a plain button
-  $('#ctaRefer').addEventListener('click', ()=> {
-  window.open(REFER_URL, '_blank', 'noopener');
+  // CTA #2 (opens URL in new tab without showing a link)
+  $('#ctaRefer').addEventListener('click', ()=>{
+    window.open(REFER_URL, '_blank', 'noopener');
   });
 }
 
