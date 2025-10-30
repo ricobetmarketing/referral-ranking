@@ -16,8 +16,8 @@
     margin:0;height:100%;color:var(--ink);
     font:15px/1.5 Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif;
     background:
-  radial-gradient(1100px 680px at 50% -10%, rgba(43,31,85,.35) 0%, rgba(43,31,85,0) 60%),
-  linear-gradient(180deg, rgba(11,12,26,.45), rgba(7,8,19,.55)),
+      radial-gradient(1100px 680px at 50% -10%, rgba(43,31,85,.35) 0%, rgba(43,31,85,0) 60%),
+      linear-gradient(180deg, rgba(11,12,26,.45), rgba(7,8,19,.55)),
       url("https://ricobr.ft-crm.com/media-api/serve/5b90c59f-1271-4f35-b640-80c04a414aec_bg.png") center/cover no-repeat;
     background-attachment: fixed;
   }
@@ -48,12 +48,9 @@
     box-shadow:0 18px 50px #00000040, inset 0 0 0 1px #ffffff05
   }
 
-  /* Segmented control + filters */
+  /* Heading + filter */
   .lbHead{display:flex;align-items:center;justify-content:space-between;gap:8px}
   .lbHead h2{font-size:20px;margin:0}
-  .seg{display:flex;gap:6px;background:#0f1030;border:1px solid var(--edge);padding:5px;border-radius:12px}
-  .seg button{appearance:none;border:0;background:transparent;color:#cfd4ff;font-weight:900;padding:8px 12px;border-radius:10px;cursor:pointer}
-  .seg button.active{color:#fff;background:linear-gradient(180deg,var(--vio1),var(--vio2));box-shadow:0 10px 26px rgba(153,120,255,.45), inset 0 -2px 10px rgba(0,0,0,.25)}
   .filters{display:flex;gap:8px;margin-top:8px}
   .pick{appearance:none;background:#0f1030;color:#eaf0ff;border:1px solid var(--edge);
     border-radius:12px;padding:10px 12px;font-weight:800;width:100%}
@@ -207,7 +204,6 @@
 <script>
 /* ===== CONFIG ===== */
 const SHEET_ID   = "1rJg4RYn0AkvsqhVGk5CwhZrYNz0gFC6_7ZPiDXigU-o";
-const GID_DAILY  = "1891032775";
 const GID_WEEKLY = "0";
 const FETCH_TIMEOUT_MS = 12000;
 const RETRIES = 2;
@@ -218,19 +214,6 @@ const $all=(s,el)=> Array.from((el||document).querySelectorAll(s));
 const unique=a=>Array.from(new Set(a));
 const fmtFull=n=>Number(n||0).toLocaleString();
 const faceBg=url=>`url("${url}")`;
-
-/* Dates */
-const toISO = (s) => {
-  if(!s) return "";
-  if(/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
-  const m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
-  if(m){ const [_,d,mo,y]=m; return `${y}-${String(mo).padStart(2,'0')}-${String(d).padStart(2,'0')}`; }
-  return s;
-};
-const toLabel = (iso) => {
-  const m = iso.match(/^(\d{4})-(\d{2})-(\d{2})$/);
-  if(!m) return iso||""; const [_,y,mo,d]=m; return `${d}/${mo}/${y}`;
-};
 
 /* mask middle 4 chars */
 function maskMid4(s){
@@ -314,19 +297,18 @@ function normalize(gvizData){
   const rows   =gvizData.table.rows.filter(r=>r&&r.c).map(r=> r.c.map(c=> c?(c.f!=null?c.f:c.v):""));
   const L=headers.map(h=>String(h||'').toLowerCase());
   const find=(names)=>{for(const n of names){const j=L.findIndex(h=>h.includes(n));if(j>-1)return j}return -1};
-  const ri=find(["rank"]), ui=find(["username","user","player","name"]), pi=find(["points","score"]), wi=find(["week"]), di=find(["date","day"]);
+  const ri=find(["rank"]), ui=find(["username","user","player","name"]), pi=find(["points","score"]), wi=find(["week"]);
   if(ri<0||ui<0||pi<0) throw new Error('Missing Rank/Username/Points columns');
   return rows.map(r=>({
     rank:Number(String(r[ri]).replace(/[^\d.\-]/g,''))||0,
     username:String(r[ui]||"").trim(),
     points:Number(String(r[pi]).replace(/[^\d.\-]/g,''))||0,
-    week: wi>-1 ? String(r[wi]||"").trim() : "",
-    dateIso: di>-1 ? toISO(String(r[di]||"").trim()) : ""
+    week: wi>-1 ? String(r[wi]||"").trim() : ""
   })).filter(x=>x.username && x.rank>0);
 }
 
-/* Data & UI */
-let MODE='daily', DAILY=[], WEEKLY=[], DATES=[], WEEKS=[], CUR_DATE_ISO='', CUR_WEEK='', CURRENT_FULL=[];
+/* Data & UI (weekly only) */
+let WEEKLY=[], WEEKS=[], CUR_WEEK='', CURRENT_FULL=[];
 
 async function renderRanks(){
   $('#view').innerHTML=`
@@ -337,22 +319,17 @@ async function renderRanks(){
         <a class="btn ghost" id="btnTest" target="_blank" rel="noopener">Test Sheet Link</a>
       </div>
       <div style="margin-top:6px;font-size:12px;color:#cdd7ff">
-        Checklist: Sheet is <b>Anyone with the link — Viewer</b>; correct <b>Sheet ID</b> & <b>GID</b>; columns include <b>Rank</b>, <b>Username</b>, <b>Points</b>.
+        Checklist: Sheet is <b>Anyone with the link — Viewer</b>; correct <b>Sheet ID</b> & <b>GID</b>; columns include <b>Rank</b>, <b>Username</b>, <b>Points</b>, <b>Week</b>.
       </div>
     </div>
 
     <div class="card">
       <div class="lbHead">
         <h2>Leaderboard</h2>
-        <div class="seg">
-          <button id="bDaily" class="active">Daily</button>
-          <button id="bWeekly">Weekly</button>
-        </div>
       </div>
       <div class="scope" id="scope"></div>
       <div class="filters">
-        <input id="pickDate" class="pick" type="date"/>
-        <select id="pickWeek" class="pick" style="display:none"></select>
+        <select id="pickWeek" class="pick"></select>
       </div>
     </div>
 
@@ -395,57 +372,43 @@ async function renderRanks(){
     </div>
   `;
 
-  const statusCard = $('#statusCard'); // hidden by default
-  statusCard.classList.remove('show'); // keep hidden unless error
+  const statusCard = $('#statusCard');
+  statusCard.classList.remove('show');
 
   const statusMsg  = $('#statusMsg');
   const btnRetry   = $('#btnRetry');
   const btnTest    = $('#btnTest');
   const testURL    = (gid)=>`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${encodeURIComponent(gid)}`;
-  btnTest.href = testURL(GID_DAILY);
+  btnTest.href = testURL(GID_WEEKLY);
   btnRetry.onclick = ()=> draw(true);
 
-  const pDate=$('#pickDate'), pWeek=$('#pickWeek');
-  const bDaily=$('#bDaily'), bWeekly=$('#bWeekly');
-  const setMode=m=>{ MODE=m;
-    bDaily.classList.toggle('active',m==='daily'); bWeekly.classList.toggle('active',m==='weekly');
-    pDate.style.display = m==='daily' ? '' : 'none'; pWeek.style.display = m==='weekly' ? '' : 'none';
-    draw(true);
-  };
-  bDaily.onclick=()=>setMode('daily'); bWeekly.onclick=()=>setMode('weekly');
-  pDate.onchange=()=>{CUR_DATE_ISO=pDate.value; draw(true)};
-  pWeek.onchange=()=>{CUR_WEEK=pWeek.value; draw(true)};
+  const pWeek=$('#pickWeek');
+  pWeek.onchange=()=>{CUR_WEEK=pWeek.value; draw(false)};
 
   async function loadData(){
     try{
-      if(!DAILY.length){
-        const dj = await gviz(GID_DAILY); DAILY = normalize(dj);
-      }
       if(!WEEKLY.length){
         const wj = await gviz(GID_WEEKLY); WEEKLY = normalize(wj);
       }
-      DATES = unique(DAILY.map(x=>x.dateIso).filter(Boolean)).sort();
       WEEKS = unique(WEEKLY.map(x=>x.week).filter(Boolean)).sort((a,b)=>{
         const na=(a.match(/\d+/)||[])[0], nb=(b.match(/\d+/)||[])[0];
         return (na&&nb)? na-nb : a.localeCompare(b);
       });
-      CUR_DATE_ISO = DATES[DATES.length-1]||"";
       CUR_WEEK = WEEKS[WEEKS.length-1]||"";
-      if(CUR_DATE_ISO){ pDate.value=CUR_DATE_ISO; pDate.min=DATES[0]||""; pDate.max=CUR_DATE_ISO; }
-      pWeek.innerHTML=WEEKS.map(w=>`<option>${w}</option>`).join(''); pWeek.value=CUR_WEEK;
+      pWeek.innerHTML=WEEKS.map(w=>`<option>${w}</option>`).join('');
+      pWeek.value=CUR_WEEK;
     }catch(e){
       console.warn(e);
       statusMsg.textContent = `Failed to load Google Sheet: ${String(e.message||e)}`;
-      statusCard.classList.add('show'); // show only on error
+      statusCard.classList.add('show');
       throw e;
     }
   }
 
   function currentRows(){
-    if(MODE==='daily'){ return DAILY.filter(x=> (x.dateIso||'')===CUR_DATE_ISO).sort((a,b)=>a.rank-b.rank); }
     return WEEKLY.filter(x=> (x.week||'')===CUR_WEEK).sort((a,b)=>a.rank-b.rank);
   }
-  function scopeText(){ return MODE==='daily' ? `Showing: <b>${toLabel(CUR_DATE_ISO)||'—'}</b>` : `Showing: <b>${CUR_WEEK||'—'}</b>`; }
+  function scopeText(){ return `Showing: <b>${CUR_WEEK||'—'}</b>`; }
 
   function setPod(n,row){
     const av=$(`#p${n}a`), nm=$(`#p${n}n`), sc=$(`#p${n}s`);
@@ -454,7 +417,7 @@ async function renderRanks(){
   }
 
   async function draw(forceLoad){
-    if(forceLoad && (!DAILY.length || !WEEKLY.length)) await loadData();
+    if(forceLoad && !WEEKLY.length) await loadData();
 
     $('#scope').innerHTML = scopeText();
     const rows = currentRows(); CURRENT_FULL = rows.slice();
@@ -485,17 +448,15 @@ async function renderRanks(){
 
   function doSearch(){
     const q = ($('#q').value||'').trim().toLowerCase();
-    const box = $('#mine'); box.style.display='none'; // we'll only use this for errors now
+    const box = $('#mine'); box.style.display='none';
 
-    // remove previous synthetic row if exists
     const oldMineRow = $('#row-mine'); if(oldMineRow) oldMineRow.remove();
 
     if(!q){ box.style.display='block'; box.textContent='Enter a username'; return; }
 
     const hit = CURRENT_FULL.find(x=>x.username.toLowerCase()===q);
-    if(!hit){ box.style.display='block'; box.textContent='No match for the selected period.'; return; }
+    if(!hit){ box.style.display='block'; box.textContent='No match for this week.'; return; }
 
-    // In Top 3 → highlight pod
     if(hit.rank<=3){
       const pod = $(`#pod${hit.rank}`); if(pod){
         pod.classList.remove('pulseHighlight'); void pod.offsetWidth; pod.classList.add('pulseHighlight');
@@ -504,7 +465,6 @@ async function renderRanks(){
       return;
     }
 
-    // In Top 20 → highlight row
     if(hit.rank<=20){
       const rowEl = $(`#row-${hit.rank}`); if(rowEl){
         rowEl.classList.remove('flash'); void rowEl.offsetWidth; rowEl.classList.add('flash');
@@ -513,7 +473,6 @@ async function renderRanks(){
       return;
     }
 
-    // Rank 21+ → append a synthetic row at the bottom
     const list=$('#lb-list');
     list.insertAdjacentHTML('beforeend',`
       <div class="row mine flash" id="row-mine">
@@ -548,7 +507,7 @@ function renderHome(){
   $('#view').innerHTML=`
     <div class="card tnc">
       <h2>Terms & Conditions</h2>
-
+      <!-- (content unchanged) -->
       <details class="titem" open>
         <summary>1. What is Referral Rush?</summary>
         <div class="ans">
@@ -558,7 +517,6 @@ function renderHome(){
           <b>Extra Bonus:</b> On top of the leaderboard rewards, you’ll still receive the <b>100% Referral Bonus</b> from your friends’ first deposit, doubling your earning rewards!
         </div>
       </details>
-
       <details class="titem">
         <summary>2. How do I participate?</summary>
         <div class="ans">
@@ -570,7 +528,6 @@ function renderHome(){
           </ul>
         </div>
       </details>
-
       <details class="titem">
         <summary>3. How are points calculated?</summary>
         <div class="ans">
@@ -584,12 +541,10 @@ function renderHome(){
           Points are cumulative across all your active referrals during the event week.
         </div>
       </details>
-
       <details class="titem">
         <summary>4. How is the leaderboard updated?</summary>
         <div class="ans">The Referral Rush Leaderboard is updated every <b>12 hours daily</b>, showing your latest position and points based on your active referrals’ turnover.</div>
       </details>
-
       <details class="titem">
         <summary>5. What prizes can I win?</summary>
         <div class="ans">
@@ -603,32 +558,26 @@ function renderHome(){
           </ul>
         </div>
       </details>
-
       <details class="titem">
         <summary>6. When will I receive my prize?</summary>
         <div class="ans">Prizes are credited every <b>Monday at 12:00 PM (GMT-3)</b> to your Rico.bet game wallet, after the weekly reset (Mon–Sun).</div>
       </details>
-
       <details class="titem">
         <summary>7. Are there any wagering requirements?</summary>
         <div class="ans">Yes, all prize credits come with a <b>5× wagering requirement</b> before any withdrawal can be made, and you can use the prize credit to play any games on Rico.bet.</div>
       </details>
-
       <details class="titem">
         <summary>8. Can I win every week?</summary>
         <div class="ans">Absolutely! Each week is an independent competition. You can appear on the leaderboard and win prizes every week during the event.</div>
       </details>
-
       <details class="titem">
         <summary>9. What happens if my referral stops playing?</summary>
         <div class="ans">Only active referrals generating turnover within the week will count toward your points for that week.</div>
       </details>
-
       <details class="titem">
         <summary>10. How do I check my ranking?</summary>
         <div class="ans">You can view your live leaderboard position and weekly points on the Referral Rush event section.</div>
       </details>
-
       <details class="titem">
         <summary>11. What can lead to disqualification?</summary>
         <div class="ans">
@@ -688,5 +637,5 @@ function renderCommunity(){
 function render(){ if(TAB==='ranks') renderRanks(); else if(TAB==='home') renderHome(); else renderCommunity(); }
 render();
 </script>
-</>
+</body>
 </html>
