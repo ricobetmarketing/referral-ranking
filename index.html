@@ -200,11 +200,11 @@
 
 <script>
 /* ===== CONFIG ===== */
-const SHEET_ID   = "1rJg4RYn0AkvsqhVGk5CwhZrYNz0gFC6_7ZPiDXigU-o";
+const SHEET_ID   = "1aPKPlSRE6M8R9YsyJlTnBmyXI6FdJKHFqTISKsCnKy4";
 const GID_WEEKLY = "0";
 const FETCH_TIMEOUT_MS = 12000;
 const RETRIES = 2;
-const REFER_URL = "https://www.rico.bet/myreferral";
+const REFER_URL = "https://www.ricobet.com.mx/myreferral";
 
 /* helpers */
 const $=(s,el)=> (el||document).querySelector(s);
@@ -475,7 +475,7 @@ async function renderRanks(){
   // CTA modal open/close
   $('#ctaHow').addEventListener('click', ()=>{
     const yt=$('#yt'), modal=$('#modal');
-    yt.src = "https://www.youtube.com/embed/A6DljwDp12A?autoplay=1&rel=0";
+    yt.src = "https://www.youtube.com/embed/j9E01oVOVq8?autoplay=1&rel=0";
     modal.classList.add('show');
   });
   $('#closeModal').addEventListener('click', ()=>{
@@ -603,11 +603,11 @@ function renderCommunity(){
 
       <div class="list">
         ${[
-          ['Facebook','https://facebook.com/',icons.facebook],
-          ['Instagram','https://instagram.com/',icons.instagram],
-          ['Telegram','https://t.me/',icons.telegram],
-          ['X (Twitter)','https://x.com/',icons.x],
-          ['YouTube','https://youtube.com/',icons.youtube],
+          ['Facebook','https://www.facebook.com/ricobetmexico',icons.facebook],
+          ['Instagram','https://www.instagram.com/ricobetmexico/',icons.instagram],
+          ['Telegram','https://t.me/ricobetmexico',icons.telegram],
+          ['X (Twitter)','https://x.com/ricobetmexico',icons.x],
+          ['YouTube','https://www.youtube.com/@ricobetbrasil/',icons.youtube],
         ].map(([label,href,icon])=>`
           <div class="item">
             <div class="c-left">
