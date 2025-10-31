@@ -1,0 +1,633 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<meta name="color-scheme" content="dark"/>
+<title>Referral Rush — México</title>
+<style>
+  :root{
+    --bg:#0b0c1a; --ink:#eaf2ff; --dim:#b8c6ff;
+    --vio1:#a975ff; --vio2:#7a5cff; --acc:#ffd86a; --teal:#37e0d7;
+    --card1:#161730; --card2:#0e1030; --edge:#ffffff18;
+  }
+  *{box-sizing:border-box}
+  html,body{
+    margin:0;height:100%;color:var(--ink);
+    font:15px/1.5 Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif;
+    background:
+      radial-gradient(1100px 680px at 50% -10%, rgba(43,31,85,.35) 0%, rgba(43,31,85,0) 60%),
+      linear-gradient(180deg, rgba(11,12,26,.45), rgba(7,8,19,.55)),
+      url("https://ricobr.ft-crm.com/media-api/serve/5b90c59f-1271-4f35-b640-80c04a414aec_bg.png") center/cover no-repeat;
+    background-attachment: fixed;
+  }
+  .app{max-width:520px;margin:0 auto;min-height:100dvh;display:grid;grid-template-rows:auto 1fr}
+
+  /* Header */
+  header{position:sticky;top:0;z-index:20;padding:16px 14px 14px;
+    background:linear-gradient(180deg,#15163a,#0d0e23);border-bottom:1px solid var(--edge)}
+  .title{font-weight:1000;font-size:32px;letter-spacing:.4px;line-height:1.05;
+    background:linear-gradient(90deg,#ffc86a,#ff6ec4,#7873f5,#71e1ff,#ffc86a);
+    background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;
+    text-shadow:0 0 22px rgba(120,115,245,.35);animation:titleFlow 6.5s linear infinite,titleGlow 3.2s ease-in-out infinite}
+  .prize{margin-top:6px;font-size:15px;font-weight:900;color:#ffe190}
+  .slogan{margin-top:2px;font-size:12px;color:#dfe6ff;font-weight:800}
+  @keyframes titleFlow{0%{background-position:0% 50%}100%{background-position:100% 50%}}
+  @keyframes titleGlow{0%,100%{text-shadow:0 0 12px rgba(120,115,245,.30),0 0 28px rgba(255,110,196,.18)}
+                       50%{text-shadow:0 0 20px rgba(120,115,245,.55),0 0 44px rgba(255,110,196,.30)}}
+
+  main{padding:14px 12px 200px;min-height:100vh;overflow-y:auto;scroll-behavior:smooth}
+
+  .card{
+    background:
+      radial-gradient(600px 140px at 10% -30%, rgba(55,224,215,.18), transparent 60%),
+      radial-gradient(600px 140px at 90% -30%, rgba(169,117,255,.18), transparent 60%),
+      linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.00)),
+      linear-gradient(180deg,var(--card1),var(--card2));
+    border:1px solid var(--edge);border-radius:18px;padding:14px;margin-bottom:12px;
+    box-shadow:0 18px 50px #00000040, inset 0 0 0 1px #ffffff05
+  }
+
+  /* Heading + filter */
+  .lbHead{display:flex;align-items:center;justify-content:space-between;gap:8px}
+  .lbHead h2{font-size:20px;margin:0}
+  .filters{display:flex;gap:8px;margin-top:8px}
+  .pick{appearance:none;background:#0f1030;color:#eaf0ff;border:1px solid var(--edge);
+    border-radius:12px;padding:10px 12px;font-weight:800;width:100%}
+  .scope{font-size:12px;color:var(--dim);margin-top:6px}
+
+  /* Status card (only shows on error) */
+  .status{display:none;margin-bottom:10px}
+  .status.show{display:block}
+  .status .msg{font-weight:800;color:#ffd2d2}
+  .status .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+  .btn{appearance:none;border:0;border-radius:12px;padding:10px 12px;font-weight:900;cursor:pointer}
+  .btn.primary{background:#ffd86a;color:#2a1a00;box-shadow:0 4px 0 rgba(0,0,0,.12)}
+  .btn.ghost{background:#0f1030;border:1px solid var(--edge);color:#eaf2ff}
+
+  /* --- TOP 3 --- */
+  .hero{position:relative;margin-top:6px;padding:22px 6px 12px;border-radius:18px}
+  .p3{display:grid;grid-template-columns:1fr 1.15fr 1fr;gap:8px;align-items:end;place-items:center}
+  .pod{position:relative;display:grid;place-items:center;padding-bottom:4px;isolation:isolate;overflow:visible}
+  .ring{width:92px;height:92px;border-radius:50%;background:radial-gradient(86px 86px at 50% 50%, rgba(169,117,255,.65), rgba(122,92,255,.35) 60%, rgba(122,92,255,0) 61%);display:grid;place-items:center;position:relative;z-index:1;animation:float 3.5s ease-in-out infinite}
+  .av{width:82px;height:82px;border-radius:50%;background:#ddd center/cover no-repeat;box-shadow:0 12px 26px rgba(0,0,0,.35);position:relative;z-index:2}
+  .badge{position:absolute;top:74px;left:50%;transform:translateX(-50%);background:linear-gradient(180deg,#6f4bff,#9f7bff);color:#fff;border-radius:999px;border:2px solid #fff;font-weight:1000;font-size:12px;padding:2px 8px;box-shadow:0 6px 14px rgba(0,0,0,.35);z-index:5}
+  .pod.s1 .badge{top:86px}
+  .crown{position:absolute;top:-22px;left:50%;transform:translateX(-50%);font-size:32px;filter:drop-shadow(0 6px 8px rgba(0,0,0,.35));z-index:9;animation:crownPulse 2.2s ease-in-out infinite}
+  .pod.s1 .ring{width:112px;height:112px}.pod.s1 .av{width:100px;height:100px}
+  .pod.s2{transform:translateY(6px)} .pod.s3{transform:translateY(10px)}
+  .name{margin-top:8px;font-weight:1000;white-space:nowrap}
+  .score{margin-top:4px;color:#e8deff;font-size:12px;display:flex;align-items:center;gap:6px;z-index:1}
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+  @keyframes crownPulse{0%,100%{transform:translateX(-50%) scale(1)}50%{transform:translateX(-50%) scale(1.08)}}
+  .pulseHighlight{animation:pulseHL 1.8s ease-in-out 1}
+  @keyframes pulseHL{0%{filter:drop-shadow(0 0 0 rgba(255,216,106,.0))}50%{filter:drop-shadow(0 0 22px rgba(255,216,106,.9))}100%{filter:drop-shadow(0 0 0 rgba(255,216,106,.0))}}
+
+  /* Rows */
+  .hdrRow{display:grid;grid-template-columns:60px 1fr 110px;gap:8px;align-items:center;margin-top:10px;background:linear-gradient(180deg,#2f325f,#26294e);color:#e9ecff;border:1px solid #ffffff22;border-radius:14px;padding:10px 12px;font-weight:900}
+  .hdrRow div:last-child{text-align:right}
+  .list{margin-top:8px;display:grid;gap:8px;max-height:488px;overflow:auto;scrollbar-width:thin}
+  .row{display:grid;grid-template-columns:60px 1fr 110px;gap:8px;align-items:center;background:linear-gradient(180deg,#a975ff,#7a5cff);border:1px solid rgba(255,255,255,.10);border-radius:14px;padding:10px 12px;box-shadow:0 0 22px rgba(169,117,255,0.45);position:relative;overflow:hidden}
+  .row::after{content:""; position:absolute; inset:0; background:linear-gradient(120deg, transparent 30%, rgba(255,255,255,.06) 50%, transparent 70%);transform:translateX(-120%); animation:shimmer 4.5s ease-in-out infinite}
+  @keyframes shimmer{0%{transform:translateX(-120%)}60%{transform:translateX(120%)}100%{transform:translateX(120%)}}
+  .rk{display:grid;place-items:center;width:42px;height:42px;border-radius:12px;font-weight:1000;background:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,.06));border:1px solid rgba(255,255,255,.28)}
+  .left{display:flex;align-items:center;gap:10px}
+  .face{width:38px;height:38px;border-radius:50%;background:#eee center/cover no-repeat;box-shadow:0 6px 14px rgba(0,0,0,.25)}
+  .uname{font-weight:1000}.val{font-weight:900;color:#fff;text-align:right}
+  .flash{animation:flashRow 1600ms ease-in-out 1}
+  @keyframes flashRow{0%{transform:scale(1); box-shadow:0 0 0 rgba(255,216,106,0)}
+    25%{transform:scale(1.02); box-shadow:0 0 28px rgba(255,216,106,.9)}100%{transform:scale(1); box-shadow:0 0 0 rgba(255,216,106,0)}}
+
+  /* synthetic "my row" (rank > 20) */
+  .row.mine{
+    background:linear-gradient(180deg,#ffd86a,#ffb84d);
+    color:#2a1a00;
+    box-shadow:0 0 26px rgba(255,216,106,.55);
+  }
+  .row.mine .rk{background:linear-gradient(180deg,rgba(0,0,0,.08),rgba(0,0,0,.02));border-color:rgba(0,0,0,.15)}
+  .row.mine .val{color:#2a1a00}
+
+  /* Search & result */
+  .search{margin-top:10px;display:grid;grid-template-columns:1fr auto;gap:8px}
+  .input{border-radius:12px;border:1px solid var(--edge);background:#0f1030;color:#eff3ff;padding:10px 12px}
+  .go{appearance:none;border:0;border-radius:12px;padding:10px 12px;background:#ffd86a;color:#3a2400;font-weight:1000;cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,.12)}
+  .go:active{transform:translateY(1px);box-shadow:0 2px 0 rgba(0,0,0,.12)}
+  .result{margin-top:8px;background:rgba(255,255,255,.95);border:1px solid rgba(0,0,0,.08);color:#2b2350;border-radius:12px;padding:10px 12px;font-weight:800;display:none}
+
+  /* CTAs */
+  .ctaRow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+  .cta{appearance:none;border:0;border-radius:14px;padding:14px 12px;font-weight:1000;cursor:pointer;text-align:center}
+  .cta.primary{background:linear-gradient(180deg,#6f4bff,#9f7ff);color:#fff;box-shadow:0 10px 24px rgba(120,115,245,.45)}
+  .cta.secondary{background:#ffd86a;color:#2a1a00;box-shadow:0 6px 16px rgba(0,0,0,.25)}
+
+  /* Bottom nav */
+  .iconnav{
+    position:fixed; left:50%; transform:translateX(-50%); bottom:0;
+    width:min(520px,100%); display:grid; grid-template-columns:repeat(3,1fr); gap:8px;
+    padding:10px 12px env(safe-area-inset-bottom); background:rgba(16,17,42,.98);
+    backdrop-filter:blur(6px); border-top:1px solid rgba(255,255,255,.1);
+    border-radius:16px 16px 0 0; z-index:1000;
+  }
+  .itab{appearance:none;border:0;background:transparent;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 6px;color:#cdd7ff;font-weight:800;border-radius:14px}
+  .itab.active{color:#fff}
+  .ico{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.8}
+
+  /* Modal – vertical, medium size */
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:2000;padding:18px}
+  .modal.show{display:flex}
+  .modal .sheet{
+    width:100%;
+    max-width:480px;
+    background:#0f1030;
+    border:1px solid var(--edge);
+    border-radius:16px;
+    box-shadow:0 20px 60px rgba(0,0,0,.6);
+    overflow:hidden
+  }
+  .modal header{position:unset;border:0;background:#12143a;padding:10px 12px;display:flex;justify-content:space-between;align-items:center}
+  .modal .frame{position:relative;padding-top:125%;background:#000} /* ~4:5 vertical */
+  .modal .frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+  .modal .close{appearance:none;border:0;border-radius:10px;padding:8px 10px;background:#ffd86a;color:#2a1a00;font-weight:1000;cursor:pointer}
+
+  /* T&C + Community */
+  .tnc h2{margin:0 0 10px 0}
+  details.titem{background:linear-gradient(180deg,#15163a,#101233);border:1px solid var(--edge);border-radius:16px;padding:8px 10px;margin:10px 0}
+  details.titem[open]{box-shadow:0 10px 24px rgba(0,0,0,.25)}
+  details.titem summary{list-style:none;cursor:pointer;font-weight:900;color:#eaf2ff;
+    padding:10px 12px;border:1px solid #ffffff18;border-radius:12px;background:#0f1030}
+  details.titem summary::-webkit-details-marker{display:none}
+  .ans{color:#dfe6ff;margin:10px 6px 4px 6px;white-space:pre-wrap}
+  .ans ul{margin:6px 0 0 18px}
+  .comm .sharebar{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+  .comm .sharebtn{appearance:none;border:0;border-radius:12px;padding:10px 14px;font-weight:900;cursor:pointer;background:#ffd86a;color:#2a1a00;box-shadow:0 4px 0 rgba(0,0,0,.12);text-decoration:none}
+  .comm .list{display:grid;gap:14px;margin-top:12px}
+  .comm .item{background: linear-gradient(180deg, #ff6ec4, #7873f5); border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:16px;color:#fff;display:flex;align-items:center;justify-content:space-between}
+  .comm .c-left{display:flex;gap:12px;align-items:center}
+  .comm .bubble{width:44px;height:44px;border-radius:12px;background:#fff;display:grid;place-items:center}
+  .comm .open{background:#fff;color:#2a1a00;border-radius:12px;padding:10px 14px;font-weight:900;text-decoration:none}
+</style>
+</head>
+
+<body>
+  <div class="app">
+    <header>
+      <div class="title">Referral Rush</div>
+      <div class="prize">Premio semanal de USD 15,000</div>
+      <div class="slogan">¡No es solo una carrera—es una carrera por recompensas!</div>
+    </header>
+    <main id="view"></main>
+  </div>
+
+  <!-- Bottom Nav -->
+  <nav class="iconnav" aria-label="Navegación principal">
+    <button class="itab active" data-tab="ranks"><svg class="ico" viewBox="0 0 24 24"><path d="M7 22V11a2 2 0 0 1 2-2h6v13H7zM3 22v-7a 2 2 0 0 1 2-2h1v9H3zM17 22V5a2 2 0 0 1 2-2h2v19h-4zM10 5l2-3 2 3"/></svg><span>Ranking</span></button>
+    <button class="itab" data-tab="home"><svg class="ico" viewBox="0 0 24 24"><path d="M7 3h7l4 4v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zM14 3v5h5"/></svg><span>FAQ</span></button>
+    <button class="itab" data-tab="community"><svg class="ico" viewBox="0 0 24 24"><path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4zm0 2c-4 0-8 2-8 5v1h16v-1c0-3-4-5-8-5z"/></svg><span>Comunidad</span></button>
+  </nav>
+
+  <!-- Modal -->
+  <div id="modal" class="modal" role="dialog" aria-modal="true" aria-label="Cómo referir">
+    <div class="sheet">
+      <header>
+        <strong>Cómo referir</strong>
+        <button class="close" id="closeModal">Cerrar</button>
+      </header>
+      <div class="frame">
+        <iframe id="yt" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+      </div>
+    </div>
+  </div>
+
+<script>
+/* ===== CONFIG ===== */
+const SHEET_ID   = "1aPKPlSRE6M8R9YsyJlTnBmyXI6FdJKHFqTISKsCnKy4";
+const GID_WEEKLY = "0";
+const FETCH_TIMEOUT_MS = 12000;
+const RETRIES = 2;
+const REFER_URL = "https://www.rico.bet/myreferral";
+
+/* helpers */
+const $=(s,el)=> (el||document).querySelector(s);
+const $all=(s,el)=> Array.from((el||document).querySelectorAll(s));
+const unique=a=>Array.from(new Set(a));
+const fmtFull=n=>Number(n||0).toLocaleString();
+const faceBg=url=>`url("${url}")`;
+
+/* mask middle 4 chars */
+function maskMid4(s){
+  s=String(s||'');
+  if(s.length<=4){
+    if(s.length<=2) return s.replace(/.(?=.)/g,'*');
+    return s[0] + '*'.repeat(Math.max(0,s.length-2)) + s.slice(-1);
+  }
+  const mid=Math.floor(s.length/2);
+  const start=Math.max(1, mid-2);
+  const end=Math.min(s.length-1, mid+2);
+  return s.slice(0,start) + '****' + s.slice(end);
+}
+
+/* Avatars 1..20 (21+ repeats #20) */
+const AVS=[
+  "https://ricobr.ft-crm.com/media-api/serve/45bca76b-c197-49d3-9a65-f31d1557b370_1.jpg",
+  "https://ricobr.ft-crm.com/media-api/serve/269c0fda-6caf-493b-9754-b7c0d668e6a8_2.jpg",
+  "https://ricobr.ft-crm.com/media-api/serve/03b0ab22-a01c-4488-8a3d-330ddc1a74d4_3.png",
+  "https://ricobr.ft-crm.com/media-api/serve/e2061798-9598-442f-8b78-659e1577b352_4.png",
+  "https://ricobr.ft-crm.com/media-api/serve/40e0a068-21b6-4225-b934-fb5433cba762_5.jpg",
+  "https://ricobr.ft-crm.com/media-api/serve/3cfd0b1c-f878-474e-9dfa-0ce3e5c3ebf8_6.png",
+  "https://ricobr.ft-crm.com/media-api/serve/cd272274-5bf0-4e2d-b992-3fe2bd927e8d_7.jpg",
+  "https://ricobr.ft-crm.com/media-api/serve/cda3b212-ac57-4a69-9f5b-eeebbd0dde4c_8.jpg",
+  "https://ricobr.ft-crm.com/media-api/serve/af48fdd4-d20e-4505-83f0-a3e2653ed2a3_9.png",
+  "https://ricobr.ft-crm.com/media-api/serve/70e809ba-ff85-48ab-99fb-f11c5ff3cfa2_10.jpg",
+  "https://ricobr.ft-crm.com/media-api/serve/c3e2c493-e797-4bdc-bd15-ee4e80de4a2a_11.png",
+  "https://ricobr.ft-crm.com/media-api/serve/944e001c-4b01-4c7d-9d41-28ed336ae6c1_12.png",
+  "https://ricobr.ft-crm.com/media-api/serve/a4912095-521e-40fd-b2e0-b02d84347c4a_13.png",
+  "https://ricobr.ft-crm.com/media-api/serve/8cc3446b-cec3-4ae2-8f67-63f2f62ffd9d_14.png",
+  "https://ricobr.ft-crm.com/media-api/serve/3267e1aa-428e-406e-b5de-39864beaee76_15.png",
+  "https://ricobr.ft-crm.com/media-api/serve/45bca76b-c197-49d3-9a65-f31d1557b370_1.jpg",
+  "https://ricobr.ft-crm.com/media-api/serve/269c0fda-6caf-493b-9754-b7c0d668e6a8_2.jpg",
+  "https://ricobr.ft-crm.com/media-api/serve/03b0ab22-a01c-4488-8a3d-330ddc1a74d4_3.png",
+  "https://ricobr.ft-crm.com/media-api/serve/e2061798-9598-442f-8b78-659e1577b352_4.png",
+  "https://ricobr.ft-crm.com/media-api/serve/40e0a068-21b6-4225-b934-fb5433cba762_5.jpg",
+];
+const rankAvatar = (r) => AVS[Math.min(Math.max(1,r),20)-1];
+
+/* Tabs */
+let TAB='ranks';
+$all('.iconnav .itab').forEach(btn=>{
+  btn.addEventListener('click',()=>{ TAB=btn.dataset.tab; $all('.itab').forEach(b=>b.classList.toggle('active',b===btn)); render();});
+});
+
+/* GViz with timeout & retries – status shows only on error */
+async function gviz(gid){
+  const url=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${encodeURIComponent(gid)}`;
+  let lastErr=null;
+  for(let i=0;i<=RETRIES;i++){
+    const ctrl=new AbortController();
+    const t=setTimeout(()=>ctrl.abort(), FETCH_TIMEOUT_MS);
+    try{
+      const res=await fetch(url,{cache:"no-store",signal:ctrl.signal});
+      clearTimeout(t);
+      const text=await res.text();
+      const m=text.match(/google\.visualization\.Query\.setResponse\((.*)\);?/s);
+      if(!m) throw new Error('parse-failed');
+      return JSON.parse(m[1]);
+    }catch(e){ lastErr=e; await new Promise(r=>setTimeout(r, 400*(i+1))); }
+  }
+  throw lastErr||new Error('unknown');
+}
+function normalize(gvizData){
+  const headers=gvizData.table.cols.map(c=>c.label||c.id||"");
+  const rows   =gvizData.table.rows.filter(r=>r&&r.c).map(r=> r.c.map(c=> c?(c.f!=null?c.f:c.v):""));
+  const L=headers.map(h=>String(h||'').toLowerCase());
+  const find=(names)=>{for(const n of names){const j=L.findIndex(h=>h.includes(n));if(j>-1)return j}return -1};
+  const ri=find(["rank"]), ui=find(["username","user","player","name"]), pi=find(["points","score"]), wi=find(["week"]);
+  if(ri<0||ui<0||pi<0) throw new Error('Missing Rank/Username/Points columns');
+  return rows.map(r=>({
+    rank:Number(String(r[ri]).replace(/[^\d.\-]/g,''))||0,
+    username:String(r[ui]||"").trim(),
+    points:Number(String(r[pi]).replace(/[^\d.\-]/g,''))||0,
+    week: wi>-1 ? String(r[wi]||"").trim() : ""
+  })).filter(x=>x.username && x.rank>0);
+}
+
+/* Data & UI (weekly only) */
+let WEEKLY=[], WEEKS=[], CUR_WEEK='', CURRENT_FULL=[];
+
+async function renderRanks(){
+  $('#view').innerHTML=`
+    <div class="card status" id="statusCard">
+      <div class="msg" id="statusMsg">No se pudo cargar la hoja de Google.</div>
+      <div class="row">
+        <button class="btn primary" id="btnRetry">Reintentar</button>
+        <a class="btn ghost" id="btnTest" target="_blank" rel="noopener">Abrir hoja</a>
+      </div>
+      <div style="margin-top:6px;font-size:12px;color:#cdd7ff">
+        Checklist: Hoja en <b>Cualquiera con el enlace — Lector</b>; <b>Sheet ID</b> y <b>GID</b> correctos; columnas incluyen <b>Rank</b>, <b>Username</b>, <b>Points</b>, <b>Week</b>.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="lbHead">
+        <h2>Tabla de clasificación</h2>
+      </div>
+      <div class="scope" id="scope"></div>
+      <div class="filters">
+        <select id="pickWeek" class="pick"></select>
+      </div>
+    </div>
+
+    <section class="hero">
+      <div class="p3">
+        <div class="pod s2" id="pod2">
+          <div class="ring"><div class="av" id="p2a"></div></div>
+          <div class="badge">2</div>
+          <div class="name" id="p2n">—</div>
+          <div class="score"><span>🏆</span><span id="p2s"></span><span>puntos</span></div>
+        </div>
+        <div class="pod s1" id="pod1">
+          <div class="crown">👑</div>
+          <div class="ring"><div class="av" id="p1a"></div></div>
+          <div class="badge">1</div>
+          <div class="name" id="p1n">—</div>
+          <div class="score"><span>🏆</span><span id="p1s"></span><span>puntos</span></div>
+        </div>
+        <div class="pod s3" id="pod3">
+          <div class="ring"><div class="av" id="p3a"></div></div>
+          <div class="badge">3</div>
+          <div class="name" id="p3n">—</div>
+          <div class="score"><span>🏆</span><span id="p3s"></span><span>puntos</span></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="hdrRow"><div>Pos.</div><div>Jugador</div><div>Puntos</div></div>
+    <div class="list" id="lb-list"></div>
+
+    <div class="search">
+      <input id="q" class="input" placeholder="Buscar usuario…"/>
+      <button id="find" class="go">Buscar</button>
+    </div>
+    <div id="mine" class="result"></div>
+
+    <div class="ctaRow">
+      <button id="ctaHow" class="cta primary" type="button">CÓMO REFERIR</button>
+      <button id="ctaRefer" class="cta secondary" type="button">ENLACE DE REFERIDO</button>
+    </div>
+  `;
+
+  const statusCard = $('#statusCard');
+  statusCard.classList.remove('show');
+
+  const statusMsg  = $('#statusMsg');
+  const btnRetry   = $('#btnRetry');
+  const btnTest    = $('#btnTest');
+  const testURL    = (gid)=>`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${encodeURIComponent(gid)}`;
+  btnTest.href = testURL(GID_WEEKLY);
+  btnRetry.onclick = ()=> draw(true);
+
+  const pWeek=$('#pickWeek');
+  pWeek.onchange=()=>{CUR_WEEK=pWeek.value; draw(false)};
+
+  async function loadData(){
+    try{
+      if(!WEEKLY.length){
+        const wj = await gviz(GID_WEEKLY); WEEKLY = normalize(wj);
+      }
+      WEEKS = unique(WEEKLY.map(x=>x.week).filter(Boolean)).sort((a,b)=>{
+        const na=(a.match(/\d+/)||[])[0], nb=(b.match(/\d+/)||[])[0];
+        return (na&&nb)? na-nb : a.localeCompare(b);
+      });
+      CUR_WEEK = WEEKS[WEEKS.length-1]||"";
+      pWeek.innerHTML=WEEKS.map(w=>`<option>${w}</option>`).join('');
+      pWeek.value=CUR_WEEK;
+    }catch(e){
+      console.warn(e);
+      statusMsg.textContent = `No se pudo cargar la hoja: ${String(e.message||e)}`;
+      statusCard.classList.add('show');
+      throw e;
+    }
+  }
+
+  function currentRows(){
+    return WEEKLY.filter(x=> (x.week||'')===CUR_WEEK).sort((a,b)=>a.rank-b.rank);
+  }
+  function scopeText(){ return `Mostrando: <b>${CUR_WEEK||'—'}</b>`; }
+
+  function setPod(n,row){
+    const av=$(`#p${n}a`), nm=$(`#p${n}n`), sc=$(`#p${n}s`);
+    if(row){ av.style.backgroundImage=faceBg(rankAvatar(row.rank)); nm.textContent=maskMid4(row.username); sc.textContent=fmtFull(row.points); }
+    else { av.style.backgroundImage='none'; nm.textContent='—'; sc.textContent=''; }
+  }
+
+  async function draw(forceLoad){
+    if(forceLoad && !WEEKLY.length) await loadData();
+
+    $('#scope').innerHTML = scopeText();
+    const rows = currentRows(); CURRENT_FULL = rows.slice();
+
+    setPod(1, rows.find(r=>r.rank===1)); setPod(2, rows.find(r=>r.rank===2)); setPod(3, rows.find(r=>r.rank===3));
+
+    const list=$('#lb-list'); list.innerHTML='';
+    rows.filter(r=>r.rank>=4 && r.rank<=20).forEach(r=>{
+      list.insertAdjacentHTML('beforeend',`
+        <div class="row" id="row-${r.rank}">
+          <div class="rk">${r.rank}</div>
+          <div class="left">
+            <div class="face" id="face-${r.rank}"></div>
+            <div class="uname">${maskMid4(r.username)}</div>
+          </div>
+          <div class="val">${fmtFull(r.points)} puntos</div>
+        </div>`);
+    });
+    rows.filter(r=>r.rank>=4 && r.rank<=20).forEach(r=>{
+      const f = document.getElementById(`face-${r.rank}`);
+      if(f) f.style.backgroundImage = faceBg(rankAvatar(r.rank));
+    });
+
+    // Search
+    $('#find').onclick=doSearch;
+    $('#q').addEventListener('keydown',e=>{ if(e.key==='Enter') doSearch(); });
+  }
+
+  function doSearch(){
+    const q = ($('#q').value||'').trim().toLowerCase();
+    const box = $('#mine'); box.style.display='none';
+
+    const oldMineRow = $('#row-mine'); if(oldMineRow) oldMineRow.remove();
+
+    if(!q){ box.style.display='block'; box.textContent='Escribe un nombre de usuario'; return; }
+
+    const hit = CURRENT_FULL.find(x=>x.username.toLowerCase()===q);
+    if(!hit){ box.style.display='block'; box.textContent='Sin coincidencias esta semana.'; return; }
+
+    if(hit.rank<=3){
+      const pod = $(`#pod${hit.rank}`); if(pod){
+        pod.classList.remove('pulseHighlight'); void pod.offsetWidth; pod.classList.add('pulseHighlight');
+        pod.scrollIntoView({behavior:'smooth', block:'center'});
+      }
+      return;
+    }
+
+    if(hit.rank<=20){
+      const rowEl = $(`#row-${hit.rank}`); if(rowEl){
+        rowEl.classList.remove('flash'); void rowEl.offsetWidth; rowEl.classList.add('flash');
+        rowEl.scrollIntoView({behavior:'smooth', block:'center'});
+      }
+      return;
+    }
+
+    const list=$('#lb-list');
+    list.insertAdjacentHTML('beforeend',`
+      <div class="row mine flash" id="row-mine">
+        <div class="rk">${hit.rank}</div>
+        <div class="left">
+          <div class="face" id="face-mine"></div>
+          <div class="uname">${maskMid4(hit.username)}</div>
+        </div>
+        <div class="val">${fmtFull(hit.points)} puntos</div>
+      </div>`);
+    $('#face-mine').style.backgroundImage = faceBg(rankAvatar(hit.rank));
+    $('#row-mine').scrollIntoView({behavior:'smooth', block:'nearest'});
+  }
+
+  await draw(true);
+
+  // CTA modal open/close
+  $('#ctaHow').addEventListener('click', ()=>{
+    const yt=$('#yt'), modal=$('#modal');
+    yt.src = "https://www.youtube.com/embed/A6DljwDp12A?autoplay=1&rel=0";
+    modal.classList.add('show');
+  });
+  $('#closeModal').addEventListener('click', ()=>{
+    const yt=$('#yt'), modal=$('#modal');
+    yt.src="about:blank"; modal.classList.remove('show');
+  });
+  $('#modal').addEventListener('click', (e)=>{ if(e.target===e.currentTarget){ $('#closeModal').click(); } });
+
+  // CTA #2
+  $('#ctaRefer').addEventListener('click', ()=>{
+    window.open(REFER_URL, '_blank', 'noopener');
+  });
+}
+
+/* FAQ — estilo desplegable con tu contenido en español (GMT-6 listo) */
+function renderHome(){
+  $('#view').innerHTML=`
+    <div class="card tnc">
+      <h2>Preguntas Frecuentes (FAQ)</h2>
+
+      <details class="titem" open>
+        <summary>1. ¿Qué es Referral Rush?</summary>
+        <div class="ans">Referral Rush es un evento competitivo de referidos que se lleva a cabo del 1 al 30 de noviembre de 2025. Los jugadores ganan puntos según el volumen de apuestas generado por sus amigos referidos. Cuanta más actividad tengan tus referidos, más puntos acumulas. ¡Sube en la tabla de clasificación y gana premios en efectivo cada semana!
+
+Bono Extra: Además de los premios del ranking, aún recibirás el Bono de Referido del 100% del primer depósito de tus amigos, ¡duplicando tus ganancias!</div>
+      </details>
+
+      <details class="titem">
+        <summary>2. ¿Cómo participo?</summary>
+        <div class="ans">- Inicia sesión en tu cuenta de Rico.bet.
+- Ve a tu Página de Referidos para obtener tu enlace único.
+- Comparte tu enlace con tus amigos por redes sociales, chat o correo electrónico.
+- Cuando tus referidos se registren, depositen y jueguen, ganarás puntos y bonos automáticamente.</div>
+      </details>
+
+      <details class="titem">
+        <summary>3. ¿Cómo se calculan los puntos?</summary>
+        <div class="ans">El volumen de apuestas se calculará según cuánto apuesten tus amigos referidos cada día. Por cada apuesta realizada, ganas 1 punto. Todos los puntos diarios generados por la actividad de tus amigos se acumulan durante la semana y determinan tu posición en la tabla de clasificación.
+- Volumen de 200 = 200 puntos
+- Volumen de 700 = 700 puntos
+
+Proceso de Cálculo Diario
+- Cada día, el volumen total de apuestas de cada amigo referido se calcula automáticamente.
+- Según su nivel de volumen diario, ganas la cantidad correspondiente de puntos mostrada arriba.
+- Si un referido realiza varias apuestas en un día, todas se suman para formar su volumen diario total.
+- Los puntos de todos tus referidos activos se combinan para crear tu total diario de puntos.
+- Estos totales diarios se acumulan a lo largo de la semana.
+- Al final de la semana, tus puntos semanales totales determinan tu posición en la tabla de clasificación y tu elegibilidad para los premios.</div>
+      </details>
+
+      <details class="titem">
+        <summary>4. ¿Cómo se actualiza la tabla de clasificación?</summary>
+        <div class="ans">La Tabla de Clasificación de Referral Rush se actualiza cada 12 horas, mostrando tu posición y puntos más recientes según la actividad de tus referidos.</div>
+      </details>
+
+      <details class="titem">
+        <summary>5. ¿Qué premios puedo ganar?</summary>
+        <div class="ans">Se otorgan premios semanales a los 100 mejores jugadores, según el ranking:
+- 1er lugar = USD 1500
+- 2º – 5º lugar = USD 750 cada uno
+- 6º – 20º lugar = USD 200 cada uno
+- 21º – 50º lugar = USD 100 cada uno
+- 51º – 100º lugar = USD 90 cada uno
+Los premios semanales se otorgan a los 100 mejores jugadores, según el total de puntos acumulados por las apuestas realizadas por sus amigos referidos durante cada período semanal. Cada apuesta equivale a 1 punto.</div>
+      </details>
+
+      <details class="titem">
+        <summary>6. ¿Cuándo recibiré mi premio?</summary>
+        <div class="ans">Los premios se acreditan después de cada reinicio semanal, según el siguiente calendario:
+Semana 1: del 1 al 7
+Semana 2: del 8 al 14
+Semana 3: del 15 al 21
+Semana 4: del 22 al 28
+Semana 5: del 29 al 30
+Los ganadores recibirán sus premios al día siguiente a las 12:00 PM (GMT-6), acreditados directamente en su billetera de juego de Rico.bet después del reinicio semanal.</div>
+      </details>
+
+      <details class="titem">
+        <summary>7. ¿Hay requisitos de apuesta?</summary>
+        <div class="ans">Sí. Todos los créditos de premio tienen un requisito de apuesta de 5x antes de poder retirar cualquier ganancia. Puedes usar el crédito del premio para jugar en cualquier juego de Rico.bet.</div>
+      </details>
+
+      <details class="titem">
+        <summary>8. ¿Puedo ganar todas las semanas?</summary>
+        <div class="ans">¡Por supuesto! Cada semana es una competencia independiente. Puedes aparecer en el ranking y ganar premios cada semana durante el evento.</div>
+      </details>
+
+      <details class="titem">
+        <summary>9. ¿Qué pasa si mi referido deja de jugar?</summary>
+        <div class="ans">Solo los referidos activos, que generen volumen de apuestas durante la semana, contarán para tus puntos de esa semana.</div>
+      </details>
+
+      <details class="titem">
+        <summary>10. ¿Cómo puedo revisar mi posición?</summary>
+        <div class="ans">Puedes ver tu posición en vivo en la tabla de clasificación y tus puntos semanales en la sección del evento Referral Rush.</div>
+      </details>
+
+      <details class="titem">
+        <summary>11. ¿Qué puede causar descalificación?</summary>
+        <div class="ans">Rico.bet aplica estrictas políticas de juego justo. Puedes ser descalificado o perder tus premios si:
+- Creas o usas múltiples cuentas para obtener ventaja injusta.
+- Intentas autorreferirte (registrar tus propias cuentas con tu enlace).
+- Participas en colusión o actividades fraudulentas con otros jugadores.
+- Manipulas o inflas artificialmente el volumen de apuestas para ganar más puntos.
+- Violentas los Términos de Servicio o las políticas de juego responsable de Rico.bet.
+
+Todas las decisiones de la administración de Rico.bet son finales y obligatorias. Rico.bet se reserva el derecho de revisar y auditar todos los datos del evento para verificar su autenticidad.</div>
+      </details>
+    </div>`;
+}
+
+/* Comunidad */
+function renderCommunity(){
+  const referUrl=location.href;
+  const icons = {
+    facebook:"https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/facebook.svg",
+    instagram:"https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/instagram.svg",
+    telegram:"https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/telegram.svg",
+    x:"https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/x.svg",
+    youtube:"https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/youtube.svg"
+  };
+  $('#view').innerHTML=`
+    <div class="card comm">
+      <h2>Compartir & Seguir</h2>
+      <p>Invita a tus amigos y síguenos.</p>
+      <div class="sharebar">
+        <a class="sharebtn" target="_blank" rel="noopener" href="https://t.me/share/url?url=${encodeURIComponent(referUrl)}">Compartir en Telegram</a>
+        <a class="sharebtn" target="_blank" rel="noopener" href="https://api.whatsapp.com/send?text=${encodeURIComponent('Únete conmigo: '+referUrl)}">Compartir en WhatsApp</a>
+      </div>
+
+      <div class="list">
+        ${[
+          ['Facebook','https://facebook.com/',icons.facebook],
+          ['Instagram','https://instagram.com/',icons.instagram],
+          ['Telegram','https://t.me/',icons.telegram],
+          ['X (Twitter)','https://x.com/',icons.x],
+          ['YouTube','https://youtube.com/',icons.youtube],
+        ].map(([label,href,icon])=>`
+          <div class="item">
+            <div class="c-left">
+              <div class="bubble"><img alt="" width="26" height="26" src="${icon}"/></div>
+              <div style="font-weight:900">${label}</div>
+            </div>
+            <a class="open" href="${href}" target="_blank" rel="noopener">Abrir</a>
+          </div>`).join('')}
+      </div>
+    </div>`;
+}
+
+/* Boot */
+function render(){ if(TAB==='ranks') renderRanks(); else if(TAB==='home') renderHome(); else renderCommunity(); }
+render();
+</script>
+</body>
+</html>
