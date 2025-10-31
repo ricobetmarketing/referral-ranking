@@ -597,13 +597,18 @@ function renderCommunity(){
     x:"https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/x.svg",
     youtube:"https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/youtube.svg"
   };
+
+  // New share text & link (exactly as requested)
+  const shareUrl = "https://ricobetplay.co/5j3hBg";
+  const shareMsg = "🚀 ¡Referral Rush en Rico.bet!\nGana puntos con las apuestas de tus amigos y compite por USD 15,000 en premios semanales!\n\n👉 Únete ahora: https://ricobetplay.co/5j3hBg";
+
   $('#view').innerHTML=`
     <div class="card comm">
       <h2>Compartir & Seguir</h2>
       <p>Invita a tus amigos y síguenos.</p>
       <div class="sharebar">
-        <a class="sharebtn" target="_blank" rel="noopener" href="https://t.me/share/url?url=${encodeURIComponent(referUrl)}">Compartir en Telegram</a>
-        <a class="sharebtn" target="_blank" rel="noopener" href="https://api.whatsapp.com/send?text=${encodeURIComponent('Únete conmigo: '+referUrl)}">Compartir en WhatsApp</a>
+        <a class="sharebtn" target="_blank" rel="noopener" href="https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareMsg)}">Compartir en Telegram</a>
+        <a class="sharebtn" target="_blank" rel="noopener" href="https://api.whatsapp.com/send?text=${encodeURIComponent(shareMsg)}">Compartir en WhatsApp</a>
       </div>
 
       <div class="list">
